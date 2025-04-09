@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const { status: response_status, data: response_data } = await $fetch('/api/getUserData', {
   default: () => [],
   cache: "no-cache",
@@ -7,7 +6,7 @@ const { status: response_status, data: response_data } = await $fetch('/api/getU
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: '{}'
-});
+}).catch(error => console.log(error));
 </script>
 
 <template>
