@@ -25,7 +25,7 @@ const openReturnUrl = () => {
 
 function showAlert(message: string) {
   isAlertShow.value = true;
-  alertMessage.value = message;
+  alertMessage.value = t(message);
 }
 
 function hideAlert() {
@@ -53,14 +53,14 @@ const authorize = async () => {
     if (response_status) {
       switch (response_status) {
         case "OK": openReturnUrl(); break;
-        default: showAlert(t('unknown_error')); break;
+        default: showAlert('unknown_error'); break;
       }
     } else {
-      showAlert(t('unknown_error'));
+      showAlert('unknown_error');
     }
   } catch (error) {
     console.error('Error:', error);
-    showAlert(t('unknown_error'));
+    showAlert('unknown_error');
   }
   isButtonDisabled.value = false;
 }
@@ -76,7 +76,7 @@ const exitAccount = async () => {
     });
   } catch (error) {
     console.error('Error:', error);
-    showAlert(t('unknown_error'));
+    showAlert('unknown_error');
   }
   location.reload();
 }

@@ -147,6 +147,10 @@ export async function updateTokens(user: Account, tokens: Array<string>): Promis
     await AccountModel.findOneAndUpdate({ _id: user._id }, { tokens: tokens });
 }
 
+export async function changeEmail(id: string, email: string): Promise<void> {
+    await AccountModel.findOneAndUpdate({ _id: id }, { email: email, emailStatus: 'NOT_VERIFIED' });
+}
+
 export async function updateEmailStatus(id: string, emailStatus: string): Promise<void> {
     await AccountModel.findOneAndUpdate({ _id: id }, { emailStatus: emailStatus });
 }

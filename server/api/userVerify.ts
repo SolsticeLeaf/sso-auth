@@ -27,6 +27,7 @@ export default defineEventHandler(async (event) => {
         const tokenUser = await getAccountByToken(declaredToken);
         if (tokenUser) {
             if (tokenUser.emailStatus === "VERIFIED") { return { status: 'OK' } }
+            if (tokenUser.email.length === 0) { return { status: 'NO_EMAIL' } }
             const code = routeData.submitCode;
             const username = tokenUser.username;
             const checkedCode = await checkSubmitCode(username, code);

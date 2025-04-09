@@ -23,7 +23,7 @@
   "password_no_lowercase": "Пароль должен содержать хотя бы одну строчную букву.",
   "password_no_digit": "Пароль должен содержать хотя бы одну цифру.",
   "password_no_special_char": "Пароль должен содержать хотя бы один специальный символ.",
-  "password_simple": "Password is too simple",
+  "password_simple": "Пароль слишком простой",
   "field_required": "Поле обязательно для заполнения",
   "username_length": "Длина имени пользователя должна быть не менее 5 символов.",
   "username_length_input": "Не менее 5 символов",
@@ -34,10 +34,15 @@
   "email_not_sent": "Произошла ошибка при отправке сообщения на почту.",
   "email_already_sent": "На вашу почту уже было выслано письмо с подтверждением,\nпожалуйста перейдите по ссылке в письме.\nСсылка действует 5 минут.",
   "registerPreCompletePage": "Подтверждение почты",
+  "setupEmailPage": "Укажите Email",
   "back_login": "Назад",
   "change_account": "Сменить аккаунт",
   "no_email": "Email: пусто",
   "code_expired": "Срок действия кода закончился",
   "send_code": "Отправить код",
-  "wait": "Подождите..."
+  "wait": "Подождите...",
+  "change_email": "Изменить email",
+  "no_email_alert": "У вас не указан email",
+  "setup_email": "Указать почту",
+  "submit": "Применить"
 }

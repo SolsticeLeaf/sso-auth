@@ -41,7 +41,7 @@ async function checkData(username: string, password: string): Promise<{status: s
     if (!username) {
         return { status: 'EMPTY_USERNAME' };
     }
-    if (usernameExpression.test(username)) {
+    if (!usernameExpression.test(username)) {
         return { status: 'USERNAME_MUST_BE_LATIN' };
     }
     if (username.length < 5) {

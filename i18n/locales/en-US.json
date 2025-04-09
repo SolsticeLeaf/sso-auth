@@ -34,10 +34,15 @@
   "email_not_sent": "There was an error when sending a message to your email.",
   "email_already_sent": "A confirmation email already has been sent to you,\nplease follow the link in the email.\nLink active period: 5 minutes",
   "registerPreCompletePage": "Email verification",
+  "setupEmailPage": "Specify email",
   "back_login": "Back",
   "change_account": "Change account",
   "no_email": "Email: empty",
   "code_expired": "Code has been expired",
   "send_code": "Send code",
-  "wait": "Please, wait..."
+  "wait": "Please, wait...",
+  "change_email": "Change email",
+  "no_email_alert": "You have not specified an email",
+  "setup_email": "Specify email",
+  "submit": "Submit"
 }

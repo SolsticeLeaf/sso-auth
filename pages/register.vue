@@ -82,7 +82,7 @@ const register = async () => {
         case "PASSWORD_NO_SPECIAL_CHAR": showAlert('password_no_special_char'); break;
         case "USERNAME_EXISTS": showAlert('username_exist'); break;
         case "EMAIL_EXISTS": showAlert('email_exist'); break;
-        default: showAlert(t('unknown_error')); break;
+        default: showAlert('unknown_error'); break;
       }
     } else {
       showAlert('unknown_error');

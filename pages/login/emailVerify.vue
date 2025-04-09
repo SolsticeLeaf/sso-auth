@@ -11,11 +11,15 @@ const data = decodeBase64AsJson(route?.query?.data || "");
 const message = ref('wait')
 const retryButton = ref(false);
 const backButton = ref(false);
+const setupEmailButton = ref(false);
 
 const openLoginPage = () => {
   openWindow(`/login?data=${routeData}`);
 }
 
+const openEmailSetupPage = () => {
+  openWindow(`/account/email?data=${routeData}`);
+}
 const openReturnUrl = () => {
   openWindow(data.returnUrl || '/');
 }
@@ -49,6 +53,9 @@ const check = async () => {
         case "EXPIRED":
           setMessage('code_expired', 'retry');
           break;
+        case "NO_EMAIL":
+          setMessage('no_email_alert', 'setupEmail');
+          break;
         case "ALREADY_SENT":
           setMessage('email_already_sent', 'back');
           break;
@@ -73,7 +80,7 @@ const check = async () => {
   }
 }
 
-function setMessage(msg: string, button: 'none' | 'retry' | 'back') {
+function setMessage(msg: string, button: 'none' | 'retry' | 'back' | 'setupEmail') {
   message.value = msg;
   switch (button) {
     case 'retry':
@@ -82,9 +89,13 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back') {
     case 'back':
       backButton.value = true;
       break;
+    case 'setupEmail':
+      setupEmailButton.value = true;
+      break;
     default:
       retryButton.value = false;
       backButton.value = false;
+      setupEmailButton.value = false;
       break;
   }
 }
@@ -111,7 +122,7 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back') {
                           :click="check"
                           :outline="false"
                           :disabled="false" />
-            <ActionButton v-else v-if="backButton"
+            <ActionButton v-if="backButton"
                           :text="t('back_login')"
                           :icon="iconsConfig.arrow_left"
                           color="--button-color"
@@ -120,6 +131,20 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back') {
                           :click="openLoginPage"
                           :outline="false"
                           :disabled="false" />
+            <ActionButton v-if="setupEmailButton"
+                          :text="t('setup_email')"
+                          color="--button-color"
+                          text-color="--text-color-light"
+                          class="main__button"
+                          :click="openEmailSetupPage"
+                          :outline="false"
+                          :disabled="false" />
+            <ActionButton v-if="retryButton || backButton"
+                          :text="t('change_email')"
+                          text-color="--text-color-primary"
+                          class="main__button"
+                          :click="openEmailSetupPage"
+                          :link="true" />
           </div>
         </div>
       </div>
@@ -128,21 +153,6 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back') {
 </template>
 
 <style scoped lang="scss">
-@use "../../assets/scss/screens" as *;
-
-.logo {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-
-  &__second {
-    background: var(--logo-gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-}
-
 .main {
   display: flex;
   flex-direction: column;
