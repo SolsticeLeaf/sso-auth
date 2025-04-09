@@ -80,49 +80,43 @@ const authorize = async () => {
 </script>
 
 <template>
-  <ClientOnly>
-    <KeepAlive>
-      <div class="main">
-        <input
-            type="text"
-            id="usernameInput"
-            name="amount"
-            class="main__input"
-            v-on:input="hideAlert"
-            v-on:keyup.enter="focusPassword"
-            :placeholder="t('username')"
-            required />
-        <input
-            type="password"
-            id="passwordInput"
-            name="amount"
-            class="main__input"
-            v-on:input="hideAlert"
-            v-on:keyup.enter="authorize"
-            :placeholder="t('password')"
-            required />
-        <p v-if="isAlertShow" class="main__alert">{{alertMessage}}</p>
-        <ActionButton :text="t('login')"
-                      :icon="iconsConfig.button_login"
-                      color="--button-color"
-                      text-color="--text-color-light"
-                      class="main__button"
-                      :click="authorize"
-                      :outline="false"
-                      :disabled="isButtonDisabled" />
-        <ActionButton :text="t('registerLink')"
-                      text-color="--text-color-primary"
-                      class="main__button"
-                      :click="openRegisterPage"
-                      :link="true" />
-      </div>
-    </KeepAlive>
-  </ClientOnly>
+  <div class="main">
+    <input
+        type="text"
+        id="usernameInput"
+        name="amount"
+        class="main__input"
+        v-on:input="hideAlert"
+        v-on:keyup.enter="focusPassword"
+        :placeholder="t('username')"
+        required />
+    <input
+        type="password"
+        id="passwordInput"
+        name="amount"
+        class="main__input"
+        v-on:input="hideAlert"
+        v-on:keyup.enter="authorize"
+        :placeholder="t('password')"
+        required />
+    <p v-if="isAlertShow" class="main__alert">{{alertMessage}}</p>
+    <ActionButton :text="t('login')"
+                  :icon="iconsConfig.button_login"
+                  color="--button-color"
+                  text-color="--text-color-light"
+                  class="main__button"
+                  :click="authorize"
+                  :outline="false"
+                  :disabled="isButtonDisabled" />
+    <ActionButton :text="t('registerLink')"
+                  text-color="--text-color-primary"
+                  class="main__button"
+                  :click="openRegisterPage"
+                  :link="true" />
+  </div>
 </template>
 
 <style scoped lang="scss">
-@use "../assets/scss/screens" as *;
-
 .main {
   display: flex;
   flex-direction: column;

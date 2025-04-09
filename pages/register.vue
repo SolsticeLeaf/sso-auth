@@ -152,21 +152,6 @@ const register = async () => {
 </template>
 
 <style scoped lang="scss">
-@use "../assets/scss/screens" as *;
-
-.logo {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
-
-  &__second {
-    background: var(--logo-gradient);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-}
-
 .main {
   display: flex;
   flex-direction: column;

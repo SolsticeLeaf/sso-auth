@@ -93,42 +93,36 @@ const emailSignatureStyle = computed(() => {
 </script>
 
 <template>
-  <ClientOnly>
-    <KeepAlive>
-      <div class="main">
-        <div class="main__userinfo transparent__glass">
-          <LazyNuxtImg :src="props.data.avatar" class="main__userinfo__avatar" />
-          <div class="main__userinfo__info">
-            <h6>{{props.data.username}}</h6>
-            <div class="main__userinfo__info__email">
-              <p :style="'color:' + emailSignatureStyle">*</p>
-              {{props.data.email || t('no_email')}}
-            </div>
-          </div>
+  <div class="main">
+    <div class="main__userinfo transparent__glass">
+      <LazyNuxtImg :src="props.data.avatar" class="main__userinfo__avatar" />
+      <div class="main__userinfo__info">
+        <h6>{{props.data.username}}</h6>
+        <div class="main__userinfo__info__email">
+          <p :style="'color:' + emailSignatureStyle">*</p>
+          {{props.data.email || t('no_email')}}
         </div>
-        <p v-if="isAlertShow" class="main__alert">{{alertMessage}}</p>
-        <ActionButton :text="t('login')"
-                      :icon="iconsConfig.button_login"
-                      color="--button-color"
-                      ttext-color="--text-color-light"
-                      class="main__button"
-                      :click="authorize"
-                      :outline="false"
-                      :disabled="isButtonDisabled" />
-        <ActionButton :text="t('change_account')"
-                      :icon="iconsConfig.button_logout"
-                      text-color="--text-color-primary"
-                      class="main__button"
-                      :click="exitAccount"
-                      :link="true" />
       </div>
-    </KeepAlive>
-  </ClientOnly>
+    </div>
+    <p v-if="isAlertShow" class="main__alert">{{alertMessage}}</p>
+    <ActionButton :text="t('login')"
+                  :icon="iconsConfig.button_login"
+                  color="--button-color"
+                  ttext-color="--text-color-light"
+                  class="main__button"
+                  :click="authorize"
+                  :outline="false"
+                  :disabled="isButtonDisabled" />
+    <ActionButton :text="t('change_account')"
+                  :icon="iconsConfig.button_logout"
+                  text-color="--text-color-primary"
+                  class="main__button"
+                  :click="exitAccount"
+                  :link="true" />
+  </div>
 </template>
 
 <style scoped lang="scss">
-@use "../assets/scss/screens" as *;
-
 .transparent__glass {
   padding: 0.8rem 1rem;
 }
