@@ -8,6 +8,7 @@ const route = useRoute();
 const routeData = route?.query?.data || "";
 const data = decodeBase64AsJson(route?.query?.data || "");
 
+const showTitle = ref(false);
 const message = ref('wait')
 const retryButton = ref(false);
 const backButton = ref(false);
@@ -82,6 +83,7 @@ const check = async () => {
 
 function setMessage(msg: string, button: 'none' | 'retry' | 'back' | 'setupEmail') {
   message.value = msg;
+  showTitle.value = msg !== 'wait'
   switch (button) {
     case 'retry':
       retryButton.value = true;
@@ -111,7 +113,7 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back' | 'setupEmail
         </div>
         <div id="hero" class="wrapper blur__glass">
           <div class="main">
-            <h6>{{t('registerPreCompletePage')}}</h6>
+            <h6 v-if="showTitle">{{t('registerPreCompletePage')}}</h6>
             <p>{{ t(message) }}</p>
             <ActionButton v-if="retryButton"
                           :text="t('send_code')"
