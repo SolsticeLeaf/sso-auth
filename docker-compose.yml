@@ -1,0 +1,18 @@
+services:
+  front:
+    build: .
+    container_name: portfolio
+    image: portfolio:latest
+    restart: always
+    network_mode: "host"
+    environment:
+      - PORT=4000
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_URL=${DATABASE_URL}
+      - DOMAIN=${DOMAIN}
+      - JWT_SECRET=${JWT_SECRET}
+      - EMAIL_FROM=${EMAIL_FROM}
+      - EMAIL_SMTP_SERVER=${EMAIL_SMTP_SERVER}
+      - EMAIL_SMTP_PORT=${EMAIL_SMTP_PORT}
+      - EMAIL_SMTP_USERNAME=${EMAIL_SMTP_USERNAME}
+      - EMAIL_SMTP_PASSWORD=${EMAIL_SMTP_PASSWORD}

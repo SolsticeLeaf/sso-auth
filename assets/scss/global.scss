@@ -1,0 +1,204 @@
+@use "themes/light";
+@use "themes/dark";
+@use "screens" as *;
+
+html {
+  overflow: scroll;
+  overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin: 0;
+  @media screen and (max-width: $screen-sm) {
+    font-size: 1.8rem;
+  }
+  @media screen and (max-width: $screen-xss) {
+    font-size: 1.7rem;
+  }
+}
+
+h2 {
+  font-size: 2.1rem;
+  margin: 0;
+  @media screen and (max-width: $screen-sm) {
+    font-size: 1.7rem;
+  }
+  @media screen and (max-width: $screen-xss) {
+    font-size: 1.6rem;
+  }
+}
+
+h3 {
+  font-size: 2rem;
+  margin: 0;
+  @media screen and (max-width: $screen-sm) {
+    font-size: 1.6rem;
+  }
+  @media screen and (max-width: $screen-xss) {
+    font-size: 1.5rem;
+  }
+}
+
+h4 {
+  font-size: 1.9rem;
+  margin: 0;
+  @media screen and (max-width: $screen-sm) {
+    font-size: 1.5rem;
+  }
+  @media screen and (max-width: $screen-xss) {
+    font-size: 1.4rem;
+  }
+}
+
+h5 {
+  font-size: 1.8rem;
+  margin: 0;
+  @media screen and (max-width: $screen-sm) {
+    font-size: 1.4rem;
+  }
+  @media screen and (max-width: $screen-xss) {
+    font-size: 1.3rem;
+  }
+}
+
+h6 {
+  font-size: 1.4rem;
+  margin: 0;
+  @media screen and (max-width: $screen-sm) {
+    font-size: 1.3rem;
+  }
+  @media screen and (max-width: $screen-xss) {
+    font-size: 1.2rem;
+  }
+}
+
+p, q {
+  font-size: 1rem;
+  margin: 0;
+  @media screen and (max-width: $screen-sm) {
+    font-size: 1rem;
+  }
+  @media screen and (max-width: $screen-xs) {
+    font-size: 0.9rem;
+  }
+  @media screen and (max-width: $screen-xss) {
+    font-size: 0.8rem;
+  }
+}
+
+label {
+  font-size: 1rem;
+  color: var(--text-color-gray) !important;
+  margin: 0;
+  @media screen and (max-width: $screen-sm) {
+    font-size: 0.8rem;
+  }
+}
+
+html, body {
+  @media (prefers-color-scheme: light) {
+    background-color: var(--background, #FFFFFF);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--background, #120e1c);
+  }
+}
+
+input {
+  font-family: "Fusion Pixel 10px Proportional KR", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Fusion Pixel 10px Proportional KR", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background);
+  color: var(--text-color-primary);
+  line-height: 2;
+
+  .displayed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    height: 100vh;
+    max-height: 100vh;
+    width: 100vw;
+    max-width: 100vw;
+    justify-content: center;
+  }
+
+  .wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+.data-marquee-icon {
+  height: 1.5rem;
+  padding-left: 1rem;
+  padding-right: 0.5rem;
+}
+
+.icon_padding_right {
+  padding-right: 0.5rem;
+}
+
+.blur__glass {
+  filter: none !important;
+  -webkit-filter: none !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 3rem;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-background);
+  padding: 2rem;
+}
+
+.transparent__glass {
+  filter: none !important;
+  -webkit-filter: none !important;
+  border-radius: 3rem;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-background);
+  padding: 2rem;
+}
+
+::selection {
+  background: var(--selection-background);
+  color: var(--selection-color);
+}
+
+::-moz-selection {
+  background: var(--selection-background);
+  color: var(--selection-color);
+}
+
+.loading-indicator {
+  font-size: 10rem;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

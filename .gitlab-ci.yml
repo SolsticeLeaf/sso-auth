@@ -1,0 +1,83 @@
+stages:
+  - dependencies
+  - prepare
+  - build
+  - deploy
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == 'master'
+
+default:
+  tags:
+    - "mais"
+  image: node:23
+
+cache:
+  key: node_modules
+  paths:
+    - node_modules/
+
+dependencies:
+  stage: dependencies
+  before_script:
+    - echo "Install dependencies..."
+  script:
+    - npm install -g pnpm
+    - npm install -g nuxi
+    - pnpm i
+
+prepare:
+  stage: prepare
+  dependencies:
+    - dependencies
+  before_script:
+    - echo "Prepare for build..."
+  script:
+    - npm install -g pnpm
+    - npm install -g nuxi
+    - pnpm run postinstall
+  artifacts:
+    paths:
+      - .nuxt/
+    expire_in: 1 hour
+
+build:
+  stage: build
+  dependencies:
+    - prepare
+  before_script:
+    - echo "Building..."
+  script:
+    - npm install -g pnpm
+    - npm install -g nuxi
+    - pnpm run build
+  artifacts:
+    paths:
+      - .nuxt/
+      - .output/
+      - config/
+      - i18n/
+    expire_in: 1 hour
+
+deploy:
+  stage: deploy
+  image: docker:latest
+  tags:
+    - "helios"
+  dependencies:
+    - build
+  before_script:
+    - echo "Deploying..."
+    - export PORT=4000
+    - export DATABASE_NAME="$DATABASE_NAME"
+    - export DATABASE_URL="$DATABASE_URL"
+    - export DOMAIN="$DOMAIN"
+    - export JWT_SECRET="$JWT_SECRET"
+    - export EMAIL_FROM="$EMAIL_FROM"
+    - export EMAIL_SMTP_SERVER="$EMAIL_SMTP_SERVER"
+    - export EMAIL_SMTP_PORT="$EMAIL_SMTP_PORT"
+    - export EMAIL_SMTP_USERNAME="$EMAIL_SMTP_USERNAME"
+    - export EMAIL_SMTP_PASSWORD="$EMAIL_SMTP_PASSWORD"
+  script:
+    - docker compose up --detach --build
