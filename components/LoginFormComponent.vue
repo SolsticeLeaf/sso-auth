@@ -49,9 +49,6 @@ const authorize = async () => {
       cache: "no-cache",
       server: false,
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
         username: getInputValue("usernameInput"),
         password: getInputValue("passwordInput"),

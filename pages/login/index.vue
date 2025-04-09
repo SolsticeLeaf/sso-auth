@@ -7,7 +7,6 @@ const { status: response_status, data: response_data } = await $fetch('/api/getU
   cache: "no-cache",
   server: false,
   method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
   body: '{}'
 }).catch(error => console.log(error));
 </script>

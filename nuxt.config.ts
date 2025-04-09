@@ -23,20 +23,11 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/**': {
-      prerender: true,
-      cache: {
-        swr: true,
-        maxAge: 120,
-        staleMaxAge: 60,
-        headersOnly: true
-      }
+      prerender: true
     }
   },
   nitro: {
-    compressPublicAssets: true,
-    routeRules: {
-      '/**': { isr: false },
-    },
+    compressPublicAssets: true
   },
   experimental: {
     viewTransition: true,
