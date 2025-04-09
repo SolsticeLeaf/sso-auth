@@ -33,7 +33,7 @@ const schema: Schema = new Schema({
     email: { type: String, required: true },
     emailStatus: { type: String, required: true },
     tokens: { type: Array<any>, required: true },
-    sources: { type: Array<any>, required: true }
+    permissions: { type: Array<any>, required: true }
 }, { collection: 'accounts' })
 
 const AccountModel = mongoose.model<Account>('accounts', schema);
