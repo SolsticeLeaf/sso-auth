@@ -21,11 +21,6 @@ export default defineNuxtConfig({
       link: [{ rel: 'icon', type: 'image/x-icon', href: 'https://ik.imagekit.io/kiinse/icons/icon.svg?updatedAt=1740170186956' }]
     }
   },
-  routeRules: {
-    '/**': {
-      prerender: true
-    }
-  },
   nitro: {
     compressPublicAssets: true
   },
