@@ -72,7 +72,8 @@ const register = async () => {
         case "EMPTY_PASSWORD_REPEAT": showAlert(t('empty_password_repeat')); break;
         case "INCORRECT_EMAIL": showAlert(t('incorrect_email')); break;
         case "PASSWORD_MISMATCH": showAlert(t('passwords_not_match')); break;
-        case "USERNAME_EXISTS": showAlert(t('wrong_credentials')); break;
+        case "USERNAME_EXISTS": showAlert(t('username_exist')); break;
+        case "EMAIL_EXISTS": showAlert(t('email_exist')); break;
         default: showAlert(t('unknown_error')); break;
       }
     } else {

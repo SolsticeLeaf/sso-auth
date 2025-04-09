@@ -22,7 +22,7 @@ export default defineNuxtConfig({
     }
   },
   nitro: {
-    compressPublicAssets: true
+    compressPublicAssets: true,
   },
   experimental: {
     viewTransition: true,

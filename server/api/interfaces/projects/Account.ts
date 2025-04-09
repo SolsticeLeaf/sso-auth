@@ -112,23 +112,25 @@ export async function refreshToken(token: string): Promise<{ status: string, tok
 
 export async function registerUser(username: string, password: string, email: string): Promise<{ status: string, token: string }> {
     try {
-        if (!(await AccountModel.findOne({ username: username }))) {
-            const hashedPassword = hashSync(password, genSaltSync(10));
-            const token = await createToken();
-            await AccountModel.create({
-                _id: encodeBase64(randomUUID().toString() + Date.now().toString()),
-                username: username,
-                password: hashedPassword,
-                avatar: 'https://ik.imagekit.io/kiinse/profile-default.svg',
-                email: email,
-                emailStatus: 'NOT_VERIFIED',
-                tokens: [token],
-                permissions: ['USER']
-            });
-            return { status: 'OK', token: token }
-        } else {
+        if ((await AccountModel.findOne({ username: username }))) {
             return { status: 'USERNAME_EXISTS', token: '' };
         }
+        if ((await AccountModel.findOne({ email: email }))) {
+            return { status: 'EMAIL_EXISTS', token: '' };
+        }
+        const hashedPassword = hashSync(password, genSaltSync(10));
+        const token = await createToken();
+        await AccountModel.create({
+            _id: encodeBase64(randomUUID().toString() + Date.now().toString()),
+            username: username,
+            password: hashedPassword,
+            avatar: 'https://ik.imagekit.io/kiinse/profile-default.svg',
+            email: email,
+            emailStatus: 'NOT_VERIFIED',
+            tokens: [token],
+            permissions: ['USER']
+        });
+        return { status: 'OK', token: token }
     } catch (error) {
         console.error("Error on user register:", error);
         return { status: 'ERROR', token: '' };

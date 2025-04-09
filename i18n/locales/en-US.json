@@ -10,6 +10,8 @@
   "loginLink": "Login to account",
   "registerPage": "Account register",
   "wrong_credentials": "Wrong username or password!",
+  "username_exist": "This username already in use!",
+  "email_exist": "This email already in use!",
   "login_error": "Authorization error!",
   "empty_username": "Username field is empty!",
   "empty_password_repeat": "Repeat password field is empty!",
