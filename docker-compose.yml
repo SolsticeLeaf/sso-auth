@@ -1,8 +1,8 @@
 services:
-  front:
+  authService:
     build: .
-    container_name: portfolio
-    image: portfolio:latest
+    container_name: auth-service
+    image: auth-service:latest
     restart: always
     network_mode: "host"
     environment:

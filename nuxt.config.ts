@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     pageTransition: false,
     layoutTransition: false,
     head: {
-      title: 'SolsticeLeaf',
+      title: 'SLEAF AUTH',
       htmlAttrs: {
         lang: 'en',
       },

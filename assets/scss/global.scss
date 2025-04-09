@@ -147,16 +147,6 @@ body {
   }
 }
 
-.data-marquee-icon {
-  height: 1.5rem;
-  padding-left: 1rem;
-  padding-right: 0.5rem;
-}
-
-.icon_padding_right {
-  padding-right: 0.5rem;
-}
-
 .blur__glass {
   filter: none !important;
   -webkit-filter: none !important;
@@ -175,30 +165,4 @@ body {
   border: 1px solid var(--glass-border);
   background: var(--glass-background);
   padding: 2rem;
-}
-
-::selection {
-  background: var(--selection-background);
-  color: var(--selection-color);
-}
-
-::-moz-selection {
-  background: var(--selection-background);
-  color: var(--selection-color);
-}
-
-.loading-indicator {
-  font-size: 10rem;
-}
-
-@keyframes pulse {
-  0% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-  100% {
-    opacity: 1;
-  }
 }

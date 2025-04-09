@@ -1,2 +1,2 @@
 User-agent: *
-Allow: https://sleaf.dev
+Allow: https://auth.sleaf.dev
