@@ -39,7 +39,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/i18n', '@nuxtjs/device', '@nuxt/icon', '@nuxt/fonts', '@nuxt/image'],
   icon: {
     serverBundle: {
-      collections: ['arcticons', 'mdi', 'ic', 'pixelarticons', 'line-md', 'f7', 'codex', 'pixel']
+      collections: ['pixelarticons']
     }
   },
   plugins: ['@/plugins/Vue3Marquee.client.ts'],
