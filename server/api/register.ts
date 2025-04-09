@@ -1,6 +1,12 @@
 import {connectDB} from "~/server/api/database/MongoDB";
 import {registerUser} from "~/server/api/interfaces/projects/Account";
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+const usernameExpression: RegExp = /^[A-Za-z][A-Za-z0-9]*$/;
+const passwordLatinOnly: RegExp = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/;
+const passwordHasUppercase: RegExp = /[A-Z]/;
+const passwordHasLowercase: RegExp = /[a-z]/;
+const passwordHasDigit: RegExp = /[0-9]/;
+const passwordHasSpecialChar: RegExp = /[!@#$%^&*()_+\-=$begin:math:display$$end:math:display${};':"\\|,.<>\/?`~]/;
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
@@ -18,7 +24,7 @@ export default defineEventHandler(async (event) => {
     }
 });
 
-async function checkData(email: string, username: string, password: string, passwordRepeat: string): Promise<{status: string}> {
+async function checkData(email: string, username: string, password: string, passwordRepeat: string): Promise<{ status: string }> {
     if (!email) {
         return { status: 'EMPTY_EMAIL' };
     }
@@ -28,11 +34,32 @@ async function checkData(email: string, username: string, password: string, pass
     if (!username) {
         return { status: 'EMPTY_USERNAME' };
     }
+    if (!usernameExpression.test(username)) {
+        return { status: 'USERNAME_MUST_BE_LATIN' };
+    }
     if (username.length < 5) {
         return { status: 'SMALL_USERNAME' };
     }
-    if (!password || password.length < 8) {
+    if (!password) {
+        return { status: 'EMPTY_PASSWORD' };
+    }
+    if (password.length < 8) {
         return { status: 'SMALL_PASSWORD' };
+    }
+    if (!passwordLatinOnly.test(password)) {
+        return { status: 'PASSWORD_ONLY_LATIN' };
+    }
+    if (!passwordHasUppercase.test(password)) {
+        return { status: 'PASSWORD_NO_UPPERCASE' };
+    }
+    if (!passwordHasLowercase.test(password)) {
+        return { status: 'PASSWORD_NO_LOWERCASE' };
+    }
+    if (!passwordHasDigit.test(password)) {
+        return { status: 'PASSWORD_NO_DIGIT' };
+    }
+    if (!passwordHasSpecialChar.test(password)) {
+        return { status: 'PASSWORD_NO_SPECIAL_CHAR' };
     }
     if (!passwordRepeat) {
         return { status: 'EMPTY_PASSWORD_REPEAT' };

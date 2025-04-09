@@ -1,6 +1,7 @@
 import {connectDB} from "~/server/api/database/MongoDB";
 import {authorizeUser, getAccountByToken} from "~/server/api/interfaces/projects/Account";
 import axios from "axios";
+const usernameExpression: RegExp = /^[A-Za-z][A-Za-z0-9]*$/;
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
     const { username, password, apiPath } = body;
@@ -39,6 +40,9 @@ async function sendToken(apiPath: string, token: string) {
 async function checkData(username: string, password: string): Promise<{status: string}> {
     if (!username) {
         return { status: 'EMPTY_USERNAME' };
+    }
+    if (usernameExpression.test(username)) {
+        return { status: 'USERNAME_MUST_BE_LATIN' };
     }
     if (username.length < 5) {
         return { status: 'SMALL_USERNAME' };

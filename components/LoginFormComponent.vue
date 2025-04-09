@@ -30,7 +30,7 @@ function getInputValue(elementId: string): string {
 
 function showAlert(message: string) {
   isAlertShow.value = true;
-  alertMessage.value = message;
+  alertMessage.value = t(message);
 }
 
 function hideAlert() {
@@ -59,18 +59,19 @@ const authorize = async () => {
       switch (response_status) {
         case "VERIFIED": openReturnUrl(); break;
         case "NOT_VERIFIED": openReturnUrl(); break;
-        case "EMPTY_USERNAME": showAlert(t('empty_username')); break;
-        case "SMALL_USERNAME": showAlert(t('username_length')); break;
-        case "SMALL_PASSWORD": showAlert(t('password_length')); break;
-        case "NOT_FOUND": showAlert(t('wrong_credentials')); break;
-        default: showAlert(t('unknown_error')); break;
+        case "EMPTY_USERNAME": showAlert('empty_username'); break;
+        case "USERNAME_MUST_BE_LATIN": showAlert('username_latin'); break;
+        case "SMALL_USERNAME": showAlert('username_length'); break;
+        case "SMALL_PASSWORD": showAlert('password_length'); break;
+        case "NOT_FOUND": showAlert('wrong_credentials'); break;
+        default: showAlert('unknown_error'); break;
       }
     } else {
-      showAlert(t('unknown_error'));
+      showAlert('unknown_error');
     }
   } catch (error) {
     console.error('Error:', error);
-    showAlert(t('unknown_error'));
+    showAlert('unknown_error');
   }
   isButtonDisabled.value = false;
 }

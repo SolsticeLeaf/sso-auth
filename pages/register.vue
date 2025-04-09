@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import ActionButton from "~/components/utilities/ActionButton.vue";
 import iconsConfig from "~/config/icons.config";
+import BaseInput from "~/components/utilities/BaseInput.vue";
 const { t } = useI18n()
 const route = useRoute();
 const routeData = route?.query?.data || "";
+
+const email = ref('');
+const username = ref('');
+const password = ref('');
+const passwordRepeat = ref('');
 
 const isButtonDisabled = ref(false);
 const isAlertShow = ref(false);
@@ -30,13 +36,9 @@ const focusPasswordRepeat = () => {
   document?.getElementById('passwordRepeatInput')?.focus();
 }
 
-function getInputValue(elementId: string): string {
-  return (<HTMLInputElement> document.getElementById(elementId))?.value?.replaceAll(' ', '');
-}
-
 function showAlert(message: string) {
   isAlertShow.value = true;
-  alertMessage.value = message;
+  alertMessage.value = t(message);
 }
 
 function hideAlert() {
@@ -56,32 +58,38 @@ const register = async () => {
       server: false,
       method: 'POST',
       body: JSON.stringify({
-        email: getInputValue("emailInput"),
-        username: getInputValue("usernameInput"),
-        password: getInputValue("passwordInput"),
-        passwordRepeat: getInputValue("passwordRepeatInput")
+        email: email.value.replaceAll(' ', ''),
+        username: username.value.replaceAll(' ', ''),
+        password: password.value.replaceAll(' ', ''),
+        passwordRepeat: passwordRepeat.value.replaceAll(' ', '')
       })
     });
     if (response_status) {
       switch (response_status) {
         case "OK": hideAlert(); openReturnUrl(); break;
-        case "EMPTY_EMAIL": showAlert(t('empty_email')); break;
-        case "EMPTY_USERNAME": showAlert(t('empty_username')); break;
-        case "SMALL_USERNAME": showAlert(t('username_length')); break;
-        case "SMALL_PASSWORD": showAlert(t('password_length')); break;
-        case "EMPTY_PASSWORD_REPEAT": showAlert(t('empty_password_repeat')); break;
-        case "INCORRECT_EMAIL": showAlert(t('incorrect_email')); break;
-        case "PASSWORD_MISMATCH": showAlert(t('passwords_not_match')); break;
-        case "USERNAME_EXISTS": showAlert(t('username_exist')); break;
-        case "EMAIL_EXISTS": showAlert(t('email_exist')); break;
+        case "EMPTY_EMAIL": showAlert('empty_email'); break;
+        case "EMPTY_USERNAME": showAlert('empty_username'); break;
+        case "SMALL_USERNAME": showAlert('username_length'); break;
+        case "SMALL_PASSWORD": showAlert('password_length'); break;
+        case "USERNAME_MUST_BE_LATIN": showAlert('username_latin'); break;
+        case "EMPTY_PASSWORD_REPEAT": showAlert('empty_password_repeat'); break;
+        case "INCORRECT_EMAIL": showAlert('incorrect_email'); break;
+        case "PASSWORD_MISMATCH": showAlert('passwords_not_match'); break;
+        case "PASSWORD_ONLY_LATIN": showAlert('password_only_latin'); break;
+        case "PASSWORD_NO_UPPERCASE": showAlert('password_no_uppercase'); break;
+        case "PASSWORD_NO_LOWERCASE": showAlert('password_no_lowercase'); break;
+        case "PASSWORD_NO_DIGIT": showAlert('password_no_digit'); break;
+        case "PASSWORD_NO_SPECIAL_CHAR": showAlert('password_no_special_char'); break;
+        case "USERNAME_EXISTS": showAlert('username_exist'); break;
+        case "EMAIL_EXISTS": showAlert('email_exist'); break;
         default: showAlert(t('unknown_error')); break;
       }
     } else {
-      showAlert(t('unknown_error'));
+      showAlert('unknown_error');
     }
   } catch (error) {
     console.error('Error:', error);
-    showAlert(t('unknown_error'));
+    showAlert('unknown_error');
   }
   isButtonDisabled.value = false;
 }
@@ -98,38 +106,43 @@ const register = async () => {
         <div id="hero" class="wrapper blur__glass">
           <div class="main">
             <h6>{{t('registerPage')}}</h6>
-            <input
-                type="text"
+            <BaseInput
+                v-model="email"
+                type="email"
                 id="emailInput"
-                class="main__input"
-                v-on:input="hideAlert"
-                v-on:keyup.enter="focusUsername"
                 :placeholder="t('email')"
-                required />
-            <input
+                :required="true"
+                :enter="focusUsername"
+                :hideAlert="hideAlert"
+            />
+            <BaseInput
+                v-model="username"
                 type="text"
                 id="usernameInput"
-                class="main__input"
-                v-on:input="hideAlert"
-                v-on:keyup.enter="focusPassword"
                 :placeholder="t('username')"
-                required />
-            <input
+                :required="true"
+                :enter="focusPassword"
+                :hideAlert="hideAlert"
+            />
+            <BaseInput
+                v-model="password"
                 type="password"
                 id="passwordInput"
-                class="main__input"
-                v-on:input="hideAlert"
-                v-on:keyup.enter="focusPasswordRepeat"
                 :placeholder="t('password')"
-                required />
-            <input
+                :required="true"
+                :enter="focusPasswordRepeat"
+                :hideAlert="hideAlert"
+            />
+            <BaseInput
+                v-model="passwordRepeat"
                 type="password"
                 id="passwordRepeatInput"
-                class="main__input"
-                v-on:input="hideAlert"
-                v-on:keyup.enter="register"
                 :placeholder="t('password_repeat')"
-                required />
+                :required="true"
+                :enter="register"
+                :hideAlert="hideAlert"
+            />
+
             <p v-if="isAlertShow">{{alertMessage}}</p>
             <ActionButton :text="t('register')"
                           :icon="iconsConfig.button_register"
@@ -152,6 +165,18 @@ const register = async () => {
 </template>
 
 <style scoped lang="scss">
+.input-error {
+  border: 1px solid red !important;
+}
+
+.main__alert {
+  color: red;
+  font-size: 0.8rem;
+  text-align: left;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .main {
   display: flex;
   flex-direction: column;
@@ -159,20 +184,6 @@ const register = async () => {
   align-content: center;
   text-align: center;
   gap: 1rem;
-
-  &__input {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border-radius: 2rem;
-    background: transparent;
-    min-width: 8rem;
-    padding: 1rem;
-    font-weight: bold;
-    font-size: 1rem;
-    border: 1px solid var(--input-border) !important;
-    color: var(--text-color-primary) !important;
-  }
 
   &__alert {
     color: var(--text-alert) !important;
