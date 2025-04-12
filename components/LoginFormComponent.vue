@@ -66,8 +66,7 @@ const authorize = async () => {
     });
     if (response_status) {
       switch (response_status) {
-        case "VERIFIED": openRedirectUrl(response_code); break;
-        case "NOT_VERIFIED": openRedirectUrl(response_code); break;
+        case "OK": openRedirectUrl(response_code); break;
         case "EMPTY_USERNAME": showAlert('empty_username'); break;
         case "USERNAME_MUST_BE_LATIN": showAlert('username_latin'); break;
         case "SMALL_USERNAME": showAlert('username_length'); break;
