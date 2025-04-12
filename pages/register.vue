@@ -176,6 +176,7 @@ const register = async () => {
   text-align: left;
   margin-top: -0.5rem;
   margin-bottom: 0.5rem;
+  white-space: pre-line;
 }
 
 .main {

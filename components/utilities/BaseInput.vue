@@ -131,5 +131,6 @@ input {
 .main__alert {
   color: var(--text-alert) !important;
   text-align: center;
+  white-space: pre-line;
 }
 </style>

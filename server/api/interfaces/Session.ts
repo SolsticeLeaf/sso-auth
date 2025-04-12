@@ -2,7 +2,7 @@ import {EventHandlerRequest, H3Event} from "h3";
 import {encodeBase64} from "~/utilities/base64.utils";
 import {randomUUID} from "node:crypto";
 import {AccountData, getAccountById} from "~/server/api/interfaces/Account";
-import {getValue, setValue} from "~/server/api/database/Redis";
+import {getValue, setValue, removeValue} from "~/server/api/database/Redis";
 
 export async function getSessionUser(event: H3Event<EventHandlerRequest>, userAgent: string): Promise<AccountData | undefined> {
     try {
@@ -45,7 +45,8 @@ export async function saveSessionUser(event: H3Event<EventHandlerRequest>, userI
 export async function removeSession(event: H3Event<EventHandlerRequest>): Promise<void> {
     try {
         const key = getCookie(event, 'sessionKey') || null;
-        if (key) { await setValue(key, ''); }
+        setCookie(event, 'sessionKey', '');
+        if (key) { await removeValue(key); }
     } catch (error) {
         console.error("Error on removing session:", error);
     }

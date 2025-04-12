@@ -33,6 +33,10 @@ const getValue = async (key: string): Promise<string | null> => {
     return null;
 };
 
+const removeValue = async (key: string): Promise<void> => {
+    if (await checkRedisHealth()) { await redisClient.del(key) }
+};
+
 const checkRedisHealth = async (): Promise<boolean> => {
     try {
         await redisClient.set('health', 'ok');
@@ -43,4 +47,4 @@ const checkRedisHealth = async (): Promise<boolean> => {
     }
 };
 
-export { connectRedis, checkRedisHealth, setValue, getValue };
+export { connectRedis, checkRedisHealth, setValue, getValue, removeValue };
