@@ -19,7 +19,7 @@ const openLoginPage = () => {
   openWindow(`/login?data=${routeData}`);
 }
 
-const openReturnUrl = () => {
+const openRedirectUrl = () => {
   hideAlert();
   openWindow(`/login/emailVerify?data=${routeData}`);
 }
@@ -61,12 +61,13 @@ const register = async () => {
         email: email.value.replaceAll(' ', ''),
         username: username.value.replaceAll(' ', ''),
         password: password.value.replaceAll(' ', ''),
-        passwordRepeat: passwordRepeat.value.replaceAll(' ', '')
+        passwordRepeat: passwordRepeat.value.replaceAll(' ', ''),
+        userAgent: useDevice().userAgent
       })
     });
     if (response_status) {
       switch (response_status) {
-        case "OK": hideAlert(); openReturnUrl(); break;
+        case "OK": hideAlert(); openRedirectUrl(); break;
         case "EMPTY_EMAIL": showAlert('empty_email'); break;
         case "EMPTY_USERNAME": showAlert('empty_username'); break;
         case "SMALL_USERNAME": showAlert('username_length'); break;

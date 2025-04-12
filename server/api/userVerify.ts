@@ -1,8 +1,10 @@
 import {connectDB} from "~/server/api/database/MongoDB";
-import {getAccountByToken, updateEmailStatus} from "~/server/api/interfaces/projects/Account";
-import {checkUserStatus, createCode, deleteUserCode, verifyCode} from "~/server/api/interfaces/projects/SubmitCode";
+import {updateEmailStatus} from "~/server/api/interfaces/Account";
+import {checkUserStatus, createCode, deleteUserCode, verifyCode} from "~/server/api/interfaces/SubmitCode";
 import nodemailer from 'nodemailer';
 import {encodeBase64} from "~/utilities/base64.utils";
+import {getSessionUser} from "~/server/api/interfaces/Session";
+import {connectRedis} from "~/server/api/database/Redis";
 
 const domain = process.env.DOMAIN || 'https://auth.sleaf.dev';
 const emailFrom = process.env.EMAIL_FROM || 'noreple@sleaf.dev';
@@ -20,24 +22,24 @@ const transporter = nodemailer.createTransport({
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    const { routeData } = body;
+    const { routeData, userAgent } = body;
     try {
         await connectDB();
-        const declaredToken = getCookie(event, 'sessionToken') || 'nullToken';
-        const tokenUser = await getAccountByToken(declaredToken);
-        if (tokenUser) {
-            if (tokenUser.emailStatus === "VERIFIED") { return { status: 'OK' } }
-            if (tokenUser.email.length === 0) { return { status: 'NO_EMAIL' } }
+        await connectRedis();
+        const sessionUser = await getSessionUser(event, userAgent);
+        if (sessionUser) {
+            if (sessionUser.emailStatus === "VERIFIED") { return { status: 'OK' } }
+            if (sessionUser.email.length === 0) { return { status: 'NO_EMAIL' } }
             const code = routeData.submitCode;
-            const username = tokenUser.username;
+            const username = sessionUser.username;
             const checkedCode = await checkSubmitCode(username, code);
             switch (checkedCode.status) {
                 case 'OK':
-                    await updateEmailStatus(tokenUser._id?.toString() || '', "VERIFIED");
+                    await updateEmailStatus(sessionUser.userId.toString(), "VERIFIED");
                     return { status: 'OK' };
                 case 'ERROR': return { status: 'ERROR' };
                 case 'EXPIRED': return { status: 'EXPIRED' };
-                default: return sendSubmitCode(username, tokenUser.email, routeData);
+                default: return sendSubmitCode(username, sessionUser.email, routeData);
             }
         }
         return { status: 'TOKEN_NOT_FOUND' }
@@ -77,9 +79,9 @@ async function createLink(data: any, code: string): Promise<string> {
     const routeData = encodeBase64(JSON.stringify({
         locale: data.locale,
         theme: data.theme,
-        returnUrl: data.returnUrl,
-        apiPath: data.apiPath,
-        submitCode: code
+        redirectUrl: data.redirectUrl,
+        submitCode: code,
+        clientId: data.clientId
     }));
     return `${domain}/login/emailVerify?data=${routeData}`;
 }

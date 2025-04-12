@@ -63,6 +63,7 @@ export default defineNuxtConfig({
     public: {
       DATABASE_NAME: process.env.DATABASE_NAME,
       DATABASE_URL: process.env.DATABASE_URL,
+      REDIS_URL: process.env.REDIS_URL,
       DOMAIN: process.env.DOMAIN,
       JWT_SECRET: process.env.JWT_SECRET,
       EMAIL_FROM: process.env.EMAIL_FROM,

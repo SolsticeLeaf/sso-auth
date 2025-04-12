@@ -60,18 +60,42 @@ build:
       - i18n/
     expire_in: 1 hour
 
-deploy:
+deploy-mais:
   stage: deploy
   image: docker:latest
   tags:
-    - "helios"
+    - "mais"
   dependencies:
     - build
   before_script:
-    - echo "Deploying..."
+    - echo "Deploying to mais..."
     - export PORT=4000
     - export DATABASE_NAME="$DATABASE_NAME"
     - export DATABASE_URL="$DATABASE_URL"
+    - export REDIS_URL="$REDIS_URL"
+    - export DOMAIN="$DOMAIN"
+    - export JWT_SECRET="$JWT_SECRET"
+    - export EMAIL_FROM="$EMAIL_FROM"
+    - export EMAIL_SMTP_SERVER="$EMAIL_SMTP_SERVER"
+    - export EMAIL_SMTP_PORT="$EMAIL_SMTP_PORT"
+    - export EMAIL_SMTP_USERNAME="$EMAIL_SMTP_USERNAME"
+    - export EMAIL_SMTP_PASSWORD="$EMAIL_SMTP_PASSWORD"
+  script:
+    - docker compose up --detach --build
+
+deploy-helios:
+  stage: deploy
+  image: docker:latest
+  tags:
+    - "mais"
+  dependencies:
+    - build
+  before_script:
+    - echo "Deploying to helios..."
+    - export PORT=4000
+    - export DATABASE_NAME="$DATABASE_NAME"
+    - export DATABASE_URL="$DATABASE_URL"
+    - export REDIS_URL="$REDIS_URL"
     - export DOMAIN="$DOMAIN"
     - export JWT_SECRET="$JWT_SECRET"
     - export EMAIL_FROM="$EMAIL_FROM"

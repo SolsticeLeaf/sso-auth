@@ -12,7 +12,7 @@ const openLoginPage = () => {
   openWindow(`/login?data=${routeData}`);
 }
 
-const openReturnUrl = () => {
+const openRedirectUrl = () => {
   openWindow(`/login/emailVerify?data=${routeData}`);
 }
 
@@ -40,13 +40,14 @@ const setupEmail = async () => {
       server: false,
       method: 'POST',
       body: JSON.stringify({
-        email: email.value.replaceAll(' ', '')
+        email: email.value.replaceAll(' ', ''),
+        userAgent: useDevice().userAgent
       })
     });
     if (response_status) {
       switch (response_status) {
         case "OK":
-          openReturnUrl();
+          openRedirectUrl();
           break;
         case "INCORRECT_EMAIL":
           showAlert('incorrect_email');

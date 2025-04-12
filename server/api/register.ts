@@ -1,5 +1,7 @@
 import {connectDB} from "~/server/api/database/MongoDB";
-import {registerUser} from "~/server/api/interfaces/projects/Account";
+import {registerUser} from "~/server/api/interfaces/Account";
+import {saveSessionUser} from "~/server/api/interfaces/Session";
+import {connectRedis} from "~/server/api/database/Redis";
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 const usernameExpression: RegExp = /^[A-Za-z][A-Za-z0-9]*$/;
 const passwordLatinOnly: RegExp = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/;
@@ -10,13 +12,14 @@ const passwordHasSpecialChar: RegExp = /[!@#$%^&*()_+\-=$begin:math:display$$end
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    const { email, username, password, passwordRepeat } = body;
+    const { email, username, password, passwordRepeat, userAgent } = body;
     try {
         const dataStatus = checkData(email, username, password, passwordRepeat);
         if ((await dataStatus).status !== "OK") { return dataStatus }
         await connectDB();
+        await connectRedis();
         const user = await registerUser(username, password, email);
-        setCookie(event, 'sessionToken', user.token)
+        if (user.userId.length > 5) { await saveSessionUser(event, user.userId, userAgent); }
         return { status: user.status };
     } catch (error) {
         console.log("Register error!", error)

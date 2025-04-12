@@ -19,11 +19,11 @@
   "passwords_not_match": "Password not match.",
   "password_length": "Password length must be 8 symbols or higher.",
   "password_only_latin": "Password must contain only Latin letters and symbols.",
-  "password_no_uppercase": "Password must contain at least one uppercase letter.",
-  "password_no_lowercase": "Password must contain at least one lowercase letter.",
+  "password_no_uppercase": "Password must contain at least one uppercase symbol.",
+  "password_no_lowercase": "Password must contain at least one lowercase symbol.",
   "password_no_digit": "Password must contain at least one digit.",
   "password_no_special_char": "Password must contain at least one special character.",
-  "password_simple": "Пароль слишком простой",
+  "password_simple": "Password too simple\nRequired:\n- >=8 symbols\n- 1 Uppercase symbol\n- 1 number\n- 1 Special symbol",
   "field_required": "Required",
   "username_length": "Username length must be 5 symbols or higher.",
   "username_length_input": "Must be 5 symbols or higher",
@@ -44,5 +44,6 @@
   "change_email": "Change email",
   "no_email_alert": "You have not specified an email",
   "setup_email": "Specify email",
-  "submit": "Submit"
+  "submit": "Submit",
+  "notFound": "Not found"
 }

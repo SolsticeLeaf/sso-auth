@@ -4,20 +4,22 @@ import LoginFormComponent from "~/components/LoginFormComponent.vue";
 import LoginUserComponent from "~/components/LoginUserComponent.vue";
 
 const status = ref('');
-const data = ref({});
+const user = ref({});
 const isLoaded = ref(false);
 
 onBeforeMount(async () => {
   try {
-    const { status: response_status, data: response_data } = await $fetch('/api/getUserData', {
+    const { status: response_status, user: response_data } = await $fetch('/api/checkAuthStatus', {
       default: () => [],
       cache: "no-cache",
       server: false,
       method: 'POST',
-      body: '{}'
+      body: JSON.stringify({
+        userAgent: useDevice().userAgent
+      })
     });
     status.value = response_status;
-    data.value = response_data;
+    user.value = response_data;
   } finally {
     isLoaded.value = true;
   }
@@ -34,7 +36,7 @@ onBeforeMount(async () => {
         </div>
         <div id="hero" class="wrapper blur__glass">
           <LoginFormComponent v-if="status !== 'OK'" />
-          <LoginUserComponent v-else :data="data" />
+          <LoginUserComponent v-else :data="user" />
         </div>
       </div>
     </KeepAlive>

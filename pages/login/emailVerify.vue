@@ -21,8 +21,8 @@ const openLoginPage = () => {
 const openEmailSetupPage = () => {
   openWindow(`/account/email?data=${routeData}`);
 }
-const openReturnUrl = () => {
-  openWindow(data.returnUrl || '/');
+const openRedirectUrl = () => {
+  openWindow(data.redirectUrl || '/');
 }
 
 function openWindow(url: string) {
@@ -43,13 +43,14 @@ const check = async () => {
       server: false,
       method: 'POST',
       body: JSON.stringify({
-        routeData: data
+        routeData: data,
+        userAgent: useDevice().userAgent
       })
     });
     if (response_status) {
       switch (response_status) {
         case "OK":
-          openReturnUrl();
+          openRedirectUrl();
           break;
         case "EXPIRED":
           setMessage('code_expired', 'retry');
@@ -67,7 +68,7 @@ const check = async () => {
           setMessage('email_not_sent', 'retry');
           break;
         case "TOKEN_NOT_FOUND":
-          openLoginPage();
+          setMessage('notFound', 'back');
           break;
         case "ERROR":
           setMessage('unknown_error', 'retry');

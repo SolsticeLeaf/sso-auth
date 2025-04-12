@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ActionButton from "~/components/utilities/ActionButton.vue";
 import iconsConfig from "~/config/icons.config";
-import {decodeBase64AsJson} from "~/utilities/base64.utils";
+import {decodeBase64AsJson, encodeBase64} from "~/utilities/base64.utils";
 const { t } = useI18n()
 const route = useRoute();
 const routeData = route?.query?.data || "";
@@ -17,10 +17,16 @@ const props = defineProps({
     default: {}
   }
 });
-
-const openReturnUrl = () => {
+const openRedirectUrl = (code: string) => {
   hideAlert();
-  openWindow(`/login/emailVerify?data=${routeData}`);
+  const route = encodeBase64(JSON.stringify({
+    locale: data.locale,
+    theme: data.theme,
+    redirectUrl: `${data.redirectUrl}${code.length > 0 ? `?serviceCode=${code}` : ''}`,
+    submitCode: data.submitCode,
+    clientId: data.clientId
+  }));
+  openWindow(`/login/emailVerify?data=${route}`);
 }
 
 function showAlert(message: string) {
@@ -39,7 +45,7 @@ function openWindow(url: string) {
 const authorize = async () => {
   isButtonDisabled.value = true;
   try {
-    const { status: response_status } = await $fetch('/api/authorize', {
+    const { status: response_status, code: response_code } = await $fetch('/api/authorize', {
       default: () => [],
       cache: "no-cache",
       server: false,
@@ -47,12 +53,13 @@ const authorize = async () => {
       body: JSON.stringify({
         username: '',
         password: '',
-        apiPath: data.apiPath || ''
+        clientId: data.clientId || '',
+        userAgent: useDevice().userAgent
       })
     });
     if (response_status) {
       switch (response_status) {
-        case "OK": openReturnUrl(); break;
+        case "OK": openRedirectUrl(response_code); break;
         default: showAlert('unknown_error'); break;
       }
     } else {

@@ -1,54 +1,63 @@
 import {connectDB} from "~/server/api/database/MongoDB";
-import {authorizeUser, getAccountByToken} from "~/server/api/interfaces/projects/Account";
-import axios from "axios";
+import {authorizeUser, authorizeUserById, Token} from "~/server/api/interfaces/Account";
+import {getSessionUser, saveSessionUser} from "~/server/api/interfaces/Session";
+import {connectRedis} from "~/server/api/database/Redis";
+import {EventHandlerRequest, H3Event} from "h3";
+import {saveTokenRequest} from "~/server/api/interfaces/TokensManager";
 const usernameExpression: RegExp = /^[A-Za-z][A-Za-z0-9]*$/;
+
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    const { username, password, apiPath } = body;
+    const { username, password, clientId, userAgent } = body;
     try {
         await connectDB();
-        const declaredToken = getCookie(event, 'sessionToken') || 'nullToken';
-        const tokenUser = await getAccountByToken(declaredToken);
-        if (tokenUser) {
-            await sendToken(apiPath, declaredToken);
-            return { status: 'OK' }
-        }
+        await connectRedis();
+        const sessionAuth = await authBySession(event, clientId, userAgent);
+        if (sessionAuth.status === 'OK') { return sessionAuth; }
         const dataStatus = checkData(username, password);
         if ((await dataStatus).status !== "OK") { return dataStatus }
-        const user = await authorizeUser(username, password);
-        if ((user.status === 'VERIFIED' || user.status === 'NOT_VERIFIED')) {
-            setCookie(event, 'sessionToken', user.token)
-            await sendToken(apiPath, user.token);
-        }
-        return { status: user.status };
+        return await authByPassword(event, username, password, clientId, userAgent);
     } catch (error) {
         console.log("Login error!", error)
-        return { status: 'ERROR' };
+        return { status: 'ERROR', code: '' };
     }
 });
 
-async function sendToken(apiPath: string, token: string) {
-    if (apiPath.length > 5) {
-        await axios.post(apiPath, {
-            sessionToken: token
-        }).catch(err => {
-            console.error('Error on handshake with site:', err);
-        })
+async function authBySession(event: H3Event<EventHandlerRequest>, clientId: string, userAgent: string): Promise<{ status: string, code: string }> {
+    const sessionUser = await getSessionUser(event, userAgent);
+    if (sessionUser) {
+        const authStatus = await authorizeUserById(sessionUser.userId || 'undefined');
+        if (authStatus.status === 'OK') { return { status: 'OK', code: await saveToken(authStatus.token, clientId) } }
     }
+    return { status: 'NOT_FOUND', code: ''}
 }
 
-async function checkData(username: string, password: string): Promise<{status: string}> {
+async function authByPassword(event: H3Event<EventHandlerRequest>, username: string, password: string, clientId: string, userAgent: string): Promise<{ status: string, code: string }> {
+    const authStatus = await authorizeUser(username, password);
+    if ((authStatus.status === 'VERIFIED' || authStatus.status === 'NOT_VERIFIED')) {
+        await saveSessionUser(event, authStatus.userId, userAgent);
+        return { status: 'OK', code: await saveToken(authStatus.token, clientId) }
+    }
+    return { status: authStatus.status, code: '' };
+}
+
+async function saveToken(token: Token | undefined, clientId: string): Promise<string> {
+    if (!token) { return 'undefined'; }
+    return await saveTokenRequest(token, clientId) || 'undefined';
+}
+
+async function checkData(username: string, password: string): Promise<{status: string, code: string}> {
     if (!username) {
-        return { status: 'EMPTY_USERNAME' };
+        return { status: 'EMPTY_USERNAME', code: '' };
     }
     if (!usernameExpression.test(username)) {
-        return { status: 'USERNAME_MUST_BE_LATIN' };
+        return { status: 'USERNAME_MUST_BE_LATIN', code: '' };
     }
     if (username.length < 5) {
-        return { status: 'SMALL_USERNAME' };
+        return { status: 'SMALL_USERNAME', code: '' };
     }
     if (!password || password.length < 8) {
-        return { status: 'SMALL_PASSWORD' };
+        return { status: 'SMALL_PASSWORD', code: '' };
     }
-    return { status: 'OK' };
+    return { status: 'OK', code: '' };
 }

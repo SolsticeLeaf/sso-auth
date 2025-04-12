@@ -9,6 +9,7 @@ services:
       - PORT=4000
       - DATABASE_NAME=${DATABASE_NAME}
       - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
       - DOMAIN=${DOMAIN}
       - JWT_SECRET=${JWT_SECRET}
       - EMAIL_FROM=${EMAIL_FROM}
