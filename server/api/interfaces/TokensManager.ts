@@ -28,7 +28,7 @@ export async function saveTokenRequest(token: Token, clientId: string): Promise<
         });
         return code;
     } catch (error) {
-        console.error("Error on user authorize:", error);
+        console.error("Error on saving token:", error);
         return undefined;
     }
 }
@@ -39,7 +39,7 @@ export async function getTokenRequest(code: string, clientId: string): Promise<T
         await TokensManagerModel.findOneAndDelete({ _id: code, clientId: clientId });
         return token?.token;
     } catch (error) {
-        console.error("Error on user authorize:", error);
+        console.error("Error on getting token:", error);
         return undefined;
     }
 }

@@ -108,6 +108,64 @@ export async function registerUser(username: string, password: string, email: st
     }
 }
 
+export async function refreshUserToken(accessToken: string, refreshToken: string): Promise<{ status: string, token: Token | undefined}> {
+    try {
+        const users = await AccountModel.find();
+        for (const user of users) {
+            const tokens = user.tokens.filter((token) => token.accessToken === accessToken && token.refreshToken === refreshToken);
+            if (tokens && tokens.length > 0) {
+                const newTokens = user.tokens.filter((token) => token.refreshToken !== refreshToken);
+                if (!(await verifyToken(refreshToken))) {
+                    await updateTokens(user, newTokens);
+                    return { status: 'EXPIRED', token: undefined };
+                } else {
+                    const newToken = await createToken();
+                    newTokens.push(newToken);
+                    await updateTokens(user, newTokens);
+                    return { status: 'OK', token: newToken };
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Error on token refresh:", error);
+        return { status: 'ERROR', token: undefined };
+    }
+    return { status: 'NOT_FOUND', token: undefined };
+}
+
+export async function getAccountData(accessToken: string): Promise<{ status: string, account: AccountData | undefined}> {
+    try {
+        const users = await AccountModel.find();
+        for (const user of users) {
+            const tokens = user.tokens.filter((token) => token.accessToken === accessToken);
+            if (tokens && tokens.length > 0) {
+                if (!(await verifyToken(accessToken))) { return { status: 'EXPIRED', account: undefined }; }
+                return { status: 'OK', account: {
+                        userId: user._id,
+                        username: user.username,
+                        avatar: user.avatar,
+                        email: user.email,
+                        emailStatus: user.emailStatus,
+                        permissions: user.permissions
+                    } };
+            }
+        }
+    } catch (error) {
+        console.error("Error on getting account:", error);
+        return { status: 'ERROR', account: undefined };
+    }
+    return { status: 'NOT_FOUND', account: undefined };
+}
+
+export async function verifyToken(token: string): Promise<boolean> {
+    try {
+        jwt.verify(token, JWT_SECRET);
+        return true;
+    } catch (error) {
+        return false;
+    }
+}
+
 export async function getAccountById(userId: string): Promise<Account | undefined> {
     const user = await AccountModel.findOne({ _id: userId });
     if (user) { return user; }
