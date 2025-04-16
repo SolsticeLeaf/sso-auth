@@ -2,6 +2,8 @@ import {connectDB} from "~/server/api/database/MongoDB";
 import {registerUser} from "~/server/api/interfaces/Account";
 import {saveSessionUser} from "~/server/api/interfaces/Session";
 import {connectRedis} from "~/server/api/database/Redis";
+import { Filter } from 'bad-words'
+const filter = new Filter();
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 const usernameExpression: RegExp = /^[A-Za-z][A-Za-z0-9]*$/;
 const passwordLatinOnly: RegExp = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/;
@@ -39,6 +41,9 @@ async function checkData(email: string, username: string, password: string, pass
     }
     if (!usernameExpression.test(username)) {
         return { status: 'USERNAME_MUST_BE_LATIN' };
+    }
+    if (filter.isProfane(username)) {
+        return { status: 'BAD_WORD' };
     }
     if (username.length < 5) {
         return { status: 'SMALL_USERNAME' };

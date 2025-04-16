@@ -12,6 +12,7 @@
   "wrong_credentials": "Wrong username or password!",
   "username_exist": "This username already in use.",
   "username_latin": "The username must consist of Latin letters and/or numbers.",
+  "username_bad_word": "Username contains bad words!",
   "email_exist": "This email already in use!",
   "login_error": "Authorization error!",
   "empty_username": "Username field is empty!",

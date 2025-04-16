@@ -15,6 +15,23 @@ const isButtonDisabled = ref(false);
 const isAlertShow = ref(false);
 const alertMessage = ref('');
 
+onBeforeMount(async () => {
+  try {
+    const { status: response_status, user: response_data } = await $fetch('/api/checkAuthStatus', {
+      default: () => [],
+      cache: "no-cache",
+      server: false,
+      method: 'POST',
+      body: JSON.stringify({
+        userAgent: useDevice().userAgent
+      })
+    });
+    if (response_status === "OK") {
+      openLoginPage();
+    }
+  } catch {}
+});
+
 const openLoginPage = () => {
   openWindow(`/login?data=${routeData}`);
 }
@@ -73,6 +90,7 @@ const register = async () => {
         case "SMALL_USERNAME": showAlert('username_length'); break;
         case "SMALL_PASSWORD": showAlert('password_length'); break;
         case "USERNAME_MUST_BE_LATIN": showAlert('username_latin'); break;
+        case "BAD_WORD": showAlert('username_bad_word'); break;
         case "EMPTY_PASSWORD_REPEAT": showAlert('empty_password_repeat'); break;
         case "INCORRECT_EMAIL": showAlert('incorrect_email'); break;
         case "PASSWORD_MISMATCH": showAlert('passwords_not_match'); break;
