@@ -22,6 +22,7 @@ const openEmailSetupPage = () => {
   openWindow(`/account/email?data=${routeData}`);
 }
 const openRedirectUrl = () => {
+  umTrackEvent('authorized')
   openWindow(data.redirectUrl || '/');
 }
 

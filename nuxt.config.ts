@@ -31,7 +31,7 @@ export default defineNuxtConfig({
   sourcemap: true,
   compatibilityDate: '2025-01-29',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/i18n', '@nuxtjs/device', '@nuxt/icon', '@nuxt/fonts', '@nuxt/image'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/device', '@nuxt/icon', '@nuxt/fonts', '@nuxt/image', 'nuxt-umami'],
   icon: {
     serverBundle: {
       collections: ['pixelarticons']
@@ -59,6 +59,19 @@ export default defineNuxtConfig({
     port: 4000,
   },
   css: ['@/assets/scss/global.scss', '@/assets/scss/screens.scss', '@/assets/scss/themes/dark.scss', '@/assets/scss/themes/light.scss'],
+  umami: {
+    id: '0231383d-1c5b-4539-a22c-9a8b3247b501',
+    host: 'https://metrics.sleaf.dev',
+    autoTrack: true,
+    // proxy: 'cloak',
+    // useDirective: true,
+    // ignoreLocalhost: true,
+    // excludeQueryParams: false,
+    // domains: ['cool-site.app', 'my-space.site'],
+    // customEndpoint: '/my-custom-endpoint',
+    // enabled: false,
+    // logErrors: true,
+  },
   runtimeConfig: {
     public: {
       DATABASE_NAME: process.env.DATABASE_NAME,

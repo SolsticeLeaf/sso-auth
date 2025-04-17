@@ -38,6 +38,7 @@ const openLoginPage = () => {
 
 const openRedirectUrl = () => {
   hideAlert();
+  umTrackEvent('registered')
   openWindow(`/login/emailVerify?data=${routeData}`);
 }
 

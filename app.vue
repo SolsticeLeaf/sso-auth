@@ -25,6 +25,10 @@ function setTheme(theme: "dark" | "light") {
   document.documentElement.setAttribute("data-theme", theme);
 }
 
+onMounted(() => {
+  umTrackView();
+});
+
 onBeforeMount(() => {
   const data = decodeBase64AsJson(route?.query?.data || "");
   const queryLocale = data.locale;
