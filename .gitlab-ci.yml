@@ -80,6 +80,8 @@ deploy-mais:
     - export EMAIL_SMTP_PORT="$EMAIL_SMTP_PORT"
     - export EMAIL_SMTP_USERNAME="$EMAIL_SMTP_USERNAME"
     - export EMAIL_SMTP_PASSWORD="$EMAIL_SMTP_PASSWORD"
+    - export UMAMI_ID="$UMAMI_ID"
+    - export UMAMI_HOST="$UMAMI_HOST"
   script:
     - docker compose up --detach --build
 
@@ -103,5 +105,7 @@ deploy-helios:
     - export EMAIL_SMTP_PORT="$EMAIL_SMTP_PORT"
     - export EMAIL_SMTP_USERNAME="$EMAIL_SMTP_USERNAME"
     - export EMAIL_SMTP_PASSWORD="$EMAIL_SMTP_PASSWORD"
+    - export UMAMI_ID="$UMAMI_ID"
+    - export UMAMI_HOST="$UMAMI_HOST"
   script:
     - docker compose up --detach --build

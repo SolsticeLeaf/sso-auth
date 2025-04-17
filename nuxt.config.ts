@@ -60,17 +60,9 @@ export default defineNuxtConfig({
   },
   css: ['@/assets/scss/global.scss', '@/assets/scss/screens.scss', '@/assets/scss/themes/dark.scss', '@/assets/scss/themes/light.scss'],
   umami: {
-    id: '0231383d-1c5b-4539-a22c-9a8b3247b501',
-    host: 'https://metrics.sleaf.dev',
+    id: process.env.UMAMI_ID,
+    host: process.env.UMAMI_HOST,
     autoTrack: true,
-    // proxy: 'cloak',
-    // useDirective: true,
-    // ignoreLocalhost: true,
-    // excludeQueryParams: false,
-    // domains: ['cool-site.app', 'my-space.site'],
-    // customEndpoint: '/my-custom-endpoint',
-    // enabled: false,
-    // logErrors: true,
   },
   runtimeConfig: {
     public: {
@@ -83,7 +75,9 @@ export default defineNuxtConfig({
       EMAIL_SMTP_SERVER: process.env.EMAIL_SMTP_SERVER,
       EMAIL_SMTP_PORT: process.env.EMAIL_SMTP_PORT,
       EMAIL_SMTP_USERNAME: process.env.EMAIL_SMTP_USERNAME,
-      EMAIL_SMTP_PASSWORD: process.env.EMAIL_SMTP_PASSWORD
+      EMAIL_SMTP_PASSWORD: process.env.EMAIL_SMTP_PASSWORD,
+      UMAMI_ID: process.env.UMAMI_ID,
+      UMAMI_HOST: process.env.UMAMI_HOST,
     }
   },
 })
