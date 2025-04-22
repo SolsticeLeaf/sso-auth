@@ -127,14 +127,11 @@ onBeforeUnmount(() => {
       padding: 0 1.5rem;
       display: inline-flex;
       color: transparent !important;
+      -webkit-text-stroke: 3px #8c8a00;
 
       @media screen and (max-width: $screen-lg) {
         font-size: 5rem;
       }
-    }
-
-    .light &__word {
-      -webkit-text-stroke: 3px #8c8a00;
     }
 
     .dark &__word {

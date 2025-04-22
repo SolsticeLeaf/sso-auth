@@ -143,9 +143,6 @@ const authorize = async () => {
     font-weight: bold;
     font-size: 1rem;
     border: 1px solid #A782FF !important;
-  }
-
-  .light &__input {
     color: #2C2044;
   }
 

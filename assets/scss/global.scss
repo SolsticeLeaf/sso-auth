@@ -95,13 +95,10 @@ label {
 
 input {
   font-family: "Fusion Pixel 10px Proportional KR", sans-serif;
+  color: #2C2044;
   font-optical-sizing: auto;
   font-weight: 400;
   font-style: normal;
-}
-
-.light input {
-  color: #2C2044;
 }
 
 .dark input {
@@ -118,16 +115,6 @@ input {
   color: #ffffff;
 }
 
-.light body {
-  background-color: #eaeaea3b;
-  color: #2C2044;
-}
-
-.dark body {
-  background-color: #120e1c;
-  color: #ffffff;
-}
-
 body {
   margin: 0;
   padding: 0;
@@ -139,6 +126,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 2;
+  background-color: #eaeaea3b;
+  color: #2C2044;
 
   .displayed {
     display: flex;
@@ -186,6 +175,11 @@ body {
   }
 }
 
+.dark body {
+  background-color: #120e1c;
+  color: #ffffff;
+}
+
 .blur__glass {
   filter: none !important;
   -webkit-filter: none !important;
@@ -193,6 +187,8 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border-radius: 3rem;
   padding: 2rem;
+  border: 1px solid rgba(44, 32, 68, 0.2);
+  background: rgba(44, 32, 68, 0.05);
 }
 
 .dark .blur__glass {
@@ -200,24 +196,16 @@ body {
   background: rgba(143, 143, 143, 0.1);
 }
 
-.light .blur__glass {
-  border: 1px solid rgba(44, 32, 68, 0.2);
-  background: rgba(44, 32, 68, 0.05);
-}
-
 .transparent__glass {
   filter: none !important;
   -webkit-filter: none !important;
   border-radius: 3rem;
   padding: 2rem;
+  border: 1px solid rgba(44, 32, 68, 0.2);
+  background: rgba(44, 32, 68, 0.05);
 }
 
 .dark .transparent__glass {
   border: 1px solid rgba(210, 210, 210, 0.2);
   background: rgba(143, 143, 143, 0.1);
-}
-
-.light .transparent__glass {
-  border: 1px solid rgba(44, 32, 68, 0.2);
-  background: rgba(44, 32, 68, 0.05);
 }
