@@ -3,6 +3,7 @@ import ActionButton from "~/components/utilities/ActionButton.vue";
 import BaseInput from "~/components/utilities/BaseInput.vue";
 
 const { t } = useI18n()
+const theme = useColorMode();
 const route = useRoute();
 const routeData = route?.query?.data || "";
 const isAlertShow = ref(false);
@@ -91,14 +92,14 @@ const setupEmail = async () => {
             />
             <p v-if="isAlertShow">{{alertMessage}}</p>
             <ActionButton :text="t('submit')"
-                          color="--button-color"
-                          text-color="--text-color-light"
+                          color="#50C878"
+                          text-color="#ffffff"
                           class="main__button"
                           :click="setupEmail"
                           :outline="false"
                           :disabled="false" />
             <ActionButton :text="t('back_login')"
-                          text-color="--text-color-primary"
+                          :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
                           class="main__button"
                           :click="openLoginPage"
                           :link="true" />

@@ -4,6 +4,7 @@ import initialConfig from "@/config/initial.config";
 import {decodeBase64AsJson} from "~/utilities/base64.utils";
 
 const { setLocale } = useI18n();
+const theme = useColorMode();
 const route = useRoute();
 const nickname = initialConfig.nickname;
 const repeatRows = ref(4);
@@ -21,10 +22,6 @@ const resizeEvent = function () {
   }
 };
 
-function setTheme(theme: "dark" | "light") {
-  document.documentElement.setAttribute("data-theme", theme);
-}
-
 onMounted(() => {
   umTrackView();
 });
@@ -37,9 +34,7 @@ onBeforeMount(() => {
     setLocale(queryLocale);
   }
   if (queryTheme === "dark" || queryTheme === "light") {
-    setTheme(queryTheme);
-  } else {
-    setTheme(window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    theme.value = queryTheme;
   }
   window.addEventListener("resize", resizeEvent);
   nextTick(() => {
@@ -99,11 +94,10 @@ onBeforeUnmount(() => {
     position: fixed;
     display: flex;
     flex-direction: row;
-    filter: var(--blur);
-    -webkit-filter: var(--blur);
     justify-content: center;
     align-items: center;
-
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
   }
 
   &__text {
@@ -113,7 +107,7 @@ onBeforeUnmount(() => {
     align-items: center;
     width: 100%;
     height: 100%;
-    font-size: var(--text-size, 6rem);
+    font-size: 6rem;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -133,11 +127,18 @@ onBeforeUnmount(() => {
       padding: 0 1.5rem;
       display: inline-flex;
       color: transparent !important;
-      -webkit-text-stroke: var(--text-stroke) var(--background-word);
 
       @media screen and (max-width: $screen-lg) {
         font-size: 5rem;
       }
+    }
+
+    .light &__word {
+      -webkit-text-stroke: 3px #8c8a00;
+    }
+
+    .dark &__word {
+      -webkit-text-stroke: 2px #3D2A5A;
     }
   }
 }

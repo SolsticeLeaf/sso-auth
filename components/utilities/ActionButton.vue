@@ -16,11 +16,11 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: '--button-color'
+    default: '#50C878'
   },
   textColor: {
     type: String,
-    default: '--text-color-primary'
+    default: 'white'
   },
   click: {
     type: Function,
@@ -37,14 +37,14 @@ const props = defineProps({
 });
 
 const buttonStyle = computed(() => ({
-  backgroundColor: props.outline ? 'transparent' : `var(${props.color})`,
+  backgroundColor: props.outline ? 'transparent' : props.color,
   padding: '0.5rem 1rem',
   filter: props.disabled ? 'brightness(80%)' : 'none',
-  border: `2px solid var(${props.color})`,
+  border: `2px solid ${props.color}`,
 }));
 
 const textStyle = computed(() => ({
-  color: `var(${props.textColor})`,
+  color: props.textColor,
   fontWeight: 'bold',
 }))
 

@@ -3,6 +3,7 @@ import ActionButton from "~/components/utilities/ActionButton.vue";
 import iconsConfig from "~/config/icons.config";
 import {decodeBase64AsJson, encodeBase64} from "~/utilities/base64.utils";
 const { t } = useI18n()
+const theme = useColorMode();
 const route = useRoute();
 const routeData = route?.query?.data || "";
 const data = decodeBase64AsJson(routeData);
@@ -108,14 +109,14 @@ const authorize = async () => {
     <p v-if="isAlertShow" class="main__alert">{{alertMessage}}</p>
     <ActionButton :text="t('login')"
                   :icon="iconsConfig.button_login"
-                  color="--button-color"
-                  text-color="--text-color-light"
+                  color="#50C878"
+                  text-color="#ffffff"
                   class="main__button"
                   :click="authorize"
                   :outline="false"
                   :disabled="isButtonDisabled" />
     <ActionButton :text="t('registerLink')"
-                  text-color="--text-color-primary"
+                  :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
                   class="main__button"
                   :click="openRegisterPage"
                   :link="true" />
@@ -141,12 +142,19 @@ const authorize = async () => {
     padding: 1rem;
     font-weight: bold;
     font-size: 1rem;
-    border: 1px solid var(--input-border) !important;
-    color: var(--text-color-primary) !important;
+    border: 1px solid #A782FF !important;
+  }
+
+  .light &__input {
+    color: #2C2044;
+  }
+
+  .dark &__input {
+    color: #ffffff;
   }
 
   &__alert {
-    color: var(--text-alert) !important;
+    color: #c71700 !important;
     font-weight: bold !important;
   }
 }

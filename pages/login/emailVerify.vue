@@ -4,6 +4,7 @@ import ActionButton from "~/components/utilities/ActionButton.vue";
 import {decodeBase64AsJson} from "~/utilities/base64.utils";
 
 const { t } = useI18n()
+const theme = useColorMode();
 const route = useRoute();
 const routeData = route?.query?.data || "";
 const data = decodeBase64AsJson(route?.query?.data || "");
@@ -120,8 +121,8 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back' | 'setupEmail
             <ActionButton v-if="retryButton"
                           :text="t('send_code')"
                           :icon="iconsConfig.repeat"
-                          color="--button-send-color"
-                          text-color="--text-color-black"
+                          color="#dcc944"
+                          text-color="#1a1a1a"
                           class="main__button"
                           :click="check"
                           :outline="false"
@@ -129,23 +130,23 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back' | 'setupEmail
             <ActionButton v-if="backButton"
                           :text="t('back_login')"
                           :icon="iconsConfig.arrow_left"
-                          color="--button-color"
-                          text-color="--text-color-light"
+                          color="#50C878"
+                          text-color="#ffffff"
                           class="main__button"
                           :click="openLoginPage"
                           :outline="false"
                           :disabled="false" />
             <ActionButton v-if="setupEmailButton"
                           :text="t('setup_email')"
-                          color="--button-color"
-                          text-color="--text-color-light"
+                          color="#50C878"
+                          text-color="#ffffff"
                           class="main__button"
                           :click="openEmailSetupPage"
                           :outline="false"
                           :disabled="false" />
             <ActionButton v-if="retryButton || backButton"
                           :text="t('change_email')"
-                          text-color="--text-color-primary"
+                          :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
                           class="main__button"
                           :click="openEmailSetupPage"
                           :link="true" />

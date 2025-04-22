@@ -9,6 +9,6 @@ export default defineEventHandler(async (event) => {
         return await refreshUserToken(accessToken, refreshToken);
     } catch (error) {
         console.log("Error on getting token!", error)
-        return { status: 'ERROR', code: '' };
+        return { status: 'ERROR', token: '' };
     }
 });

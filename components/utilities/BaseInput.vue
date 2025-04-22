@@ -105,7 +105,7 @@ const onKeyup = (event: KeyboardEvent) => {
         :value="value"
         :placeholder="placeholder"
         :autofocus="autofocus"
-        :style="`border: 1px solid ${error ? 'var(--input-border-error)' : 'var(--input-border)'} !important`"
+        :style="`border: 1px solid ${error ? '#c71700' : '#A782FF'} !important`"
         @input="onInput"
         @keyup="onKeyup"
     />
@@ -125,11 +125,10 @@ input {
   padding: 1rem;
   font-weight: bold;
   font-size: 1rem;
-  color: var(--text-color-primary) !important;
 }
 
 .main__alert {
-  color: var(--text-alert) !important;
+  color: #c71700 !important;
   text-align: center;
   white-space: pre-line;
 }

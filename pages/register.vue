@@ -3,6 +3,7 @@ import ActionButton from "~/components/utilities/ActionButton.vue";
 import iconsConfig from "~/config/icons.config";
 import BaseInput from "~/components/utilities/BaseInput.vue";
 const { t } = useI18n()
+const theme = useColorMode();
 const route = useRoute();
 const routeData = route?.query?.data || "";
 
@@ -166,14 +167,14 @@ const register = async () => {
             <p v-if="isAlertShow">{{alertMessage}}</p>
             <ActionButton :text="t('register')"
                           :icon="iconsConfig.button_register"
-                          color="--button-color"
-                          text-color="--text-color-light"
+                          color="#50C878"
+                          text-color="#ffffff"
                           class="main__button"
                           :click="register"
                           :outline="false"
                           :disabled="isButtonDisabled" />
             <ActionButton :text="t('loginLink')"
-                          text-color="--text-color-primary"
+                          :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
                           class="main__button"
                           :click="openLoginPage"
                           :link="true" />
@@ -207,7 +208,7 @@ const register = async () => {
   gap: 1rem;
 
   &__alert {
-    color: var(--text-alert) !important;
+    color: #c71700 !important;
     font-weight: bold !important;
   }
 }

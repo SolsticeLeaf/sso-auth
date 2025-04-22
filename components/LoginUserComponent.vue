@@ -3,6 +3,7 @@ import ActionButton from "~/components/utilities/ActionButton.vue";
 import iconsConfig from "~/config/icons.config";
 import {decodeBase64AsJson, encodeBase64} from "~/utilities/base64.utils";
 const { t } = useI18n()
+const theme = useColorMode();
 const route = useRoute();
 const routeData = route?.query?.data || "";
 const data = decodeBase64AsJson(routeData);
@@ -89,9 +90,9 @@ const exitAccount = async () => {
 }
 
 const emailSignatureStyle = computed(() => {
-  if (props.data.email.length === 0) { return 'var(--email-red)'; }
-  if (props.data.emailStatus === 'VERIFIED') { return 'var(--email-green)' }
-  return 'var(--email-yellow)';
+  if (props.data.email.length === 0) { return '#c71700'; }
+  if (props.data.emailStatus !== 'VERIFIED') { return '#dcc944' }
+  return '#50C878';
 });
 </script>
 
@@ -110,15 +111,15 @@ const emailSignatureStyle = computed(() => {
     <p v-if="isAlertShow" class="main__alert">{{alertMessage}}</p>
     <ActionButton :text="t('login')"
                   :icon="iconsConfig.button_login"
-                  color="--button-color"
-                  ttext-color="--text-color-light"
+                  color="#50C878"
+                  text-color="#ffffff"
                   class="main__button"
                   :click="authorize"
                   :outline="false"
                   :disabled="isButtonDisabled" />
     <ActionButton :text="t('change_account')"
                   :icon="iconsConfig.button_logout"
-                  text-color="--text-color-primary"
+                  :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
                   class="main__button"
                   :click="exitAccount"
                   :link="true" />
@@ -165,7 +166,7 @@ const emailSignatureStyle = computed(() => {
   }
 
   &__alert {
-    color: var(--text-alert) !important;
+    color: #c71700 !important;
     font-weight: bold !important;
   }
 }
