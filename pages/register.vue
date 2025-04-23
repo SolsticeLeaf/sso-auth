@@ -18,14 +18,12 @@ const alertMessage = ref('');
 
 onBeforeMount(async () => {
   try {
-    const { status: response_status, user: response_data } = await $fetch('/api/checkAuthStatus', {
+    const { status: response_status } = await $fetch('/api/checkAuthStatus', {
       default: () => [],
       cache: "no-cache",
       server: false,
-      method: 'POST',
-      body: JSON.stringify({
-        userAgent: useDevice().userAgent
-      })
+      method: 'GET',
+      headers: { userAgent: useDevice().userAgent }
     });
     if (response_status === "OK") {
       openLoginPage();
@@ -76,12 +74,12 @@ const register = async () => {
       cache: "no-cache",
       server: false,
       method: 'POST',
+      headers: { userAgent: useDevice().userAgent },
       body: JSON.stringify({
         email: email.value.replaceAll(' ', ''),
         username: username.value.replaceAll(' ', ''),
         password: password.value.replaceAll(' ', ''),
-        passwordRepeat: passwordRepeat.value.replaceAll(' ', ''),
-        userAgent: useDevice().userAgent
+        passwordRepeat: passwordRepeat.value.replaceAll(' ', '')
       })
     });
     if (response_status) {

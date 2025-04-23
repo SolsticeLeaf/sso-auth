@@ -3,7 +3,10 @@ import {refreshUserToken} from "~/server/api/interfaces/Account";
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    const { accessToken, refreshToken } = body;
+    const { refreshToken } = body;
+    const token = getRequestHeader(event, 'authorization');
+    if (token === undefined) { return { status: 'ACCESS_DENIED', user: undefined } }
+    const accessToken = token.replaceAll('Bearer ', '');
     try {
         await connectDB();
         return await refreshUserToken(accessToken, refreshToken);

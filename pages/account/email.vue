@@ -40,10 +40,8 @@ const setupEmail = async () => {
       cache: "no-cache",
       server: false,
       method: 'POST',
-      body: JSON.stringify({
-        email: email.value.replaceAll(' ', ''),
-        userAgent: useDevice().userAgent
-      })
+      headers: { userAgent: useDevice().userAgent },
+      body: JSON.stringify({email: email.value.replaceAll(' ', '')})
     });
     if (response_status) {
       switch (response_status) {

@@ -21,10 +21,9 @@ const openRedirectUrl = (code: string) => {
   const route = encodeBase64(JSON.stringify({
     locale: data.locale,
     theme: data.theme,
-    redirectUrl: `${data.redirectUrl}${code.length > 0 ? `?serviceCode=${code}` : ''}`,
+    redirectUrl: `${data.redirectUrl}${code.length > 0 ? code : ''}`,
     submitCode: data.submitCode,
-    clientId: data.clientId,
-    userAgent: useDevice().userAgent
+    clientId: data.clientId
   }));
   openWindow(`/login/emailVerify?data=${route}`);
 }
@@ -58,11 +57,11 @@ const authorize = async () => {
       cache: "no-cache",
       server: false,
       method: 'POST',
+      headers: { userAgent: useDevice().userAgent },
       body: JSON.stringify({
         username: getInputValue("usernameInput"),
         password: getInputValue("passwordInput"),
-        clientId: data.clientId || '',
-        userAgent: useDevice().userAgent
+        clientId: data.clientId || ''
       })
     });
     if (response_status) {

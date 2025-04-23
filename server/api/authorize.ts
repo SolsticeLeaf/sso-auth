@@ -8,7 +8,9 @@ const usernameExpression: RegExp = /^[A-Za-z][A-Za-z0-9]*$/;
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    const { username, password, clientId, userAgent } = body;
+    const { username, password, clientId } = body;
+    const userAgent = getRequestHeader(event, 'userAgent');
+    if (userAgent === undefined) { return { status: 'NO_USER_AGENT', user: undefined } }
     try {
         await connectDB();
         await connectRedis();

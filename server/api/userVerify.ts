@@ -22,7 +22,9 @@ const transporter = nodemailer.createTransport({
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    const { routeData, userAgent } = body;
+    const { routeData } = body;
+    const userAgent = getRequestHeader(event, 'userAgent');
+    if (userAgent === undefined) { return { status: 'NO_USER_AGENT', user: undefined } }
     try {
         await connectDB();
         await connectRedis();

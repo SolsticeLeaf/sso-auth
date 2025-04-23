@@ -13,10 +13,8 @@ onBeforeMount(async () => {
       default: () => [],
       cache: "no-cache",
       server: false,
-      method: 'POST',
-      body: JSON.stringify({
-        userAgent: useDevice().userAgent
-      })
+      method: 'GET',
+      headers: { userAgent: useDevice().userAgent },
     });
     status.value = response_status;
     user.value = response_data;

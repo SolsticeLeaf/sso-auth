@@ -6,7 +6,9 @@ const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    const { email, userAgent } = body;
+    const { email } = body;
+    const userAgent = getRequestHeader(event, 'userAgent');
+    if (userAgent === undefined) { return { status: 'NO_USER_AGENT', user: undefined } }
     try {
         await connectDB();
         await connectRedis();

@@ -23,7 +23,7 @@ const openRedirectUrl = (code: string) => {
   const route = encodeBase64(JSON.stringify({
     locale: data.locale,
     theme: data.theme,
-    redirectUrl: `${data.redirectUrl}${code.length > 0 ? `?serviceCode=${code}` : ''}`,
+    redirectUrl: `${data.redirectUrl}${code.length > 0 ? code : ''}`,
     submitCode: data.submitCode,
     clientId: data.clientId
   }));
@@ -51,11 +51,11 @@ const authorize = async () => {
       cache: "no-cache",
       server: false,
       method: 'POST',
+      headers: { userAgent: useDevice().userAgent },
       body: JSON.stringify({
         username: '',
         password: '',
-        clientId: data.clientId || '',
-        userAgent: useDevice().userAgent
+        clientId: data.clientId || ''
       })
     });
     if (response_status) {
@@ -79,8 +79,7 @@ const exitAccount = async () => {
       default: () => [],
       cache: "no-cache",
       server: false,
-      method: 'POST',
-      body: '{}'
+      method: 'GET'
     });
   } catch (error) {
     console.error('Error:', error);

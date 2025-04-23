@@ -44,10 +44,8 @@ const check = async () => {
       cache: "no-cache",
       server: false,
       method: 'POST',
-      body: JSON.stringify({
-        routeData: data,
-        userAgent: useDevice().userAgent
-      })
+      headers: { userAgent: useDevice().userAgent },
+      body: JSON.stringify({routeData: data})
     });
     if (response_status) {
       switch (response_status) {

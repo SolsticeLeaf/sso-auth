@@ -14,7 +14,9 @@ const passwordHasSpecialChar: RegExp = /[!@#$%^&*()_+\-=$begin:math:display$$end
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event);
-    const { email, username, password, passwordRepeat, userAgent } = body;
+    const { email, username, password, passwordRepeat } = body;
+    const userAgent = getRequestHeader(event, 'userAgent');
+    if (userAgent === undefined) { return { status: 'NO_USER_AGENT', user: undefined } }
     try {
         const dataStatus = checkData(email, username, password, passwordRepeat);
         if ((await dataStatus).status !== "OK") { return dataStatus }
