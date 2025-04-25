@@ -45,7 +45,7 @@ export async function saveSessionUser(event: H3Event<EventHandlerRequest>, userI
 export async function removeSession(event: H3Event<EventHandlerRequest>): Promise<void> {
     try {
         const key = getCookie(event, 'sessionKey') || null;
-        setCookie(event, 'sessionKey', '');
+        deleteCookie(event, 'sessionKey');
         if (key) { await removeValue(key); }
     } catch (error) {
         console.error("Error on removing session:", error);
