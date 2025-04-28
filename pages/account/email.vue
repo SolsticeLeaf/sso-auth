@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import ActionButton from "~/components/utilities/ActionButton.vue";
-import BaseInput from "~/components/utilities/BaseInput.vue";
+import ActionButton from '~/components/utilities/ActionButton.vue';
+import BaseInput from '~/components/utilities/BaseInput.vue';
 
-const { t } = useI18n()
+const { t } = useI18n();
 const theme = useColorMode();
 const route = useRoute();
-const routeData = route?.query?.data || "";
+const routeData = route?.query?.data || '';
 const isAlertShow = ref(false);
 const alertMessage = ref('');
 
 const openLoginPage = () => {
   openWindow(`/login?data=${routeData}`);
-}
+};
 
 const openRedirectUrl = () => {
   openWindow(`/login/emailVerify?data=${routeData}`);
-}
+};
 
 function openWindow(url: string) {
   window.location.assign(url);
-  window.open(url, "_self")
+  window.open(url, '_self');
 }
 
 function showAlert(message: string) {
@@ -37,27 +37,27 @@ const setupEmail = async () => {
     hideAlert();
     const { status: response_status } = await $fetch('/api/changeEmail', {
       default: () => [],
-      cache: "no-cache",
+      cache: 'no-cache',
       server: false,
       method: 'POST',
       headers: { userAgent: useDevice().userAgent },
-      body: JSON.stringify({email: email.value.replaceAll(' ', '')})
+      body: JSON.stringify({ email: email.value.replaceAll(' ', '') }),
     });
     if (response_status) {
       switch (response_status) {
-        case "OK":
+        case 'OK':
           openRedirectUrl();
           break;
-        case "INCORRECT_EMAIL":
+        case 'INCORRECT_EMAIL':
           showAlert('incorrect_email');
           break;
-        case "NO_EMAIL":
+        case 'NO_EMAIL':
           showAlert('empty_email');
           break;
-        case "ERROR":
+        case 'ERROR':
           showAlert('unknown_error');
           break;
-        case "NOT_FOUND":
+        case 'NOT_FOUND':
           openLoginPage();
           break;
       }
@@ -66,7 +66,7 @@ const setupEmail = async () => {
     console.error('Error:', error);
     alert('Unknown error occurred.');
   }
-}
+};
 </script>
 
 <template>
@@ -79,28 +79,23 @@ const setupEmail = async () => {
         </div>
         <div id="hero" class="wrapper blur__glass">
           <div class="main">
-            <h6>{{t('setupEmailPage')}}</h6>
-            <BaseInput
-                v-model="email"
-                type="email"
-                id="emailInput"
-                :placeholder="t('email')"
-                :required="true"
-                :enter="setupEmail"
-            />
-            <p v-if="isAlertShow">{{alertMessage}}</p>
-            <ActionButton :text="t('submit')"
-                          color="#50C878"
-                          text-color="#ffffff"
-                          class="main__button"
-                          :click="setupEmail"
-                          :outline="false"
-                          :disabled="false" />
-            <ActionButton :text="t('back_login')"
-                          :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
-                          class="main__button"
-                          :click="openLoginPage"
-                          :link="true" />
+            <h6>{{ t('setupEmailPage') }}</h6>
+            <BaseInput v-model="email" type="email" id="emailInput" :placeholder="t('email')" :required="true" :enter="setupEmail" />
+            <p v-if="isAlertShow">{{ alertMessage }}</p>
+            <ActionButton
+              :text="t('submit')"
+              color="#50C878"
+              text-color="#ffffff"
+              class="main__button"
+              :click="setupEmail"
+              :outline="false"
+              :disabled="false" />
+            <ActionButton
+              :text="t('back_login')"
+              :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
+              class="main__button"
+              :click="openLoginPage"
+              :link="true" />
           </div>
         </div>
       </div>

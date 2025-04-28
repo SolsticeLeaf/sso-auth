@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import ActionButton from "~/components/utilities/ActionButton.vue";
-import iconsConfig from "~/config/icons.config";
-import { decodeBase64AsJson, encodeBase64 } from "~/utilities/base64.utils";
-const { t } = useI18n()
+import ActionButton from '~/components/utilities/ActionButton.vue';
+import iconsConfig from '~/config/icons.config';
+import { decodeBase64AsJson, encodeBase64 } from '~/utilities/base64.utils';
+const { t } = useI18n();
 const theme = useColorMode();
 const route = useRoute();
-const routeData = route?.query?.data || "";
+const routeData = route?.query?.data || '';
 const data = decodeBase64AsJson(routeData);
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
@@ -15,26 +15,28 @@ const alertMessage = ref('');
 
 const openRegisterPage = () => {
   return openWindow(`/register?data=${routeData}`);
-}
+};
 
 const openRedirectUrl = (code: string) => {
   hideAlert();
-  const route = encodeBase64(JSON.stringify({
-    locale: data.locale,
-    theme: data.theme,
-    redirectUrl: `${data.redirectUrl}${code.length > 0 ? code : ''}`,
-    submitCode: data.submitCode,
-    clientId: data.clientId
-  }));
+  const route = encodeBase64(
+    JSON.stringify({
+      locale: data.locale,
+      theme: data.theme,
+      redirectUrl: `${data.redirectUrl}${code.length > 0 ? code : ''}`,
+      submitCode: data.submitCode,
+      clientId: data.clientId,
+    })
+  );
   openWindow(`/login/emailVerify?data=${route}`);
-}
+};
 
 const focusPassword = () => {
   document?.getElementById('passwordInput')?.focus();
-}
+};
 
 function getInputValue(elementId: string): string {
-  return (<HTMLInputElement> document.getElementById(elementId))?.value?.replaceAll(' ', '');
+  return (<HTMLInputElement>document.getElementById(elementId))?.value?.replaceAll(' ', '');
 }
 
 function showAlert(message: string) {
@@ -48,34 +50,48 @@ function hideAlert() {
 
 function openWindow(url: string) {
   window.location.assign(url);
-  window.open(url, "_self")
+  window.open(url, '_self');
 }
 const authorize = async () => {
   isButtonDisabled.value = true;
   try {
-    const inputUsername = getInputValue("usernameInput");
+    const inputUsername = getInputValue('usernameInput');
     const { status: response_status, code: response_code } = await $fetch('/api/authorize', {
       default: () => [],
-      cache: "no-cache",
+      cache: 'no-cache',
       server: false,
       method: 'POST',
       headers: { userAgent: useDevice().userAgent },
       body: JSON.stringify({
         username: inputUsername,
-        password: getInputValue("passwordInput"),
+        password: getInputValue('passwordInput'),
         isEmail: emailExpression.test(inputUsername),
-        clientId: data.clientId || ''
-      })
+        clientId: data.clientId || '',
+      }),
     });
     if (response_status) {
       switch (response_status) {
-        case "OK": openRedirectUrl(response_code); break;
-        case "EMPTY_USERNAME": showAlert('empty_username'); break;
-        case "USERNAME_MUST_BE_LATIN": showAlert('username_latin'); break;
-        case "SMALL_USERNAME": showAlert('username_length'); break;
-        case "SMALL_PASSWORD": showAlert('password_length'); break;
-        case "NOT_FOUND": showAlert('wrong_credentials'); break;
-        default: showAlert('unknown_error'); break;
+        case 'OK':
+          openRedirectUrl(response_code);
+          break;
+        case 'EMPTY_USERNAME':
+          showAlert('empty_username');
+          break;
+        case 'USERNAME_MUST_BE_LATIN':
+          showAlert('username_latin');
+          break;
+        case 'SMALL_USERNAME':
+          showAlert('username_length');
+          break;
+        case 'SMALL_PASSWORD':
+          showAlert('password_length');
+          break;
+        case 'NOT_FOUND':
+          showAlert('wrong_credentials');
+          break;
+        default:
+          showAlert('unknown_error');
+          break;
       }
     } else {
       showAlert('unknown_error');
@@ -85,43 +101,45 @@ const authorize = async () => {
     showAlert('unknown_error');
   }
   isButtonDisabled.value = false;
-}
+};
 </script>
 
 <template>
   <div class="main">
     <input
-        type="text"
-        id="usernameInput"
-        name="amount"
-        class="main__input"
-        v-on:input="hideAlert"
-        v-on:keyup.enter="focusPassword"
-        :placeholder="t('username_email')"
-        required />
+      type="text"
+      id="usernameInput"
+      name="amount"
+      class="main__input"
+      v-on:input="hideAlert"
+      v-on:keyup.enter="focusPassword"
+      :placeholder="t('username_email')"
+      required />
     <input
-        type="password"
-        id="passwordInput"
-        name="amount"
-        class="main__input"
-        v-on:input="hideAlert"
-        v-on:keyup.enter="authorize"
-        :placeholder="t('password')"
-        required />
-    <p v-if="isAlertShow" class="main__alert">{{alertMessage}}</p>
-    <ActionButton :text="t('login')"
-                  :icon="iconsConfig.button_login"
-                  color="#50C878"
-                  text-color="#ffffff"
-                  class="main__button"
-                  :click="authorize"
-                  :outline="false"
-                  :disabled="isButtonDisabled" />
-    <ActionButton :text="t('registerLink')"
-                  :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
-                  class="main__button"
-                  :click="openRegisterPage"
-                  :link="true" />
+      type="password"
+      id="passwordInput"
+      name="amount"
+      class="main__input"
+      v-on:input="hideAlert"
+      v-on:keyup.enter="authorize"
+      :placeholder="t('password')"
+      required />
+    <p v-if="isAlertShow" class="main__alert">{{ alertMessage }}</p>
+    <ActionButton
+      :text="t('login')"
+      :icon="iconsConfig.button_login"
+      color="#50C878"
+      text-color="#ffffff"
+      class="main__button"
+      :click="authorize"
+      :outline="false"
+      :disabled="isButtonDisabled" />
+    <ActionButton
+      :text="t('registerLink')"
+      :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
+      class="main__button"
+      :click="openRegisterPage"
+      :link="true" />
   </div>
 </template>
 
@@ -144,8 +162,8 @@ const authorize = async () => {
     padding: 1rem;
     font-weight: bold;
     font-size: 1rem;
-    border: 1px solid #A782FF !important;
-    color: #2C2044;
+    border: 1px solid #a782ff !important;
+    color: #2c2044;
   }
 
   .dark &__input {

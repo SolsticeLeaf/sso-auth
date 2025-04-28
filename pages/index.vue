@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t } = useI18n();
 </script>
 
 <template>
@@ -13,7 +13,6 @@ const { t } = useI18n()
 </template>
 
 <style scoped lang="scss">
-
 .body {
   display: flex;
   width: 100vw;
@@ -25,5 +24,4 @@ const { t } = useI18n()
 .blur__glass {
   padding: 0 1.5rem;
 }
-
 </style>

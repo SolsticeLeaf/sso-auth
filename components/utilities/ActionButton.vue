@@ -4,36 +4,36 @@ import { computed } from 'vue';
 const props = defineProps({
   disabled: {
     type: Boolean,
-    default: false
+    default: false,
   },
   text: {
     type: String,
-    required: true
+    required: true,
   },
   icon: {
     type: String,
-    default: ''
+    default: '',
   },
   color: {
     type: String,
-    default: '#50C878'
+    default: '#50C878',
   },
   textColor: {
     type: String,
-    default: 'white'
+    default: 'white',
   },
   click: {
     type: Function,
-    required: true
+    default: () => {},
   },
   link: {
     type: Boolean,
-    default: false
+    default: false,
   },
   outline: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
 const buttonStyle = computed(() => ({
@@ -46,7 +46,7 @@ const buttonStyle = computed(() => ({
 const textStyle = computed(() => ({
   color: props.textColor,
   fontWeight: 'bold',
-}))
+}));
 
 function onClick() {
   if (!props.disabled) {
@@ -63,7 +63,6 @@ function onClick() {
 </template>
 
 <style scoped lang="scss">
-
 * {
   cursor: pointer;
   user-select: none;

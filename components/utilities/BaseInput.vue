@@ -1,40 +1,40 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-const { t } = useI18n()
+const { t } = useI18n();
 
 const props = defineProps({
   modelValue: {
     type: String,
-    required: true
+    required: true,
   },
   type: {
     type: String,
-    default: 'text'
+    default: 'text',
   },
   placeholder: {
     type: String,
-    default: ''
+    default: '',
   },
   required: {
     type: Boolean,
-    default: false
+    default: false,
   },
   autofocus: {
     type: Boolean,
-    default: false
+    default: false,
   },
   id: {
     type: String,
-    required: false
+    required: false,
   },
   enter: {
     type: Function,
-    default: null
+    default: null,
   },
   hideAlert: {
     type: Function,
-    default: null
-  }
+    default: null,
+  },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -68,20 +68,20 @@ const validate = () => {
   return !error.value;
 };
 
-watch(() => props.modelValue, (newValue) => {
-  value.value = newValue;
-  validate();
-});
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    value.value = newValue;
+    validate();
+  }
+);
 
 watch(value, (newValue) => {
   emit('update:modelValue', newValue);
   validate();
 });
 
-const inputClasses = computed(() => [
-  'main__input',
-  { 'input-error': error.value }
-]);
+const inputClasses = computed(() => ['main__input', { 'input-error': error.value }]);
 
 const onInput = (event: Event) => {
   const target = event.target as HTMLInputElement;
@@ -94,27 +94,24 @@ const onKeyup = (event: KeyboardEvent) => {
     props.enter();
   }
 };
-
 </script>
 
 <template>
   <div>
     <input
-        :id="id"
-        :type="type"
-        :value="value"
-        :placeholder="placeholder"
-        :autofocus="autofocus"
-        :style="`border: 1px solid ${error ? '#c71700' : '#A782FF'} !important`"
-        @input="onInput"
-        @keyup="onKeyup"
-    />
+      :id="id"
+      :type="type"
+      :value="value"
+      :placeholder="placeholder"
+      :autofocus="autofocus"
+      :style="`border: 1px solid ${error ? '#c71700' : '#A782FF'} !important`"
+      @input="onInput"
+      @keyup="onKeyup" />
     <p v-if="error" class="main__alert">{{ t(error) }}</p>
   </div>
 </template>
 
 <style scoped>
-
 input {
   -webkit-appearance: none;
   -moz-appearance: none;

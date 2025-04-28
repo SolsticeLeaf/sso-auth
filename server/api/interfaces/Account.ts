@@ -1,10 +1,10 @@
-import mongoose, { Schema, Document } from "mongoose";
-import { genSaltSync, hashSync, compareSync } from "bcrypt-ts";
-import jwt from "jsonwebtoken";
-import { randomUUID } from "node:crypto";
-import { encodeBase64 } from "~/utilities/base64.utils";
+import mongoose, { Schema, Document } from 'mongoose';
+import { genSaltSync, hashSync, compareSync } from 'bcrypt-ts';
+import jwt from 'jsonwebtoken';
+import { randomUUID } from 'node:crypto';
+import { encodeBase64 } from '~/utilities/base64.utils';
 
-const JWT_SECRET = process.env.JWT_SECRET || "dfsdsfv32rvsdcv2csc";
+const JWT_SECRET = process.env.JWT_SECRET || 'dfsdsfv32rvsdcv2csc';
 
 export interface Account extends Document {
   _id: string;
@@ -12,7 +12,7 @@ export interface Account extends Document {
   password: string;
   avatar: string;
   email: string;
-  emailStatus: "VERIFIED" | "NOT_VERIFIED";
+  emailStatus: 'VERIFIED' | 'NOT_VERIFIED';
   tokens: Array<Token>;
   permissions: Array<string>;
 }
@@ -29,7 +29,7 @@ export interface AccountData {
   username: string;
   avatar: string;
   email: string;
-  emailStatus: "VERIFIED" | "NOT_VERIFIED";
+  emailStatus: 'VERIFIED' | 'NOT_VERIFIED';
   permissions: Array<string>;
 }
 
@@ -44,15 +44,12 @@ const schema: Schema = new Schema(
     tokens: { type: Array<Token>, required: true },
     permissions: { type: Array<any>, required: true },
   },
-  { collection: "accounts" }
+  { collection: 'accounts' }
 );
 
-const AccountModel = mongoose.model<Account>("accounts", schema);
+const AccountModel = mongoose.model<Account>('accounts', schema);
 
-export async function authorizeUser(
-  username: string,
-  password: string
-): Promise<{ status: string; userId: string; token: Token | undefined }> {
+export async function authorizeUser(username: string, password: string): Promise<{ status: string; userId: string; token: Token | undefined }> {
   try {
     const user = await AccountModel.findOne({ username: username });
     if (user && compareSync(password, user.password)) {
@@ -63,16 +60,13 @@ export async function authorizeUser(
       return { status: user.emailStatus, userId: user._id, token: token };
     }
   } catch (error) {
-    console.error("Error on user authorize:", error);
-    return { status: "ERROR", userId: "", token: undefined };
+    console.error('Error on user authorize:', error);
+    return { status: 'ERROR', userId: '', token: undefined };
   }
-  return { status: "NOT_FOUND", userId: "", token: undefined };
+  return { status: 'NOT_FOUND', userId: '', token: undefined };
 }
 
-export async function authorizeUserByEmail(
-  email: string,
-  password: string
-): Promise<{ status: string; userId: string; token: Token | undefined }> {
+export async function authorizeUserByEmail(email: string, password: string): Promise<{ status: string; userId: string; token: Token | undefined }> {
   try {
     const user = await AccountModel.findOne({ email: email });
     if (user && compareSync(password, user.password)) {
@@ -83,10 +77,10 @@ export async function authorizeUserByEmail(
       return { status: user.emailStatus, userId: user._id, token: token };
     }
   } catch (error) {
-    console.error("Error on user authorize by email:", error);
-    return { status: "ERROR", userId: "", token: undefined };
+    console.error('Error on user authorize by email:', error);
+    return { status: 'ERROR', userId: '', token: undefined };
   }
-  return { status: "NOT_FOUND", userId: "", token: undefined };
+  return { status: 'NOT_FOUND', userId: '', token: undefined };
 }
 
 export async function authorizeUserById(userId: string): Promise<{ status: string; token: Token | undefined }> {
@@ -97,26 +91,22 @@ export async function authorizeUserById(userId: string): Promise<{ status: strin
       const tokens = user.tokens;
       tokens.push(token);
       await updateTokens(user, tokens);
-      return { status: "OK", token: token };
+      return { status: 'OK', token: token };
     }
   } catch (error) {
-    console.error("Error on user authorize:", error);
-    return { status: "ERROR", token: undefined };
+    console.error('Error on user authorize:', error);
+    return { status: 'ERROR', token: undefined };
   }
-  return { status: "NOT_FOUND", token: undefined };
+  return { status: 'NOT_FOUND', token: undefined };
 }
 
-export async function registerUser(
-  username: string,
-  password: string,
-  email: string
-): Promise<{ status: string; userId: string; token: Token | undefined }> {
+export async function registerUser(username: string, password: string, email: string): Promise<{ status: string; userId: string; token: Token | undefined }> {
   try {
     if (await AccountModel.findOne({ username: username })) {
-      return { status: "USERNAME_EXISTS", userId: "", token: undefined };
+      return { status: 'USERNAME_EXISTS', userId: '', token: undefined };
     }
     if (await AccountModel.findOne({ email: email })) {
-      return { status: "EMAIL_EXISTS", userId: "", token: undefined };
+      return { status: 'EMAIL_EXISTS', userId: '', token: undefined };
     }
     const hashedPassword = hashSync(password, genSaltSync(10));
     const token = await createToken();
@@ -125,23 +115,20 @@ export async function registerUser(
       _id: userId,
       username: username,
       password: hashedPassword,
-      avatar: "https://ik.imagekit.io/kiinse/profile-default.svg",
+      avatar: 'https://ik.imagekit.io/kiinse/profile-default.svg',
       email: email,
-      emailStatus: "NOT_VERIFIED",
+      emailStatus: 'NOT_VERIFIED',
       tokens: [token],
-      permissions: ["USER"],
+      permissions: ['USER'],
     });
-    return { status: "OK", userId: userId, token: token };
+    return { status: 'OK', userId: userId, token: token };
   } catch (error) {
-    console.error("Error on user register:", error);
-    return { status: "ERROR", userId: "", token: undefined };
+    console.error('Error on user register:', error);
+    return { status: 'ERROR', userId: '', token: undefined };
   }
 }
 
-export async function refreshUserToken(
-  accessToken: string,
-  refreshToken: string
-): Promise<{ status: string; token: Token | undefined }> {
+export async function refreshUserToken(accessToken: string, refreshToken: string): Promise<{ status: string; token: Token | undefined }> {
   try {
     const users = await AccountModel.find();
     for (const user of users) {
@@ -150,20 +137,20 @@ export async function refreshUserToken(
         const newTokens = user.tokens.filter((token) => token.refreshToken !== refreshToken);
         if (!(await verifyToken(refreshToken))) {
           await updateTokens(user, newTokens);
-          return { status: "EXPIRED", token: undefined };
+          return { status: 'EXPIRED', token: undefined };
         } else {
           const newToken = await createToken();
           newTokens.push(newToken);
           await updateTokens(user, newTokens);
-          return { status: "OK", token: newToken };
+          return { status: 'OK', token: newToken };
         }
       }
     }
   } catch (error) {
-    console.error("Error on token refresh:", error);
-    return { status: "ERROR", token: undefined };
+    console.error('Error on token refresh:', error);
+    return { status: 'ERROR', token: undefined };
   }
-  return { status: "NOT_FOUND", token: undefined };
+  return { status: 'NOT_FOUND', token: undefined };
 }
 
 export async function getAccountData(accessToken: string): Promise<{ status: string; account: AccountData | undefined }> {
@@ -173,10 +160,10 @@ export async function getAccountData(accessToken: string): Promise<{ status: str
       const tokens = user.tokens.filter((token) => token.accessToken === accessToken);
       if (tokens && tokens.length > 0) {
         if (!(await verifyToken(accessToken))) {
-          return { status: "EXPIRED", account: undefined };
+          return { status: 'EXPIRED', account: undefined };
         }
         return {
-          status: "OK",
+          status: 'OK',
           account: {
             userId: user._id,
             username: user.username,
@@ -189,10 +176,10 @@ export async function getAccountData(accessToken: string): Promise<{ status: str
       }
     }
   } catch (error) {
-    console.error("Error on getting account:", error);
-    return { status: "ERROR", account: undefined };
+    console.error('Error on getting account:', error);
+    return { status: 'ERROR', account: undefined };
   }
-  return { status: "NOT_FOUND", account: undefined };
+  return { status: 'NOT_FOUND', account: undefined };
 }
 
 export async function verifyToken(token: string): Promise<boolean> {
@@ -217,7 +204,7 @@ export async function updateTokens(user: Account, tokens: Array<Token>): Promise
 }
 
 export async function changeEmail(id: string, email: string): Promise<void> {
-  await AccountModel.findOneAndUpdate({ _id: id }, { email: email, emailStatus: "NOT_VERIFIED" });
+  await AccountModel.findOneAndUpdate({ _id: id }, { email: email, emailStatus: 'NOT_VERIFIED' });
 }
 
 export async function updateEmailStatus(id: string, emailStatus: string): Promise<void> {
@@ -225,8 +212,8 @@ export async function updateEmailStatus(id: string, emailStatus: string): Promis
 }
 
 export async function createToken(): Promise<Token> {
-  const accessToken = jwt.sign({}, JWT_SECRET, { expiresIn: "48h" });
-  const refreshToken = jwt.sign({}, JWT_SECRET, { expiresIn: "720h" });
+  const accessToken = jwt.sign({}, JWT_SECRET, { expiresIn: '48h' });
+  const refreshToken = jwt.sign({}, JWT_SECRET, { expiresIn: '720h' });
   const accessTokenDate = new Date();
   accessTokenDate.setHours(accessTokenDate.getHours() + 48);
   const refreshTokenDate = new Date();

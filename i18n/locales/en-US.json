@@ -47,5 +47,24 @@
   "no_email_alert": "You have not specified an email",
   "setup_email": "Specify email",
   "submit": "Submit",
-  "notFound": "Not found"
+  "notFound": "Not found",
+  "cookies": "COOKIE-FILES",
+  "cookies_description": "The sleaf.dev websites use cookies and other similar technologies. If you continue to use our website after reading this message, it means that you do not object to the use of these technologies.",
+  "cookies_button_accept": "OK",
+  "backgroundWords": [
+    "SolsticeLeaf",
+    "Minecraft",
+    "Server",
+    "Players",
+    "Websites",
+    "Authorization",
+    "Auth",
+    "Shop",
+    "Survival",
+    "MCWeb",
+    "SLEAF",
+    "Vanilla",
+    "Private",
+    "Map"
+  ]
 }

@@ -1,4 +1,4 @@
 export default {
-    nickname: "SolsticeLeaf",
-    siteName: "SLEAF"
-}
+  nickname: 'SolsticeLeaf',
+  siteName: 'SLEAF',
+};

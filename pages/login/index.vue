@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue';
-import LoginFormComponent from "~/components/LoginFormComponent.vue";
-import LoginUserComponent from "~/components/LoginUserComponent.vue";
+import LoginFormComponent from '~/components/LoginFormComponent.vue';
+import LoginUserComponent from '~/components/LoginUserComponent.vue';
 
 const status = ref('');
 const user = ref({});
@@ -11,7 +11,7 @@ onBeforeMount(async () => {
   try {
     const { status: response_status, user: response_data } = await $fetch('/api/checkAuthStatus', {
       default: () => [],
-      cache: "no-cache",
+      cache: 'no-cache',
       server: false,
       method: 'GET',
       headers: { userAgent: useDevice().userAgent },
@@ -41,5 +41,4 @@ onBeforeMount(async () => {
   </ClientOnly>
 </template>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

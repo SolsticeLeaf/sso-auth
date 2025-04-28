@@ -1,90 +1,91 @@
 <script setup lang="ts">
-import iconsConfig from "~/config/icons.config";
-import ActionButton from "~/components/utilities/ActionButton.vue";
-import {decodeBase64AsJson} from "~/utilities/base64.utils";
+import iconsConfig from '~/config/icons.config';
+import ActionButton from '~/components/utilities/ActionButton.vue';
+import { decodeBase64AsJson } from '~/utilities/base64.utils';
 
-const { t } = useI18n()
+const { t } = useI18n();
 const theme = useColorMode();
 const route = useRoute();
-const routeData = route?.query?.data || "";
-const data = decodeBase64AsJson(route?.query?.data || "");
+const routeData = route?.query?.data || '';
+const data = decodeBase64AsJson(route?.query?.data || '');
 
 const showTitle = ref(false);
-const message = ref('wait')
+const message = ref('wait');
 const retryButton = ref(false);
 const backButton = ref(false);
 const setupEmailButton = ref(false);
 
 const openLoginPage = () => {
   openWindow(`/login?data=${routeData}`);
-}
+};
 
 const openEmailSetupPage = () => {
   openWindow(`/account/email?data=${routeData}`);
-}
+};
 const openRedirectUrl = () => {
-  umTrackEvent('authorized')
+  umTrackEvent('authorized');
   openWindow(data.redirectUrl || '/');
-}
+};
 
 function openWindow(url: string) {
   window.location.assign(url);
-  window.open(url, "_self")
+  window.open(url, '_self');
 }
 
 onBeforeMount(async () => {
   await check();
-})
+});
 
 const check = async () => {
   try {
     setMessage('wait', 'none');
     const { status: response_status } = await $fetch('/api/userVerify', {
       default: () => [],
-      cache: "no-cache",
+      cache: 'no-cache',
       server: false,
       method: 'POST',
       headers: { userAgent: useDevice().userAgent },
-      body: JSON.stringify({routeData: data})
+      body: JSON.stringify({ routeData: data }),
     });
     if (response_status) {
       switch (response_status) {
-        case "OK":
+        case 'OK':
           openRedirectUrl();
           break;
-        case "EXPIRED":
+        case 'EXPIRED':
           setMessage('code_expired', 'retry');
           break;
-        case "NO_EMAIL":
+        case 'NO_EMAIL':
           setMessage('no_email_alert', 'setupEmail');
           break;
-        case "ALREADY_SENT":
+        case 'ALREADY_SENT':
           setMessage('email_already_sent', 'back');
           break;
-        case "CODE_SENT":
+        case 'CODE_SENT':
           setMessage('email_sent', 'back');
           break;
-        case "CODE_NOT_SENT":
+        case 'CODE_NOT_SENT':
           setMessage('email_not_sent', 'retry');
           break;
-        case "TOKEN_NOT_FOUND":
+        case 'TOKEN_NOT_FOUND':
           setMessage('notFound', 'back');
           break;
-        case "ERROR":
+        case 'ERROR':
           setMessage('unknown_error', 'retry');
           break;
-        default: break;
+        default:
+          break;
       }
     }
   } catch (error) {
     console.error('Error:', error);
     alert('Unknown error occurred.');
   }
-}
+};
 
 function setMessage(msg: string, button: 'none' | 'retry' | 'back' | 'setupEmail') {
   message.value = msg;
-  showTitle.value = msg !== 'wait'
+  showTitle.value = msg !== 'wait';
   switch (button) {
     case 'retry':
       retryButton.value = true;
@@ -114,40 +115,44 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back' | 'setupEmail
         </div>
         <div id="hero" class="wrapper blur__glass">
           <div class="main">
-            <h6 v-if="showTitle">{{t('registerPreCompletePage')}}</h6>
+            <h6 v-if="showTitle">{{ t('registerPreCompletePage') }}</h6>
             <p>{{ t(message) }}</p>
-            <ActionButton v-if="retryButton"
-                          :text="t('send_code')"
-                          :icon="iconsConfig.repeat"
-                          color="#dcc944"
-                          text-color="#1a1a1a"
-                          class="main__button"
-                          :click="check"
-                          :outline="false"
-                          :disabled="false" />
-            <ActionButton v-if="backButton"
-                          :text="t('back_login')"
-                          :icon="iconsConfig.arrow_left"
-                          color="#50C878"
-                          text-color="#ffffff"
-                          class="main__button"
-                          :click="openLoginPage"
-                          :outline="false"
-                          :disabled="false" />
-            <ActionButton v-if="setupEmailButton"
-                          :text="t('setup_email')"
-                          color="#50C878"
-                          text-color="#ffffff"
-                          class="main__button"
-                          :click="openEmailSetupPage"
-                          :outline="false"
-                          :disabled="false" />
-            <ActionButton v-if="retryButton || backButton"
-                          :text="t('change_email')"
-                          :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
-                          class="main__button"
-                          :click="openEmailSetupPage"
-                          :link="true" />
+            <ActionButton
+              v-if="retryButton"
+              :text="t('send_code')"
+              :icon="iconsConfig.repeat"
+              color="#dcc944"
+              text-color="#1a1a1a"
+              class="main__button"
+              :click="check"
+              :outline="false"
+              :disabled="false" />
+            <ActionButton
+              v-if="backButton"
+              :text="t('back_login')"
+              :icon="iconsConfig.arrow_left"
+              color="#50C878"
+              text-color="#ffffff"
+              class="main__button"
+              :click="openLoginPage"
+              :outline="false"
+              :disabled="false" />
+            <ActionButton
+              v-if="setupEmailButton"
+              :text="t('setup_email')"
+              color="#50C878"
+              text-color="#ffffff"
+              class="main__button"
+              :click="openEmailSetupPage"
+              :outline="false"
+              :disabled="false" />
+            <ActionButton
+              v-if="retryButton || backButton"
+              :text="t('change_email')"
+              :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
+              class="main__button"
+              :click="openEmailSetupPage"
+              :link="true" />
           </div>
         </div>
       </div>
