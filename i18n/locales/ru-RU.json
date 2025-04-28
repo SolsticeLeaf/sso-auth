@@ -1,6 +1,7 @@
 {
   "not_found": "404 -> Не найдено :(",
-  "username": "Пользователь",
+  "username": "Логин",
+  "username_email": "Логин/Email",
   "email": "Почта",
   "password": "Пароль",
   "password_repeat": "Повтор пароля",

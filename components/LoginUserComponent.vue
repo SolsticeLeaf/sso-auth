@@ -55,6 +55,7 @@ const authorize = async () => {
       body: JSON.stringify({
         username: '',
         password: '',
+        isEmail: false,
         clientId: data.clientId || ''
       })
     });

@@ -1,6 +1,7 @@
 {
   "not_found": "404 -> Not Found :(",
   "username": "Username",
+  "username_email": "Username/Email",
   "email": "Email",
   "password": "Password",
   "password_repeat": "Repeat password",

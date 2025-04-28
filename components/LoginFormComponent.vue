@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import ActionButton from "~/components/utilities/ActionButton.vue";
 import iconsConfig from "~/config/icons.config";
-import {decodeBase64AsJson, encodeBase64} from "~/utilities/base64.utils";
+import { decodeBase64AsJson, encodeBase64 } from "~/utilities/base64.utils";
 const { t } = useI18n()
 const theme = useColorMode();
 const route = useRoute();
 const routeData = route?.query?.data || "";
 const data = decodeBase64AsJson(routeData);
+const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 const isButtonDisabled = ref(false);
 const isAlertShow = ref(false);
@@ -52,6 +53,7 @@ function openWindow(url: string) {
 const authorize = async () => {
   isButtonDisabled.value = true;
   try {
+    const inputUsername = getInputValue("usernameInput");
     const { status: response_status, code: response_code } = await $fetch('/api/authorize', {
       default: () => [],
       cache: "no-cache",
@@ -59,8 +61,9 @@ const authorize = async () => {
       method: 'POST',
       headers: { userAgent: useDevice().userAgent },
       body: JSON.stringify({
-        username: getInputValue("usernameInput"),
+        username: inputUsername,
         password: getInputValue("passwordInput"),
+        isEmail: emailExpression.test(inputUsername),
         clientId: data.clientId || ''
       })
     });
@@ -94,7 +97,7 @@ const authorize = async () => {
         class="main__input"
         v-on:input="hideAlert"
         v-on:keyup.enter="focusPassword"
-        :placeholder="t('username')"
+        :placeholder="t('username_email')"
         required />
     <input
         type="password"
