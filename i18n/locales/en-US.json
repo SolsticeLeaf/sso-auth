@@ -1,5 +1,6 @@
 {
   "not_found": "404 -> Not Found :(",
+  "doc_not_found": "Document not found :(",
   "username": "Username",
   "username_email": "Username/Email",
   "email": "Email",

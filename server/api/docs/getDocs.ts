@@ -6,8 +6,12 @@ export default defineEventHandler(async (event) => {
   const { page } = body;
   try {
     await connectDB();
-    return { data: (await getDoc(page)) || {} };
+    const docs = await getDoc(page);
+    if (docs === undefined) {
+      return { status: 'NOT_FOUND', docs: {} };
+    }
+    return { status: 'OK', docs: docs };
   } catch (error) {
-    return { data: {} };
+    return { status: 'ERR', docs: {} };
   }
 });

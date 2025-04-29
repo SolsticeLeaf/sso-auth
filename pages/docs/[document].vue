@@ -1,26 +1,28 @@
 <script setup lang="ts">
+import iconsConfig from '~/config/icons.config';
 import FlexButton from '~/components/utilities/FlexButton.vue';
 import { textFormat } from '~/utilities/text.utils';
 import { getDefaultTextColor } from '~/utilities/colors.utils';
-import iconsConfig from '~/config/icons.config';
 const { t, locale } = useI18n();
-const route = useRoute();
 const theme = useColorMode();
+const route = useRoute();
 
 const isLoaded = ref(false);
+const status = ref('');
 const data = ref<any>();
 
 onBeforeMount(async () => {
   try {
-    const { data: response_data } = await $fetch('/api/docs/getDoc', {
+    const { status: response_status, docs: response_data } = await $fetch('/api/docs/getDocs', {
       default: () => [],
       cache: 'no-cache',
       server: false,
       method: 'POST',
       body: JSON.stringify({
-        page: 'privacy-policy',
+        page: route.params.document,
       }),
     });
+    status.value = response_status;
     data.value = response_data;
   } finally {
     isLoaded.value = true;
@@ -42,14 +44,14 @@ function getLocaleObjects(): any[] {
     <KeepAlive>
       <div class="body">
         <div class="wrapper blur__glass" v-if="isLoaded">
-          <div class="text">
-            <FlexButton
-              :text="t('back_login')"
-              :text-color="getDefaultTextColor(theme.value)"
-              :icon="iconsConfig.arrow_left"
-              color="transparent"
-              :transparent="true"
-              :link="`/login?data=${route?.query?.data}`" />
+          <FlexButton
+            :text="t('back_login')"
+            :text-color="getDefaultTextColor(theme.value)"
+            :icon="iconsConfig.arrow_left"
+            color="transparent"
+            :transparent="true"
+            :link="`/login?data=${route?.query?.data}`" />
+          <div v-if="status === 'OK'" class="text">
             <div v-for="obj in getLocaleObjects()">
               <h4 v-if="obj.type === 'title'">{{ obj.text }}</h4>
               <h5 v-if="obj.type === 'subTitle'">{{ obj.text }}</h5>
@@ -60,6 +62,9 @@ function getLocaleObjects(): any[] {
               </div>
             </div>
           </div>
+          <div v-else>
+            <h5>{{ t('doc_not_found') }}</h5>
+          </div>
         </div>
       </div>
     </KeepAlive>
@@ -67,6 +72,8 @@ function getLocaleObjects(): any[] {
 </template>
 
 <style scoped lang="scss">
+@use '/assets/scss/screens.scss' as *;
+
 .body {
   display: flex;
   flex-direction: column;
@@ -76,7 +83,7 @@ function getLocaleObjects(): any[] {
   align-items: center;
   width: 100vw;
   gap: 1rem;
-  padding-bottom: 3rem;
+  padding-bottom: 1rem;
 }
 
 .wrapper {
@@ -84,6 +91,14 @@ function getLocaleObjects(): any[] {
   flex-direction: column;
   height: fit-content;
   width: 50%;
+
+  @media screen and (max-width: $screen-lg) {
+    width: 80%;
+  }
+
+  @media screen and (max-width: $screen-md) {
+    width: 90%;
+  }
 }
 
 .text {
