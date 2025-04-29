@@ -81,6 +81,7 @@ const check = async () => {
   } catch (error) {
     console.error('Error:', error);
     alert('Unknown error occurred.');
+    setMessage('unknown_error', 'retry');
   }
 };
 

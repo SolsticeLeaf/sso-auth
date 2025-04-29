@@ -7,7 +7,6 @@ import { getSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
 
 const domain = process.env.DOMAIN || 'https://auth.sleaf.dev';
-const emailFrom = process.env.EMAIL_FROM || 'noreple@sleaf.dev';
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_SMTP_SERVER || '',
   port: Number(process.env.EMAIL_SMTP_PORT?.toString() || '465'),
@@ -78,7 +77,7 @@ async function sendSubmitCode(username: string, email: string, data: any): Promi
   const code = codeStatus.code;
   try {
     await transporter.sendMail({
-      from: `"SLEAF AUTH" <${emailFrom}>`,
+      from: `noreply`,
       to: email,
       subject: 'Verification link | SLEAF AUTH',
       text: `Your verification link is ${await createLink(data, code)} (Link period: 5 minutes)`,
@@ -86,6 +85,7 @@ async function sendSubmitCode(username: string, email: string, data: any): Promi
     });
     return { status: 'CODE_SENT' };
   } catch (error) {
+    console.log('Error on sending code:', error);
     await deleteUserCode(code, username);
     return { status: 'CODE_NOT_SENT' };
   }

@@ -4,7 +4,7 @@ services:
     container_name: auth-service
     image: auth-service:latest
     restart: always
-    network_mode: "host"
+    network_mode: 'host'
     environment:
       - PORT=4000
       - DATABASE_NAME=${DATABASE_NAME}
@@ -12,7 +12,6 @@ services:
       - REDIS_URL=${REDIS_URL}
       - DOMAIN=${DOMAIN}
       - JWT_SECRET=${JWT_SECRET}
-      - EMAIL_FROM=${EMAIL_FROM}
       - EMAIL_SMTP_SERVER=${EMAIL_SMTP_SERVER}
       - EMAIL_SMTP_PORT=${EMAIL_SMTP_PORT}
       - EMAIL_SMTP_USERNAME=${EMAIL_SMTP_USERNAME}

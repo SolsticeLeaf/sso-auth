@@ -10,7 +10,7 @@ workflow:
 
 default:
   tags:
-    - "mais"
+    - 'mais'
   image: node:23
 
 cache:
@@ -64,7 +64,7 @@ deploy-mais:
   stage: deploy
   image: docker:latest
   tags:
-    - "mais"
+    - 'mais'
   dependencies:
     - build
   before_script:
@@ -75,7 +75,6 @@ deploy-mais:
     - export REDIS_URL="$REDIS_URL"
     - export DOMAIN="$DOMAIN"
     - export JWT_SECRET="$JWT_SECRET"
-    - export EMAIL_FROM="$EMAIL_FROM"
     - export EMAIL_SMTP_SERVER="$EMAIL_SMTP_SERVER"
     - export EMAIL_SMTP_PORT="$EMAIL_SMTP_PORT"
     - export EMAIL_SMTP_USERNAME="$EMAIL_SMTP_USERNAME"
@@ -89,7 +88,7 @@ deploy-helios:
   stage: deploy
   image: docker:latest
   tags:
-    - "helios"
+    - 'helios'
   dependencies:
     - build
   before_script:
@@ -100,7 +99,6 @@ deploy-helios:
     - export REDIS_URL="$REDIS_URL"
     - export DOMAIN="$DOMAIN"
     - export JWT_SECRET="$JWT_SECRET"
-    - export EMAIL_FROM="$EMAIL_FROM"
     - export EMAIL_SMTP_SERVER="$EMAIL_SMTP_SERVER"
     - export EMAIL_SMTP_PORT="$EMAIL_SMTP_PORT"
     - export EMAIL_SMTP_USERNAME="$EMAIL_SMTP_USERNAME"
