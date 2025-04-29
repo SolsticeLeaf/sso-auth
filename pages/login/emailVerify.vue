@@ -2,6 +2,7 @@
 import iconsConfig from '~/config/icons.config';
 import ActionButton from '~/components/utilities/ActionButton.vue';
 import { decodeBase64AsJson } from '~/utilities/base64.utils';
+import { getDefaultTextColor } from '~/utilities/colors.utils';
 
 const { t } = useI18n();
 const theme = useColorMode();
@@ -149,7 +150,7 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back' | 'setupEmail
             <ActionButton
               v-if="retryButton || backButton"
               :text="t('change_email')"
-              :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
+              :text-color="getDefaultTextColor(theme.value)"
               class="main__button"
               :click="openEmailSetupPage"
               :link="true" />

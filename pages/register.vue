@@ -2,6 +2,9 @@
 import ActionButton from '~/components/utilities/ActionButton.vue';
 import iconsConfig from '~/config/icons.config';
 import BaseInput from '~/components/utilities/BaseInput.vue';
+import TermsOfUse from '~/components/utilities/TermsOfUse.vue';
+import { getDefaultTextColor } from '~/utilities/colors.utils';
+
 const { t } = useI18n();
 const theme = useColorMode();
 const route = useRoute();
@@ -198,20 +201,24 @@ const register = async () => {
               :click="register"
               :outline="false"
               :disabled="isButtonDisabled" />
-            <ActionButton
-              :text="t('loginLink')"
-              :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
-              class="main__button"
-              :click="openLoginPage"
-              :link="true" />
+            <ActionButton :text="t('loginLink')" :text-color="getDefaultTextColor(theme.value)" class="main__button" :click="openLoginPage" :link="true" />
           </div>
         </div>
+        <TermsOfUse />
       </div>
     </KeepAlive>
   </ClientOnly>
 </template>
 
 <style scoped lang="scss">
+@use '/assets/scss/screens.scss' as *;
+
+.blur__glass {
+  @media screen and (max-width: $screen-sm) {
+    padding: 1rem;
+  }
+}
+
 .input-error {
   border: 1px solid red !important;
 }

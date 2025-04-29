@@ -2,6 +2,7 @@
 import ActionButton from '~/components/utilities/ActionButton.vue';
 import iconsConfig from '~/config/icons.config';
 import { decodeBase64AsJson, encodeBase64 } from '~/utilities/base64.utils';
+import { getDefaultTextColor } from '~/utilities/colors.utils';
 const { t } = useI18n();
 const theme = useColorMode();
 const route = useRoute();
@@ -131,7 +132,7 @@ const emailSignatureStyle = computed(() => {
     <ActionButton
       :text="t('change_account')"
       :icon="iconsConfig.button_logout"
-      :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
+      :text-color="getDefaultTextColor(theme.value)"
       class="main__button"
       :click="exitAccount"
       :link="true" />

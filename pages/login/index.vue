@@ -2,6 +2,7 @@
 import { ref, onBeforeMount } from 'vue';
 import LoginFormComponent from '~/components/LoginFormComponent.vue';
 import LoginUserComponent from '~/components/LoginUserComponent.vue';
+import TermsOfUse from '~/components/utilities/TermsOfUse.vue';
 
 const status = ref('');
 const user = ref({});
@@ -36,9 +37,18 @@ onBeforeMount(async () => {
           <LoginFormComponent v-if="status !== 'OK'" />
           <LoginUserComponent v-else :data="user" />
         </div>
+        <TermsOfUse />
       </div>
     </KeepAlive>
   </ClientOnly>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+@use '/assets/scss/screens.scss' as *;
+
+.blur__glass {
+  @media screen and (max-width: $screen-sm) {
+    padding: 1rem;
+  }
+}
+</style>

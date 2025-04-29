@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ActionButton from '~/components/utilities/ActionButton.vue';
 import BaseInput from '~/components/utilities/BaseInput.vue';
+import { getDefaultTextColor } from '~/utilities/colors.utils';
 
 const { t } = useI18n();
 const theme = useColorMode();
@@ -90,12 +91,7 @@ const setupEmail = async () => {
               :click="setupEmail"
               :outline="false"
               :disabled="false" />
-            <ActionButton
-              :text="t('back_login')"
-              :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
-              class="main__button"
-              :click="openLoginPage"
-              :link="true" />
+            <ActionButton :text="t('back_login')" :text-color="getDefaultTextColor(theme.value)" class="main__button" :click="openLoginPage" :link="true" />
           </div>
         </div>
       </div>

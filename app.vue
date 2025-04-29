@@ -19,7 +19,10 @@ onBeforeMount(() => {
     setLocale(queryLocale);
   }
   if (queryTheme === 'dark' || queryTheme === 'light') {
+    theme.preference = queryTheme;
     theme.value = queryTheme;
+  } else {
+    theme.preference = 'system';
   }
 });
 </script>

@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import ActionButton from '~/components/utilities/ActionButton.vue';
+import FlexButton from '~/components/utilities/FlexButton.vue';
 import iconsConfig from '~/config/icons.config';
+import { getDefaultTextColor } from '~/utilities/colors.utils';
 
 const { t } = useI18n();
+const route = useRoute();
+const theme = useColorMode();
 const cookies = useCookie('cookies');
 
 function acceptCookies() {
@@ -15,7 +19,20 @@ function acceptCookies() {
     <h6>{{ t('cookies') }}</h6>
     <p>{{ t('cookies_description') }}</p>
     <div class="content__buttons">
-      <ActionButton :text="t('cookies_button_accept')" text-color="#ffffff" :icon="iconsConfig.accept" color="#009a00" @click="acceptCookies()" />
+      <ActionButton
+        :text="t('cookies_button_accept')"
+        text-color="#ffffff"
+        :icon="iconsConfig.accept"
+        color="#009a00"
+        :transparent="false"
+        @click="acceptCookies()" />
+      <FlexButton
+        :text="t('cookies_button_info')"
+        :text-color="getDefaultTextColor(theme.value)"
+        :icon="iconsConfig.info"
+        color="transparent"
+        :transparent="true"
+        :link="`/docs/cookies?data=${route?.query?.data}`" />
     </div>
   </div>
 </template>
@@ -41,12 +58,8 @@ function acceptCookies() {
     flex-direction: row;
   }
 
-  @media screen and (max-width: $screen-lg) {
-    width: 30rem;
-  }
-
-  @media screen and (max-width: $screen-md) {
-    width: 95%;
+  @media screen and (max-width: $screen-xss) {
+    width: 90%;
   }
 }
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ActionButton from '~/components/utilities/ActionButton.vue';
 import iconsConfig from '~/config/icons.config';
+import { getDefaultTextColor } from '~/utilities/colors.utils';
 import { decodeBase64AsJson, encodeBase64 } from '~/utilities/base64.utils';
 const { t } = useI18n();
 const theme = useColorMode();
@@ -134,12 +135,7 @@ const authorize = async () => {
       :click="authorize"
       :outline="false"
       :disabled="isButtonDisabled" />
-    <ActionButton
-      :text="t('registerLink')"
-      :text-color="theme.value === 'dark' ? '#ffffff' : '#2C2044'"
-      class="main__button"
-      :click="openRegisterPage"
-      :link="true" />
+    <ActionButton :text="t('registerLink')" :text-color="getDefaultTextColor(theme.value)" class="main__button" :click="openRegisterPage" :link="true" />
   </div>
 </template>
 

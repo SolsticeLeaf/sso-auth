@@ -5,4 +5,5 @@ export default {
   repeat: 'pixelarticons:repeat',
   arrow_left: 'pixelarticons:arrow-left',
   accept: 'pixelarticons:check',
+  info: 'pixelarticons:info-box',
 };
