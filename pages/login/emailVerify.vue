@@ -115,8 +115,8 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back' | 'setupEmail
           <h1 class="logo__first">SLEAF</h1>
           <h1 class="logo__second">AUTH</h1>
         </div>
-        <div id="hero" class="wrapper blur__glass">
-          <div class="main">
+        <div id="hero" class="wrapper">
+          <div class="main blur__glass">
             <h6 v-if="showTitle">{{ t('registerPreCompletePage') }}</h6>
             <p>{{ t(message) }}</p>
             <ActionButton
@@ -166,10 +166,14 @@ function setMessage(msg: string, button: 'none' | 'retry' | 'back' | 'setupEmail
 .main {
   display: flex;
   flex-direction: column;
-  width: fit-content;
-  align-content: center;
+  padding: 2rem !important;
   text-align: center;
+  width: fit-content !important;
+  max-width: 100%;
   gap: 1rem;
-  white-space: pre-line;
+}
+
+.blur__glass {
+  padding: 0;
 }
 </style>

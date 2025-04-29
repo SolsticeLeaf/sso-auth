@@ -53,6 +53,7 @@ function openWindow(url: string) {
   window.location.assign(url);
   window.open(url, '_self');
 }
+
 const authorize = async () => {
   isButtonDisabled.value = true;
   try {
@@ -106,7 +107,7 @@ const authorize = async () => {
 </script>
 
 <template>
-  <div class="main">
+  <div class="main blur__glass">
     <input
       type="text"
       id="usernameInput"
@@ -143,9 +144,11 @@ const authorize = async () => {
 .main {
   display: flex;
   flex-direction: column;
-  width: fit-content;
-  align-content: center;
+  padding: 2rem !important;
+  padding-bottom: 1rem !important;
   text-align: center;
+  width: fit-content !important;
+  max-width: 100%;
   gap: 1rem;
 
   &__input {

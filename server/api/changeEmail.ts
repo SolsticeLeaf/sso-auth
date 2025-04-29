@@ -2,6 +2,7 @@ import { connectDB } from '~/server/api/database/MongoDB';
 import { changeEmail } from '~/server/api/interfaces/Account';
 import { getSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
+import { sendEmail } from './interfaces/EmailService';
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export default defineEventHandler(async (event) => {
@@ -23,6 +24,15 @@ export default defineEventHandler(async (event) => {
         return { status: 'INCORRECT_EMAIL' };
       }
       await changeEmail(sessionUser.userId.toString(), email);
+      try {
+        await sendEmail({
+          from: `noreply`,
+          to: sessionUser.email,
+          subject: 'Email changed| SLEAF AUTH',
+          text: `Your email has been changed to: ${email}. Agent: ${userAgent} | Time: ${new Date()}`,
+          headers: { 'x-cloudmta-class': 'standard' },
+        });
+      } catch {}
       return { status: 'OK' };
     }
     return { status: 'NOT_FOUND' };

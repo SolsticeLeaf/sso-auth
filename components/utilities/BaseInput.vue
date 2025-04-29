@@ -44,29 +44,58 @@ const error = ref('');
 
 const validate = () => {
   if (!value.value && props.required) {
-    error.value = 'field_required';
+    error.value = t('field_required');
     return false;
   }
   if (value.value && props.type === 'email') {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    error.value = emailRegex.test(value.value) ? '' : 'incorrect_email';
+    error.value = emailRegex.test(value.value) ? '' : t('incorrect_email');
   }
   if (value.value && props.type === 'text' && props.id?.includes('username')) {
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
     if (value.value.length < 5) {
-      error.value = 'username_length_input';
+      error.value = t('username_length_input');
     } else if (!usernameRegex.test(value.value)) {
-      error.value = 'username_latin';
+      error.value = t('username_latin');
     } else {
       error.value = '';
     }
   }
   if (value.value && props.type === 'password') {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{6,}$/;
-    error.value = passwordRegex.test(value.value) ? '' : 'password_simple';
+    let errorStr: string = '';
+    const password = value.value;
+    if (!/^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/.test(password)) {
+      errorStr = t('error_latin_only');
+    } else {
+      if (password.length < 8) {
+        errorStr = getMsg(errorStr, t('error_8_symbols'));
+      }
+      if (!/[A-Z]/.test(password)) {
+        errorStr = getMsg(errorStr, t('error_no_uppercase'));
+      }
+      if (!/[a-z]/.test(password)) {
+        errorStr = getMsg(errorStr, t('error_no_lowercase'));
+      }
+      if (!/\W|_/g.test(password)) {
+        errorStr = getMsg(errorStr, t('error_no_special_char'));
+      }
+      if (!/[0-9]/.test(password)) {
+        errorStr = getMsg(errorStr, t('error_no_digits'));
+      }
+    }
+
+    error.value = errorStr;
   }
   return !error.value;
 };
+
+function getMsg(errorStr: string, msg: string): string {
+  return `${errorStr}${hasText(errorStr) ? '\n' : ''}- ${msg}`;
+}
+
+function hasText(value: string): Boolean {
+  return value.length > 0;
+}
 
 watch(
   () => props.modelValue,
@@ -97,18 +126,16 @@ const onKeyup = (event: KeyboardEvent) => {
 </script>
 
 <template>
-  <div>
-    <input
-      :id="id"
-      :type="type"
-      :value="value"
-      :placeholder="placeholder"
-      :autofocus="autofocus"
-      :style="`border: 1px solid ${error ? '#c71700' : '#A782FF'} !important`"
-      @input="onInput"
-      @keyup="onKeyup" />
-    <p v-if="error" class="main__alert">{{ t(error) }}</p>
-  </div>
+  <input
+    :id="id"
+    :type="type"
+    :value="value"
+    :placeholder="placeholder"
+    :autofocus="autofocus"
+    :style="`border: 1px solid ${error ? '#c71700' : '#A782FF'} !important`"
+    @input="onInput"
+    @keyup="onKeyup" />
+  <p v-if="error" class="main__alert">{{ error }}</p>
 </template>
 
 <style scoped>

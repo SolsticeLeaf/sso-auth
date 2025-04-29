@@ -10,7 +10,7 @@ const passwordLatinOnly: RegExp = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/
 const passwordHasUppercase: RegExp = /[A-Z]/;
 const passwordHasLowercase: RegExp = /[a-z]/;
 const passwordHasDigit: RegExp = /[0-9]/;
-const passwordHasSpecialChar: RegExp = /[!@#$%^&*()_+\-=$begin:math:display$$end:math:display${};':"\\|,.<>\/?`~]/;
+const passwordHasSpecialChar: RegExp = /\W|_/g;
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);

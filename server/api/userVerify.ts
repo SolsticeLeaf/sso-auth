@@ -1,23 +1,12 @@
 import { connectDB } from '~/server/api/database/MongoDB';
 import { updateEmailStatus } from '~/server/api/interfaces/Account';
 import { checkUserStatus, createCode, deleteUserCode, verifyCode } from '~/server/api/interfaces/SubmitCode';
-import nodemailer from 'nodemailer';
 import { encodeBase64 } from '~/utilities/base64.utils';
 import { getSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
+import { sendEmail } from './interfaces/EmailService';
 
 const domain = process.env.DOMAIN || 'https://auth.sleaf.dev';
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_SMTP_SERVER || '',
-  port: Number(process.env.EMAIL_SMTP_PORT?.toString() || '465'),
-  secure: true,
-  requireTLS: true,
-  auth: {
-    user: process.env.EMAIL_SMTP_USERNAME || '',
-    pass: process.env.EMAIL_SMTP_PASSWORD || '',
-  },
-  logger: false,
-});
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -32,6 +21,15 @@ export default defineEventHandler(async (event) => {
     const sessionUser = await getSessionUser(event, userAgent);
     if (sessionUser) {
       if (sessionUser.emailStatus === 'VERIFIED') {
+        try {
+          await sendEmail({
+            from: `noreply`,
+            to: sessionUser.email,
+            subject: 'Account authorization | SLEAF AUTH',
+            text: `An authorization has been made to your account. Agent: ${userAgent} | Time: ${new Date()}`,
+            headers: { 'x-cloudmta-class': 'standard' },
+          });
+        } catch {}
         return { status: 'OK' };
       }
       if (sessionUser.email.length === 0) {
@@ -76,7 +74,7 @@ async function sendSubmitCode(username: string, email: string, data: any): Promi
   }
   const code = codeStatus.code;
   try {
-    await transporter.sendMail({
+    await sendEmail({
       from: `noreply`,
       to: email,
       subject: 'Verification link | SLEAF AUTH',

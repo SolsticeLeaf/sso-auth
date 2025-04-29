@@ -33,11 +33,13 @@ onBeforeMount(async () => {
           <h1 class="logo__first">SLEAF</h1>
           <h1 class="logo__second">AUTH</h1>
         </div>
-        <div id="hero" class="wrapper blur__glass">
-          <LoginFormComponent v-if="status !== 'OK'" />
-          <LoginUserComponent v-else :data="user" />
+        <div class="wrapper">
+          <div id="hero" class="login">
+            <LoginFormComponent v-if="status !== 'OK'" />
+            <LoginUserComponent v-else :data="user" />
+          </div>
+          <TermsOfUse />
         </div>
-        <TermsOfUse />
       </div>
     </KeepAlive>
   </ClientOnly>
@@ -46,9 +48,13 @@ onBeforeMount(async () => {
 <style scoped lang="scss">
 @use '/assets/scss/screens.scss' as *;
 
+.login {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
 .blur__glass {
-  @media screen and (max-width: $screen-sm) {
-    padding: 1rem;
-  }
+  padding: 0;
 }
 </style>

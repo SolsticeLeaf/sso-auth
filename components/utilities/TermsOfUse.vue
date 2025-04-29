@@ -30,13 +30,9 @@ const route = useRoute();
   justify-content: center;
   flex-wrap: wrap;
   gap: 0.3rem;
-  width: 32rem;
+  width: 90%;
   z-index: 20;
   color: #00000097;
-
-  @media screen and (max-width: $screen-sm) {
-    width: 100%;
-  }
 }
 
 .dark .terms {
@@ -57,6 +53,10 @@ const route = useRoute();
 }
 
 p {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+
+  @media screen and (max-width: $screen-lg) {
+    font-size: 0.8rem;
+  }
 }
 </style>

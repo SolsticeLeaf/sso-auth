@@ -69,6 +69,15 @@ function openWindow(url: string) {
   window.location.assign(url);
   window.open(url, '_self');
 }
+
+function hasText(value: string): boolean {
+  return value.replaceAll(' ', '').length > 0;
+}
+
+const allFieldsHasText = computed(() => {
+  return hasText(email.value) && hasText(username.value) && hasText(password.value) && hasText(passwordRepeat.value);
+});
+
 const register = async () => {
   isButtonDisabled.value = true;
   try {
@@ -162,49 +171,58 @@ const register = async () => {
           <h1 class="logo__first">SLEAF</h1>
           <h1 class="logo__second">AUTH</h1>
         </div>
-        <div id="hero" class="wrapper blur__glass">
-          <div class="main">
-            <h6>{{ t('registerPage') }}</h6>
-            <BaseInput v-model="email" type="email" id="emailInput" :placeholder="t('email')" :required="true" :enter="focusUsername" :hideAlert="hideAlert" />
-            <BaseInput
-              v-model="username"
-              type="text"
-              id="usernameInput"
-              :placeholder="t('username')"
-              :required="true"
-              :enter="focusPassword"
-              :hideAlert="hideAlert" />
-            <BaseInput
-              v-model="password"
-              type="password"
-              id="passwordInput"
-              :placeholder="t('password')"
-              :required="true"
-              :enter="focusPasswordRepeat"
-              :hideAlert="hideAlert" />
-            <BaseInput
-              v-model="passwordRepeat"
-              type="password"
-              id="passwordRepeatInput"
-              :placeholder="t('password_repeat')"
-              :required="true"
-              :enter="register"
-              :hideAlert="hideAlert" />
-
-            <p v-if="isAlertShow">{{ alertMessage }}</p>
-            <ActionButton
-              :text="t('register')"
-              :icon="iconsConfig.button_register"
-              color="#50C878"
-              text-color="#ffffff"
-              class="main__button"
-              :click="register"
-              :outline="false"
-              :disabled="isButtonDisabled" />
-            <ActionButton :text="t('loginLink')" :text-color="getDefaultTextColor(theme.value)" class="main__button" :click="openLoginPage" :link="true" />
+        <div class="wrapper">
+          <div id="hero" class="register blur__glass">
+            <div class="main">
+              <h6>{{ t('registerPage') }}</h6>
+              <BaseInput
+                v-model="email"
+                type="email"
+                id="emailInput"
+                :placeholder="t('email')"
+                :required="true"
+                :enter="focusUsername"
+                :hideAlert="hideAlert" />
+              <BaseInput
+                v-model="username"
+                type="text"
+                id="usernameInput"
+                :placeholder="t('username')"
+                :required="true"
+                :enter="focusPassword"
+                :hideAlert="hideAlert" />
+              <BaseInput
+                v-model="password"
+                type="password"
+                id="passwordInput"
+                :placeholder="t('password')"
+                :required="true"
+                :enter="focusPasswordRepeat"
+                :hideAlert="hideAlert" />
+              <BaseInput
+                v-model="passwordRepeat"
+                type="password"
+                id="passwordRepeatInput"
+                :placeholder="t('password_repeat')"
+                :required="true"
+                :enter="register"
+                :hideAlert="hideAlert" />
+              <p v-if="isAlertShow">{{ alertMessage }}</p>
+              <ActionButton
+                :text="t('register')"
+                :icon="iconsConfig.button_register"
+                color="#50C878"
+                text-color="#ffffff"
+                class="main__button"
+                :click="register"
+                :outline="false"
+                :noLoadingIcon="!allFieldsHasText"
+                :disabled="isButtonDisabled || !allFieldsHasText" />
+              <ActionButton :text="t('loginLink')" :text-color="getDefaultTextColor(theme.value)" class="main__button" :click="openLoginPage" :link="true" />
+            </div>
           </div>
+          <TermsOfUse />
         </div>
-        <TermsOfUse />
       </div>
     </KeepAlive>
   </ClientOnly>
@@ -214,9 +232,7 @@ const register = async () => {
 @use '/assets/scss/screens.scss' as *;
 
 .blur__glass {
-  @media screen and (max-width: $screen-sm) {
-    padding: 1rem;
-  }
+  padding: 0;
 }
 
 .input-error {
@@ -232,11 +248,16 @@ const register = async () => {
   white-space: pre-line;
 }
 
+.register {
+  width: 100%;
+}
+
 .main {
   display: flex;
   flex-direction: column;
-  width: fit-content;
   align-content: center;
+  padding: 2rem;
+  padding-bottom: 1rem;
   text-align: center;
   gap: 1rem;
 

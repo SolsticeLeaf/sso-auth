@@ -30,6 +30,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  noLoadingIcon: {
+    type: Boolean,
+    default: false,
+  },
   outline: {
     type: Boolean,
     default: false,
@@ -57,7 +61,7 @@ function onClick() {
 
 <template>
   <div @click="onClick" class="button" :style="props.link ? '' : buttonStyle">
-    <Icon :name="props.disabled ? 'line-md:loading-loop' : props.icon" class="button__img" :style="textStyle"></Icon>
+    <Icon :name="props.disabled ? (props.noLoadingIcon ? '' : 'line-md:loading-loop') : props.icon" class="button__img" :style="textStyle"></Icon>
     <p :style="textStyle">{{ props.text }}</p>
   </div>
 </template>

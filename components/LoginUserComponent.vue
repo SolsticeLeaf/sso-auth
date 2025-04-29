@@ -108,7 +108,7 @@ const emailSignatureStyle = computed(() => {
 </script>
 
 <template>
-  <div class="main">
+  <div class="main blur__glass">
     <div class="main__userinfo transparent__glass">
       <LazyNuxtImg :src="props.data.avatar" class="main__userinfo__avatar" />
       <div class="main__userinfo__info">
@@ -147,9 +147,11 @@ const emailSignatureStyle = computed(() => {
 .main {
   display: flex;
   flex-direction: column;
-  width: fit-content;
-  align-content: center;
+  padding: 2rem !important;
+  padding-bottom: 1rem !important;
   text-align: center;
+  width: fit-content !important;
+  max-width: 100%;
   gap: 1rem;
 
   &__userinfo {
