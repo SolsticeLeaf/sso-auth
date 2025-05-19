@@ -6,4 +6,5 @@ export default {
   arrow_left: 'pixelarticons:arrow-left',
   accept: 'pixelarticons:check',
   info: 'pixelarticons:info-box',
+  home: 'pixelarticons:home',
 };

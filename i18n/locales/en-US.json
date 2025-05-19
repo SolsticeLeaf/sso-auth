@@ -7,8 +7,12 @@
   "password": "Password",
   "password_repeat": "Repeat password",
   "login": "Login",
+  "back": "Back",
+  "error": "Error",
   "register": "Register",
+  "forgotPasswordPage": "Password recovery",
   "registerLink": "Register account",
+  "forgotPassword": "Forgot password?",
   "loginLink": "Login to account",
   "registerPage": "Account register",
   "wrong_credentials": "Wrong username or password!",
@@ -40,6 +44,7 @@
   "incorrect_email": "Email is incorrect",
   "unknown_error": "Unknown error, please try again later.",
   "email_sent": "A confirmation email has been sent to you,\nplease follow the link in the email.\nLink active period: 5 minutes",
+  "password_recovery_sent": "A recovery link has been sent to your email,\nplease follow the link in the email.\nLink active period: 5 minutes",
   "email_not_sent": "There was an error when sending a message to your email.",
   "email_already_sent": "A confirmation email already has been sent to you,\nplease follow the link in the email.\nLink active period: 5 minutes",
   "registerPreCompletePage": "Email verification",
@@ -80,5 +85,11 @@
     "Vanilla",
     "Private",
     "Map"
-  ]
+  ],
+  "changePasswordPage": "Change password",
+  "change_password": "Change password",
+  "email_rate_limit": "Please wait a minute before sending another email.",
+  "password_too_long": "Password is too long. Maximum length: 128 characters.",
+  "invalid_data": "Invalid request data.",
+  "user_not_found": "User not found."
 }

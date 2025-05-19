@@ -125,7 +125,6 @@ const emailSignatureStyle = computed(() => {
       :icon="iconsConfig.button_login"
       color="#50C878"
       text-color="#ffffff"
-      class="main__button"
       :click="authorize"
       :outline="false"
       :disabled="isButtonDisabled" />
@@ -133,7 +132,6 @@ const emailSignatureStyle = computed(() => {
       :text="t('change_account')"
       :icon="iconsConfig.button_logout"
       :text-color="getDefaultTextColor(theme.value)"
-      class="main__button"
       :click="exitAccount"
       :link="true" />
   </div>

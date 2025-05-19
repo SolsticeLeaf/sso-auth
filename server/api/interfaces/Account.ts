@@ -199,6 +199,14 @@ export async function getAccountById(userId: string): Promise<Account | undefine
   return undefined;
 }
 
+export async function getAccountByEmail(email: string): Promise<Account | undefined> {
+  const user = await AccountModel.findOne({ email: email });
+  if (user) {
+    return user;
+  }
+  return undefined;
+}
+
 export async function updateTokens(user: Account, tokens: Array<Token>): Promise<void> {
   await AccountModel.findOneAndUpdate({ _id: user._id }, { tokens: tokens });
 }
@@ -224,4 +232,21 @@ export async function createToken(): Promise<Token> {
     accessExpire: accessTokenDate,
     refreshExpire: refreshTokenDate,
   };
+}
+
+export async function updatePassword(id: string, hashedPassword: string): Promise<{ status: string }> {
+  try {
+    const result = await AccountModel.findOneAndUpdate({ _id: id }, { password: hashedPassword }, { new: true });
+
+    if (!result) {
+      return { status: 'USER_NOT_FOUND' };
+    }
+    return { status: 'OK' };
+  } catch (error) {
+    console.error('Error updating password:', {
+      error,
+      userId: id,
+    });
+    return { status: 'ERROR' };
+  }
 }

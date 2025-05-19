@@ -3,6 +3,7 @@ import { registerUser } from '~/server/api/interfaces/Account';
 import { saveSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
 import { Filter } from 'bad-words';
+import { addLog } from './interfaces/Logger';
 const filter = new Filter();
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 const usernameExpression: RegExp = /^[A-Za-z][A-Za-z0-9]*$/;
@@ -29,6 +30,13 @@ export default defineEventHandler(async (event) => {
     const user = await registerUser(username, password, email);
     if (user.userId.length > 5) {
       await saveSessionUser(event, user.userId, userAgent);
+      await addLog({
+        userId: user.userId,
+        action: 'REGISTERED',
+        additional: {
+          userAgent: userAgent,
+        },
+      });
     }
     return { status: user.status };
   } catch (error) {

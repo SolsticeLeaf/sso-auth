@@ -57,13 +57,13 @@ function acceptCookies() {
     display: flex;
     flex-direction: row;
   }
-
-  @media screen and (max-width: $screen-xss) {
-    width: 90%;
-  }
 }
 
 .blur__glass {
   padding: 1rem;
+
+  @media screen and (max-width: $screen-sm) {
+    padding: 1rem 0.5rem;
+  }
 }
 </style>

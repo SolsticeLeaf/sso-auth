@@ -213,12 +213,11 @@ const register = async () => {
                 :icon="iconsConfig.button_register"
                 color="#50C878"
                 text-color="#ffffff"
-                class="main__button"
                 :click="register"
                 :outline="false"
                 :noLoadingIcon="!allFieldsHasText"
                 :disabled="isButtonDisabled || !allFieldsHasText" />
-              <ActionButton :text="t('loginLink')" :text-color="getDefaultTextColor(theme.value)" class="main__button" :click="openLoginPage" :link="true" />
+              <ActionButton :text="t('loginLink')" :text-color="getDefaultTextColor(theme.value)" :click="openLoginPage" :link="true" />
             </div>
           </div>
           <TermsOfUse />

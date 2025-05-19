@@ -18,6 +18,10 @@ const openRegisterPage = () => {
   return openWindow(`/register?data=${routeData}`);
 };
 
+const openForgotPasswordPage = () => {
+  return openWindow(`/account/forgotPassword?data=${routeData}`);
+};
+
 const openRedirectUrl = (code: string) => {
   hideAlert();
   const route = encodeBase64(
@@ -132,11 +136,11 @@ const authorize = async () => {
       :icon="iconsConfig.button_login"
       color="#50C878"
       text-color="#ffffff"
-      class="main__button"
       :click="authorize"
       :outline="false"
       :disabled="isButtonDisabled" />
-    <ActionButton :text="t('registerLink')" :text-color="getDefaultTextColor(theme.value)" class="main__button" :click="openRegisterPage" :link="true" />
+    <ActionButton :text="t('forgotPassword')" :text-color="getDefaultTextColor(theme.value)" :click="openForgotPasswordPage" :link="true" />
+    <ActionButton :text="t('registerLink')" :text-color="getDefaultTextColor(theme.value)" :click="openRegisterPage" :link="true" />
   </div>
 </template>
 

@@ -4,6 +4,7 @@ import { getSessionUser, saveSessionUser } from '~/server/api/interfaces/Session
 import { connectRedis } from '~/server/api/database/Redis';
 import { EventHandlerRequest, H3Event } from 'h3';
 import { saveTokenRequest } from '~/server/api/interfaces/TokensManager';
+import { addLog } from './interfaces/Logger';
 const usernameExpression: RegExp = /^[A-Za-z][A-Za-z0-9]*$/;
 
 export default defineEventHandler(async (event) => {
@@ -39,6 +40,14 @@ async function authBySession(event: H3Event<EventHandlerRequest>, clientId: stri
   if (sessionUser) {
     const authStatus = await authorizeUserById(sessionUser.userId || 'undefined');
     if (authStatus.status === 'OK') {
+      await addLog({
+        userId: sessionUser.userId,
+        action: 'AUTHORIZE',
+        additional: {
+          userAgent: userAgent,
+          type: 'Session',
+        },
+      });
       return { status: 'OK', code: await saveToken(authStatus.token, clientId) };
     }
   }
@@ -55,6 +64,14 @@ async function authByPassword(
   const authStatus = await authorizeUser(username, password);
   if (authStatus.status === 'VERIFIED' || authStatus.status === 'NOT_VERIFIED') {
     await saveSessionUser(event, authStatus.userId, userAgent);
+    await addLog({
+      userId: authStatus.userId,
+      action: 'AUTHORIZE',
+      additional: {
+        userAgent: userAgent,
+        type: 'Username',
+      },
+    });
     return { status: 'OK', code: await saveToken(authStatus.token, clientId) };
   }
   return { status: authStatus.status, code: '' };
@@ -70,6 +87,14 @@ async function authByEmail(
   const authStatus = await authorizeUserByEmail(email, password);
   if (authStatus.status === 'VERIFIED' || authStatus.status === 'NOT_VERIFIED') {
     await saveSessionUser(event, authStatus.userId, userAgent);
+    await addLog({
+      userId: authStatus.userId,
+      action: 'AUTHORIZE',
+      additional: {
+        userAgent: userAgent,
+        type: 'Email',
+      },
+    });
     return { status: 'OK', code: await saveToken(authStatus.token, clientId) };
   }
   return { status: authStatus.status, code: '' };
