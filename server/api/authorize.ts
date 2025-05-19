@@ -5,7 +5,6 @@ import { connectRedis } from '~/server/api/database/Redis';
 import { EventHandlerRequest, H3Event } from 'h3';
 import { saveTokenRequest } from '~/server/api/interfaces/TokensManager';
 import { addLog } from './interfaces/Logger';
-const usernameExpression: RegExp = /^[A-Za-z][A-Za-z0-9]*$/;
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -110,9 +109,6 @@ async function saveToken(token: Token | undefined, clientId: string): Promise<st
 async function checkData(username: string, password: string): Promise<{ status: string; code: string }> {
   if (!username) {
     return { status: 'EMPTY_USERNAME', code: '' };
-  }
-  if (!usernameExpression.test(username)) {
-    return { status: 'USERNAME_MUST_BE_LATIN', code: '' };
   }
   if (username.length < 5) {
     return { status: 'SMALL_USERNAME', code: '' };

@@ -182,7 +182,7 @@ export async function getAccountData(accessToken: string): Promise<{ status: str
   return { status: 'NOT_FOUND', account: undefined };
 }
 
-export async function verifyToken(token: string): Promise<boolean> {
+async function verifyToken(token: string): Promise<boolean> {
   try {
     jwt.verify(token, JWT_SECRET);
     return true;
@@ -207,7 +207,15 @@ export async function getAccountByEmail(email: string): Promise<Account | undefi
   return undefined;
 }
 
-export async function updateTokens(user: Account, tokens: Array<Token>): Promise<void> {
+export async function getAccountEmail(userId: string): Promise<string | undefined> {
+  const user = await AccountModel.findOne({ _id: userId });
+  if (user) {
+    return user.email;
+  }
+  return undefined;
+}
+
+async function updateTokens(user: Account, tokens: Array<Token>): Promise<void> {
   await AccountModel.findOneAndUpdate({ _id: user._id }, { tokens: tokens });
 }
 
@@ -219,7 +227,7 @@ export async function updateEmailStatus(id: string, emailStatus: string): Promis
   await AccountModel.findOneAndUpdate({ _id: id }, { emailStatus: emailStatus });
 }
 
-export async function createToken(): Promise<Token> {
+async function createToken(): Promise<Token> {
   const accessToken = jwt.sign({}, JWT_SECRET, { expiresIn: '48h' });
   const refreshToken = jwt.sign({}, JWT_SECRET, { expiresIn: '720h' });
   const accessTokenDate = new Date();

@@ -2,12 +2,13 @@ import { connectDB } from '~/server/api/database/MongoDB';
 import { changeEmail } from '~/server/api/interfaces/Account';
 import { getSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
-import { sendEmail } from './interfaces/EmailService';
+import { sendTemplatedEmail } from './utilities/emailTemplate';
+
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const { email } = body;
+  const { email, routeData } = body;
   const userAgent = getRequestHeader(event, 'userAgent');
   if (userAgent === undefined) {
     return { status: 'NO_USER_AGENT', user: undefined };
@@ -23,14 +24,20 @@ export default defineEventHandler(async (event) => {
       if (!emailExpression.test(email)) {
         return { status: 'INCORRECT_EMAIL' };
       }
+      const oldEmail = sessionUser.email;
       await changeEmail(sessionUser.userId.toString(), email);
       try {
-        await sendEmail({
-          from: `noreply`,
-          to: sessionUser.email,
-          subject: 'Email changed| SLEAF AUTH',
-          text: `Your email has been changed to: ${email}. Agent: ${userAgent} | Time: ${new Date()}`,
-          headers: { 'x-cloudmta-class': 'standard' },
+        await sendTemplatedEmail({
+          to: oldEmail,
+          subject: 'Email changed | SLEAF AUTH',
+          template: 'email-change',
+          data: {
+            oldEmail,
+            newEmail: email,
+            changeTime: new Date().toLocaleString(),
+            userAgent,
+          },
+          locale: routeData?.locale || 'en',
         });
       } catch {}
       return { status: 'OK' };

@@ -2,14 +2,14 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { randomUUID } from 'node:crypto';
 
 export interface SubmitCode extends Document {
-  username: string;
+  userId: string;
   expires: Date;
 }
 
 const schema: Schema = new Schema(
   {
     _id: { type: String },
-    username: { type: String, required: true },
+    userId: { type: String, required: true },
     expires: { type: Date, required: true },
   },
   { collection: 'recoverySubmitCodes' }
@@ -17,9 +17,9 @@ const schema: Schema = new Schema(
 
 const SubmitCodeModel = mongoose.model<SubmitCode>('recoverySubmitCodes', schema);
 
-export async function checkUserStatus(username: string): Promise<{ status: string }> {
+export async function checkUserStatus(userId: string): Promise<{ status: string }> {
   try {
-    const codes = await SubmitCodeModel.find({ username: username });
+    const codes = await SubmitCodeModel.find({ userId: userId });
     for (const code of codes) {
       if (code.expires < new Date()) {
         await SubmitCodeModel.findOneAndDelete({ _id: code._id }).exec();
@@ -34,23 +34,23 @@ export async function checkUserStatus(username: string): Promise<{ status: strin
   return { status: 'OK' };
 }
 
-export async function deleteUserCode(code: string, username: string): Promise<void> {
+export async function deleteUserCode(code: string, userId: string): Promise<void> {
   try {
-    await SubmitCodeModel.findOneAndDelete({ _id: code, username: username }).exec();
+    await SubmitCodeModel.findOneAndDelete({ _id: code, userId: userId }).exec();
   } catch (error) {
     console.error('Error on deleting user code:', error);
   }
 }
 
-export async function verifyCode(code: string, username: string): Promise<{ status: string }> {
+export async function verifyCode(code: string, userId: string): Promise<{ status: string }> {
   try {
-    const user = await SubmitCodeModel.findOne({ _id: code, username: username });
+    const user = await SubmitCodeModel.findOne({ _id: code, userId: userId });
     if (user) {
       let status = 'OK';
       if (user.expires < new Date()) {
         status = 'EXPIRED';
       }
-      await SubmitCodeModel.findByIdAndDelete({ _id: code, username: username });
+      await SubmitCodeModel.findByIdAndDelete({ _id: code, userId: userId });
       return { status: status };
     }
   } catch (error) {
@@ -60,14 +60,14 @@ export async function verifyCode(code: string, username: string): Promise<{ stat
   return { status: 'NOT_FOUND' };
 }
 
-export async function createCode(username: string): Promise<{ status: string; code: string }> {
+export async function createCode(userId: string): Promise<{ status: string; code: string }> {
   try {
     const code = randomUUID().toString();
     const date = new Date();
     date.setMinutes(date.getMinutes() + 5);
     await SubmitCodeModel.create({
       _id: code,
-      username: username,
+      userId: userId,
       expires: date,
     });
     return { status: 'OK', code: code };

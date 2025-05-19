@@ -2,7 +2,8 @@ import { connectDB } from '~/server/api/database/MongoDB';
 import { verifyCode } from './interfaces/RecoveryPasswordsCodes';
 import { addLog } from './interfaces/Logger';
 import { genSaltSync, hashSync } from 'bcrypt-ts';
-import { updatePassword } from './interfaces/Account';
+import { getAccountEmail, updatePassword } from './interfaces/Account';
+import { sendTemplatedEmail } from './utilities/emailTemplate';
 
 const passwordLatinOnly: RegExp = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/;
 const passwordHasUppercase: RegExp = /[A-Z]/;
@@ -15,24 +16,20 @@ const MAX_PASSWORD_LENGTH = 128;
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { password, passwordRepeat, routeData } = body;
-
   if (!routeData || !routeData.submitCode || !routeData.userId) {
     console.error('Invalid route data:', { routeData });
     return { status: 'INVALID_DATA' };
   }
-
   const userAgent = getRequestHeader(event, 'userAgent');
   if (userAgent === undefined) {
     return { status: 'NO_USER_AGENT' };
   }
-
   try {
     await connectDB();
     const dataStatus = await checkData(password, passwordRepeat);
     if (dataStatus.status !== 'OK') {
       return dataStatus;
     }
-
     const code = routeData.submitCode;
     const userId = routeData.userId;
     const checkedCode = await verifyCode(code, userId);
@@ -40,7 +37,6 @@ export default defineEventHandler(async (event) => {
     if (checkedCode.status === 'OK') {
       const hashedPassword = hashSync(password, genSaltSync(10));
       const updateResult = await updatePassword(userId, hashedPassword);
-
       if (updateResult.status === 'OK') {
         await addLog({
           userId: userId,
@@ -50,6 +46,22 @@ export default defineEventHandler(async (event) => {
             ip: getRequestHeader(event, 'x-forwarded-for') || 'unknown',
           },
         });
+        try {
+          const email = await getAccountEmail(userId);
+          if (email !== undefined) {
+            await sendTemplatedEmail({
+              to: email,
+              subject: 'Password changed | SLEAF AUTH',
+              template: 'password-change',
+              data: {
+                changeTime: new Date().toLocaleString(),
+                userAgent,
+                ipAddress: getRequestHeader(event, 'x-forwarded-for') || 'unknown',
+              },
+              locale: routeData.locale || 'en',
+            });
+          }
+        } catch {}
         return { status: 'OK' };
       }
       return updateResult;

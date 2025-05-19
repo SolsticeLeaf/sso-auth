@@ -4,7 +4,7 @@ import { checkUserStatus, createCode, deleteUserCode, verifyCode } from '~/serve
 import { encodeBase64 } from '~/utilities/base64.utils';
 import { getSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
-import { sendEmail } from './interfaces/EmailService';
+import { sendTemplatedEmail } from './utilities/emailTemplate';
 
 const domain = process.env.DOMAIN || 'https://auth.sleaf.dev';
 
@@ -22,12 +22,15 @@ export default defineEventHandler(async (event) => {
     if (sessionUser) {
       if (sessionUser.emailStatus === 'VERIFIED') {
         try {
-          await sendEmail({
-            from: `noreply`,
+          await sendTemplatedEmail({
             to: sessionUser.email,
             subject: 'Account authorization | SLEAF AUTH',
-            text: `An authorization has been made to your account. Agent: ${userAgent} | Time: ${new Date()}`,
-            headers: { 'x-cloudmta-class': 'standard' },
+            template: 'email-change',
+            data: {
+              userAgent,
+              changeTime: new Date().toLocaleString(),
+            },
+            locale: routeData.locale || 'en',
           });
         } catch {}
         return { status: 'OK' };
@@ -36,8 +39,8 @@ export default defineEventHandler(async (event) => {
         return { status: 'NO_EMAIL' };
       }
       const code = routeData.submitCode;
-      const username = sessionUser.username;
-      const checkedCode = await checkSubmitCode(username, code);
+      const userId = sessionUser.userId;
+      const checkedCode = await checkSubmitCode(userId, code);
       switch (checkedCode.status) {
         case 'OK':
           await updateEmailStatus(sessionUser.userId.toString(), 'VERIFIED');
@@ -47,7 +50,7 @@ export default defineEventHandler(async (event) => {
         case 'EXPIRED':
           return { status: 'EXPIRED' };
         default:
-          return sendSubmitCode(username, sessionUser.email, routeData);
+          return sendSubmitCode(userId, sessionUser.email, routeData);
       }
     }
     return { status: 'TOKEN_NOT_FOUND' };
@@ -57,34 +60,37 @@ export default defineEventHandler(async (event) => {
   }
 });
 
-async function checkSubmitCode(username: string, code: string): Promise<{ status: string }> {
-  return await verifyCode(code, username);
+async function checkSubmitCode(userId: string, code: string): Promise<{ status: string }> {
+  return await verifyCode(code, userId);
 }
 
-async function sendSubmitCode(username: string, email: string, data: any): Promise<{ status: string }> {
-  const checkCodeStatus = (await checkUserStatus(username)).status;
+async function sendSubmitCode(userId: string, email: string, data: any): Promise<{ status: string }> {
+  const checkCodeStatus = (await checkUserStatus(userId)).status;
   if (checkCodeStatus === 'HAS_CODE') {
     return { status: 'ALREADY_SENT' };
   } else if (checkCodeStatus === 'ERROR') {
     return { status: 'ERROR' };
   }
-  const codeStatus = await createCode(username);
+  const codeStatus = await createCode(userId);
   if (codeStatus.status !== 'OK') {
     return { status: codeStatus.status };
   }
   const code = codeStatus.code;
   try {
-    await sendEmail({
-      from: `noreply`,
+    const verificationLink = await createLink(data, code);
+    await sendTemplatedEmail({
       to: email,
       subject: 'Verification link | SLEAF AUTH',
-      text: `Your verification link is ${await createLink(data, code)} (Link period: 5 minutes)`,
-      headers: { 'x-cloudmta-class': 'standard' },
+      template: 'verification',
+      data: {
+        verificationLink,
+      },
+      locale: data.locale || 'en',
     });
     return { status: 'CODE_SENT' };
   } catch (error) {
     console.log('Error on sending code:', error);
-    await deleteUserCode(code, username);
+    await deleteUserCode(code, userId);
     return { status: 'CODE_NOT_SENT' };
   }
 }

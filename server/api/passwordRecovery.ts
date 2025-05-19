@@ -1,9 +1,10 @@
 import { connectDB } from '~/server/api/database/MongoDB';
 import { getAccountByEmail } from '~/server/api/interfaces/Account';
 import { encodeBase64 } from '~/utilities/base64.utils';
-import { sendEmail } from './interfaces/EmailService';
+import { sendTemplatedEmail } from './utilities/emailTemplate';
 import { addLog } from './interfaces/Logger';
 import { createCode } from './interfaces/RecoveryPasswordsCodes';
+
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 const domain = process.env.DOMAIN || 'https://auth.sleaf.dev';
 
@@ -36,17 +37,20 @@ export default defineEventHandler(async (event) => {
         userAgent: userAgent,
       },
     });
-    const codeStatus = await createCode(account.username);
+    const codeStatus = await createCode(account._id);
     if (codeStatus.status !== 'OK') {
       return { status: codeStatus.status };
     }
     const code = codeStatus.code;
-    await sendEmail({
-      from: `noreply`,
+    const recoveryLink = await createLink(routeData, account._id, code);
+    await sendTemplatedEmail({
       to: email,
       subject: 'Verification link | SLEAF AUTH',
-      text: `Your password recovery link is ${await createLink(routeData, account._id, code)} (Link period: 5 minutes)`,
-      headers: { 'x-cloudmta-class': 'standard' },
+      template: 'password-recovery',
+      data: {
+        recoveryLink,
+      },
+      locale: routeData.locale || 'en',
     });
     return { status: 'OK' };
   } catch (error) {
