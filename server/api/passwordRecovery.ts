@@ -23,13 +23,9 @@ export default defineEventHandler(async (event) => {
     }
     await connectDB();
     const account = await getAccountByEmail(email);
-    if (account === undefined) {
+    if (account === undefined || account.emailStatus === 'VERIFIED') {
       return { status: 'OK' };
     }
-    // if (account === undefined || account.emailStatus === 'VERIFIED') {
-    //   return { status: 'OK' };
-    // }
-    // TODO: Uncommit
     await addLog({
       userId: account._id,
       action: 'Password recovery request',

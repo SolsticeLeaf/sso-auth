@@ -38,6 +38,10 @@ function hasText(value: string): boolean {
   return value.replaceAll(' ', '').length > 0;
 }
 
+const focusPasswordRepeat = () => {
+  document?.getElementById('passwordRepeatInput')?.focus();
+};
+
 const allFieldsHasText = computed(() => {
   return hasText(password.value) && hasText(passwordRepeat.value);
 });
@@ -123,7 +127,7 @@ const changePassword = async () => {
               id="passwordInput"
               :placeholder="t('password')"
               :required="true"
-              :enter="changePassword"
+              :enter="focusPasswordRepeat"
               :hideAlert="hideAlert" />
             <BaseInput
               v-model="passwordRepeat"
