@@ -23,7 +23,10 @@ export default defineEventHandler(async (event) => {
     }
     await connectDB();
     const account = await getAccountByEmail(email);
-    if (account === undefined || account.emailStatus === 'VERIFIED') {
+    if (account === undefined) {
+      return { status: 'INCORRECT_EMAIL' };
+    }
+    if (account.emailStatus !== 'VERIFIED') {
       return { status: 'OK' };
     }
     await addLog({
