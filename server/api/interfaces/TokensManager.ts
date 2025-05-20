@@ -2,8 +2,6 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { Token } from '~/server/api/interfaces/Account';
 import { randomUUID } from 'node:crypto';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'dfsdsfv32rvsdcv2csc';
-
 export interface TokensManager extends Document {
   _id: string;
   clientId: string;
@@ -37,8 +35,7 @@ export async function saveTokenRequest(token: Token, clientId: string): Promise<
 
 export async function getTokenRequest(code: string, clientId: string): Promise<Token | undefined> {
   try {
-    const token = await TokensManagerModel.findOne({ _id: code, clientId: clientId });
-    await TokensManagerModel.findOneAndDelete({ _id: code, clientId: clientId });
+    const token = await TokensManagerModel.findOneAndDelete({ _id: code, clientId: clientId });
     return token?.token;
   } catch (error) {
     return undefined;

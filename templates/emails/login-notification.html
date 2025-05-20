@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{t "loginNotification.title"}}</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .header {
+        text-align: center;
+        padding: 20px 0;
+      }
+      .content {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 30px;
+        margin: 20px 0;
+      }
+      .footer {
+        text-align: center;
+        font-size: 12px;
+        color: #666;
+        margin-top: 30px;
+      }
+      .info-block {
+        background-color: #fff;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 15px;
+        margin: 15px 0;
+      }
+      .warning {
+        color: #dc3545;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>{{t "loginNotification.title"}}</h1>
+      </div>
+      <div class="content">
+        <p>{{t "loginNotification.greeting"}}</p>
+
+        <div class="info-block">
+          <p><strong>{{t "loginNotification.loginTime"}}:</strong> {{loginTime}}</p>
+          <p><strong>{{t "loginNotification.device"}}:</strong> {{userAgent}}</p>
+          <p><strong>{{t "loginNotification.ipAddress"}}:</strong> {{ipAddress}}</p>
+        </div>
+
+        <p>{{t "loginNotification.securityNote"}}</p>
+
+        <p class="warning">{{t "loginNotification.warning"}}</p>
+      </div>
+      <div class="footer">
+        <p>{{t "loginNotification.footer"}}</p>
+      </div>
+    </div>
+  </body>
+</html>

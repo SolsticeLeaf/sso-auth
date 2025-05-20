@@ -22,7 +22,7 @@ export async function checkUserStatus(userId: string): Promise<{ status: string 
     const codes = await SubmitCodeModel.find({ userId: userId });
     for (const code of codes) {
       if (code.expires < new Date()) {
-        await SubmitCodeModel.findOneAndDelete({ _id: code._id }).exec();
+        await SubmitCodeModel.deleteOne({ _id: code._id }).exec();
       } else {
         return { status: 'HAS_CODE' };
       }
@@ -36,7 +36,7 @@ export async function checkUserStatus(userId: string): Promise<{ status: string 
 
 export async function deleteUserCode(code: string, userId: string): Promise<void> {
   try {
-    await SubmitCodeModel.findOneAndDelete({ _id: code, userId: userId }).exec();
+    await SubmitCodeModel.deleteOne({ _id: code, userId: userId }).exec();
   } catch (error) {
     console.error('Error on deleting user code:', error);
   }

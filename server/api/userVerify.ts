@@ -21,18 +21,6 @@ export default defineEventHandler(async (event) => {
     const sessionUser = await getSessionUser(event, userAgent);
     if (sessionUser) {
       if (sessionUser.emailStatus === 'VERIFIED') {
-        try {
-          await sendTemplatedEmail({
-            to: sessionUser.email,
-            subject: 'Account authorization | SLEAF AUTH',
-            template: 'email-change',
-            data: {
-              userAgent,
-              changeTime: new Date().toLocaleString(),
-            },
-            locale: routeData.locale || 'en',
-          });
-        } catch {}
         return { status: 'OK' };
       }
       if (sessionUser.email.length === 0) {

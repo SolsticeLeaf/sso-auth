@@ -155,6 +155,7 @@ export async function refreshUserToken(accessToken: string, refreshToken: string
 
 export async function getAccountData(accessToken: string): Promise<{ status: string; account: AccountData | undefined }> {
   try {
+    console.log('accessToken', accessToken);
     const users = await AccountModel.find();
     for (const user of users) {
       const tokens = user.tokens.filter((token) => token.accessToken === accessToken);
@@ -233,7 +234,7 @@ async function createToken(): Promise<Token> {
   const accessTokenDate = new Date();
   accessTokenDate.setHours(accessTokenDate.getHours() + 48);
   const refreshTokenDate = new Date();
-  refreshTokenDate.setMinutes(refreshTokenDate.getMonth() + 1);
+  refreshTokenDate.setMonth(refreshTokenDate.getMonth() + 1);
   return {
     accessToken: accessToken,
     refreshToken: refreshToken,

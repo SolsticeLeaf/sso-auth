@@ -117,5 +117,15 @@
   "password_change_agent": "User Agent",
   "password_change_ip": "IP Address",
   "password_change_security": "If you did not make this change, please contact our support team immediately.",
-  "email_footer": "This is an automated message, please do not reply to this email."
+  "email_footer": "This is an automated message, please do not reply to this email.",
+  "loginNotification": {
+    "title": "New Login to Your Account",
+    "greeting": "We detected a new login to your SLEAF AUTH account.",
+    "loginTime": "Login Time",
+    "device": "Device",
+    "ipAddress": "IP Address",
+    "securityNote": "If this was you, you can safely ignore this email. If you don't recognize this login, please secure your account immediately.",
+    "warning": "If you didn't make this login, please change your password immediately and enable two-factor authentication if you haven't already.",
+    "footer": "This is an automated message, please do not reply to this email."
+  }
 }

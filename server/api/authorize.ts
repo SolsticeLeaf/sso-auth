@@ -1,10 +1,11 @@
 import { connectDB } from '~/server/api/database/MongoDB';
-import { authorizeUser, authorizeUserById, authorizeUserByEmail, Token } from '~/server/api/interfaces/Account';
+import { authorizeUser, authorizeUserById, authorizeUserByEmail, Token, getAccountEmail } from '~/server/api/interfaces/Account';
 import { getSessionUser, saveSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
 import { EventHandlerRequest, H3Event } from 'h3';
 import { saveTokenRequest } from '~/server/api/interfaces/TokensManager';
 import { addLog } from './interfaces/Logger';
+import { sendTemplatedEmail } from './utilities/emailTemplate';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
@@ -47,7 +48,7 @@ async function authBySession(event: H3Event<EventHandlerRequest>, clientId: stri
           type: 'Session',
         },
       });
-      return { status: 'OK', code: await saveToken(authStatus.token, clientId) };
+      return { status: 'OK', code: await saveToken(authStatus.token, clientId, sessionUser.email, userAgent, event) };
     }
   }
   return { status: 'NOT_FOUND', code: '' };
@@ -71,7 +72,7 @@ async function authByPassword(
         type: 'Username',
       },
     });
-    return { status: 'OK', code: await saveToken(authStatus.token, clientId) };
+    return { status: 'OK', code: await saveToken(authStatus.token, clientId, await getAccountEmail(authStatus.userId), userAgent, event) };
   }
   return { status: authStatus.status, code: '' };
 }
@@ -94,12 +95,34 @@ async function authByEmail(
         type: 'Email',
       },
     });
-    return { status: 'OK', code: await saveToken(authStatus.token, clientId) };
+    return { status: 'OK', code: await saveToken(authStatus.token, clientId, email, userAgent, event) };
   }
   return { status: authStatus.status, code: '' };
 }
 
-async function saveToken(token: Token | undefined, clientId: string): Promise<string> {
+async function saveToken(
+  token: Token | undefined,
+  clientId: string,
+  email: string | undefined,
+  userAgent: string,
+  event: H3Event<EventHandlerRequest>
+): Promise<string> {
+  if (email !== undefined && email !== 'empty') {
+    try {
+      await sendTemplatedEmail({
+        to: email,
+        subject: 'New Login to Your Account | SLEAF AUTH',
+        template: 'login-notification',
+        data: {
+          loginTime: new Date().toLocaleString(),
+          userAgent,
+          ipAddress: getRequestHeader(event, 'x-forwarded-for') || getRequestHeader(event, 'x-real-ip') || 'Unknown',
+        },
+      });
+    } catch (error) {
+      console.log('Error sending login notification:', error);
+    }
+  }
   if (!token) {
     return 'undefined';
   }
