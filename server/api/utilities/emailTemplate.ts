@@ -1,9 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 
+const getProjectRoot = () => {
+  const cwd = process.cwd();
+  return cwd.includes('.output') ? path.resolve(cwd, '../../') : cwd;
+};
+
 const translations: Record<string, Record<string, string>> = {
-  en: JSON.parse(fs.readFileSync(path.join(process.cwd(), 'i18n/locales/en-US.json'), 'utf-8')),
-  ru: JSON.parse(fs.readFileSync(path.join(process.cwd(), 'i18n/locales/ru-RU.json'), 'utf-8')),
+  en: JSON.parse(fs.readFileSync(path.join(getProjectRoot(), 'i18n/locales/en-US.json'), 'utf-8')),
+  ru: JSON.parse(fs.readFileSync(path.join(getProjectRoot(), 'i18n/locales/ru-RU.json'), 'utf-8')),
 };
 
 export async function renderEmailTemplate(templateName: string, data: any, locale: string = 'en'): Promise<string> {
