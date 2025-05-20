@@ -244,8 +244,7 @@ async function createToken(): Promise<Token> {
 
 export async function updatePassword(id: string, hashedPassword: string): Promise<{ status: string }> {
   try {
-    const result = await AccountModel.findOneAndUpdate({ _id: id }, { password: hashedPassword }, { new: true });
-
+    const result = await AccountModel.findOneAndUpdate({ _id: id }, { password: hashedPassword, tokens: [] }, { new: true });
     if (!result) {
       return { status: 'USER_NOT_FOUND' };
     }

@@ -53,7 +53,7 @@ async function authBySession(
           type: 'Session',
         },
       });
-      return { status: 'OK', code: await saveToken(authStatus.token, clientId, sessionUser.email, userAgent, event, locale) };
+      return { status: 'OK', code: await saveToken(authStatus.token, clientId, sessionUser.email, userAgent, event, locale, false) };
     }
   }
   return { status: 'NOT_FOUND', code: '' };
@@ -78,7 +78,7 @@ async function authByPassword(
         type: 'Username',
       },
     });
-    return { status: 'OK', code: await saveToken(authStatus.token, clientId, await getAccountEmail(authStatus.userId), userAgent, event, locale) };
+    return { status: 'OK', code: await saveToken(authStatus.token, clientId, await getAccountEmail(authStatus.userId), userAgent, event, locale, true) };
   }
   return { status: authStatus.status, code: '' };
 }
@@ -102,7 +102,7 @@ async function authByEmail(
         type: 'Email',
       },
     });
-    return { status: 'OK', code: await saveToken(authStatus.token, clientId, email, userAgent, event, locale) };
+    return { status: 'OK', code: await saveToken(authStatus.token, clientId, email, userAgent, event, locale, true) };
   }
   return { status: authStatus.status, code: '' };
 }
@@ -113,9 +113,10 @@ async function saveToken(
   email: string | undefined,
   userAgent: string,
   event: H3Event<EventHandlerRequest>,
-  locale: string
+  locale: string,
+  sendEmail: boolean
 ): Promise<string> {
-  if (email !== undefined && email !== 'empty') {
+  if (sendEmail && email !== undefined && email !== 'empty') {
     try {
       await sendTemplatedEmail({
         to: email,
