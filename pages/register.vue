@@ -41,7 +41,7 @@ const openLoginPage = () => {
 const openRedirectUrl = () => {
   hideAlert();
   umTrackEvent('registered');
-  openWindow(`/login/emailVerify?data=${routeData}`);
+  openWindow(`/login?data=${routeData}`);
 };
 
 const focusUsername = () => {

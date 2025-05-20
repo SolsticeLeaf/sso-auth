@@ -155,7 +155,6 @@ export async function refreshUserToken(accessToken: string, refreshToken: string
 
 export async function getAccountData(accessToken: string): Promise<{ status: string; account: AccountData | undefined }> {
   try {
-    console.log('accessToken', accessToken);
     const users = await AccountModel.find();
     for (const user of users) {
       const tokens = user.tokens.filter((token) => token.accessToken === accessToken);

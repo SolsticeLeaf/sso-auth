@@ -20,7 +20,7 @@ const translations: Record<string, Record<string, string>> = {
   ru: JSON.parse(fs.readFileSync(getTranslationPath('ru-RU'), 'utf-8')),
 };
 
-async function renderEmailTemplate(templateName: string, data: any, locale: string = 'en'): Promise<string> {
+async function renderEmailTemplate(templateName: string, data: any, locale: string = 'en'): Promise<{ html: string; subject: string }> {
   const templatePath = path.join(getProjectRoot(), 'templates/emails', `${templateName}.html`);
   const template = fs.readFileSync(templatePath, 'utf-8');
   const t = (key: string) => translations[locale]?.[key] || translations['en'][key] || key;
@@ -29,14 +29,15 @@ async function renderEmailTemplate(templateName: string, data: any, locale: stri
     html = html.replace(new RegExp(`{{${key}}}`, 'g'), String(value));
   });
 
-  return html;
+  const titleMatch = html.match(/<title>(.*?)<\/title>/);
+  const subject = titleMatch ? titleMatch[1] : 'SLEAF AUTH';
+
+  return { html, subject };
 }
 
 export async function sendTemplatedEmail(options: { to: string; template: string; data: any; locale?: string }) {
   const { sendEmail } = await import('../interfaces/EmailService');
-  const html = await renderEmailTemplate(options.template, options.data, options.locale);
-  const t = (key: string) => translations[options.locale || 'en']?.[key] || translations['en'][key] || key;
-  const subject = t(`${options.template}_title`);
+  const { html, subject } = await renderEmailTemplate(options.template, options.data, options.locale);
 
   return sendEmail({
     from: 'noreply',
