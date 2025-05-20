@@ -45,7 +45,6 @@ export default defineEventHandler(async (event) => {
     const recoveryLink = await createLink(routeData, account._id, code);
     await sendTemplatedEmail({
       to: email,
-      subject: 'Verification link | SLEAF AUTH',
       template: 'password-recovery',
       data: {
         recoveryLink,

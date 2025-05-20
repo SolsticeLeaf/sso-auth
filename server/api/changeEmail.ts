@@ -29,7 +29,6 @@ export default defineEventHandler(async (event) => {
       try {
         await sendTemplatedEmail({
           to: oldEmail,
-          subject: 'Email changed | SLEAF AUTH',
           template: 'email-change',
           data: {
             oldEmail,

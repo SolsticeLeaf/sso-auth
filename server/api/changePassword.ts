@@ -50,7 +50,6 @@ export default defineEventHandler(async (event) => {
           if (email !== undefined) {
             await sendTemplatedEmail({
               to: email,
-              subject: 'Password changed | SLEAF AUTH',
               template: 'password-change',
               data: {
                 changeTime: new Date().toLocaleString(),

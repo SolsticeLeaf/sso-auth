@@ -111,7 +111,6 @@ async function saveToken(
     try {
       await sendTemplatedEmail({
         to: email,
-        subject: 'New Login to Your Account | SLEAF AUTH',
         template: 'login-notification',
         data: {
           loginTime: new Date().toLocaleString(),

@@ -68,7 +68,6 @@ async function sendSubmitCode(userId: string, email: string, data: any): Promise
     const verificationLink = await createLink(data, code);
     await sendTemplatedEmail({
       to: email,
-      subject: 'Verification link | SLEAF AUTH',
       template: 'verification',
       data: {
         verificationLink,

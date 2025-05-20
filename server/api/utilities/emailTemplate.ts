@@ -32,14 +32,16 @@ async function renderEmailTemplate(templateName: string, data: any, locale: stri
   return html;
 }
 
-export async function sendTemplatedEmail(options: { to: string; subject: string; template: string; data: any; locale?: string }) {
+export async function sendTemplatedEmail(options: { to: string; template: string; data: any; locale?: string }) {
   const { sendEmail } = await import('../interfaces/EmailService');
   const html = await renderEmailTemplate(options.template, options.data, options.locale);
+  const t = (key: string) => translations[options.locale || 'en']?.[key] || translations['en'][key] || key;
+  const subject = t(`${options.template}_title`);
 
   return sendEmail({
     from: 'noreply',
     to: options.to,
-    subject: options.subject,
+    subject,
     html,
     headers: { 'x-cloudmta-class': 'standard' },
   });
