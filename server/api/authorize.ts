@@ -9,7 +9,7 @@ import { sendTemplatedEmail } from './utilities/emailTemplate';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const { username, password, isEmail, clientId } = body;
+  const { username, password, isEmail, clientId, locale } = body;
   const userAgent = getRequestHeader(event, 'userAgent');
   if (userAgent === undefined) {
     return { status: 'NO_USER_AGENT', code: '' };
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   try {
     await connectDB();
     await connectRedis();
-    const sessionAuth = await authBySession(event, clientId, userAgent);
+    const sessionAuth = await authBySession(event, clientId, userAgent, locale);
     if (sessionAuth.status === 'OK') {
       return sessionAuth;
     }
@@ -26,16 +26,21 @@ export default defineEventHandler(async (event) => {
       return dataStatus;
     }
     if (isEmail) {
-      return await authByEmail(event, username, password, clientId, userAgent);
+      return await authByEmail(event, username, password, clientId, userAgent, locale);
     }
-    return await authByPassword(event, username, password, clientId, userAgent);
+    return await authByPassword(event, username, password, clientId, userAgent, locale);
   } catch (error) {
     console.log('Login error!', error);
     return { status: 'ERROR', code: '' };
   }
 });
 
-async function authBySession(event: H3Event<EventHandlerRequest>, clientId: string, userAgent: string): Promise<{ status: string; code: string }> {
+async function authBySession(
+  event: H3Event<EventHandlerRequest>,
+  clientId: string,
+  userAgent: string,
+  locale: string
+): Promise<{ status: string; code: string }> {
   const sessionUser = await getSessionUser(event, userAgent);
   if (sessionUser) {
     const authStatus = await authorizeUserById(sessionUser.userId || 'undefined');
@@ -48,7 +53,7 @@ async function authBySession(event: H3Event<EventHandlerRequest>, clientId: stri
           type: 'Session',
         },
       });
-      return { status: 'OK', code: await saveToken(authStatus.token, clientId, sessionUser.email, userAgent, event) };
+      return { status: 'OK', code: await saveToken(authStatus.token, clientId, sessionUser.email, userAgent, event, locale) };
     }
   }
   return { status: 'NOT_FOUND', code: '' };
@@ -59,7 +64,8 @@ async function authByPassword(
   username: string,
   password: string,
   clientId: string,
-  userAgent: string
+  userAgent: string,
+  locale: string
 ): Promise<{ status: string; code: string }> {
   const authStatus = await authorizeUser(username, password);
   if (authStatus.status === 'VERIFIED' || authStatus.status === 'NOT_VERIFIED') {
@@ -72,7 +78,7 @@ async function authByPassword(
         type: 'Username',
       },
     });
-    return { status: 'OK', code: await saveToken(authStatus.token, clientId, await getAccountEmail(authStatus.userId), userAgent, event) };
+    return { status: 'OK', code: await saveToken(authStatus.token, clientId, await getAccountEmail(authStatus.userId), userAgent, event, locale) };
   }
   return { status: authStatus.status, code: '' };
 }
@@ -82,7 +88,8 @@ async function authByEmail(
   email: string,
   password: string,
   clientId: string,
-  userAgent: string
+  userAgent: string,
+  locale: string
 ): Promise<{ status: string; code: string }> {
   const authStatus = await authorizeUserByEmail(email, password);
   if (authStatus.status === 'VERIFIED' || authStatus.status === 'NOT_VERIFIED') {
@@ -95,7 +102,7 @@ async function authByEmail(
         type: 'Email',
       },
     });
-    return { status: 'OK', code: await saveToken(authStatus.token, clientId, email, userAgent, event) };
+    return { status: 'OK', code: await saveToken(authStatus.token, clientId, email, userAgent, event, locale) };
   }
   return { status: authStatus.status, code: '' };
 }
@@ -105,7 +112,8 @@ async function saveToken(
   clientId: string,
   email: string | undefined,
   userAgent: string,
-  event: H3Event<EventHandlerRequest>
+  event: H3Event<EventHandlerRequest>,
+  locale: string
 ): Promise<string> {
   if (email !== undefined && email !== 'empty') {
     try {
@@ -117,6 +125,7 @@ async function saveToken(
           userAgent,
           ipAddress: getRequestHeader(event, 'x-forwarded-for') || getRequestHeader(event, 'x-real-ip') || 'Unknown',
         },
+        locale: locale,
       });
     } catch (error) {
       console.log('Error sending login notification:', error);

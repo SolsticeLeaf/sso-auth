@@ -3,7 +3,7 @@ import ActionButton from '~/components/utilities/ActionButton.vue';
 import iconsConfig from '~/config/icons.config';
 import { decodeBase64AsJson, encodeBase64 } from '~/utilities/base64.utils';
 import { getDefaultTextColor } from '~/utilities/colors.utils';
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const theme = useColorMode();
 const route = useRoute();
 const routeData = route?.query?.data || '';
@@ -60,6 +60,7 @@ const authorize = async () => {
         password: '',
         isEmail: false,
         clientId: data.clientId || '',
+        locale: data.locale || locale.value,
       }),
     });
     if (response_status) {
