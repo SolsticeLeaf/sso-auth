@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 
-const debugMode = (process.env.nodeEnv || 'production') === 'development';
+const productionMode = (process.env.nodeEnv || 'production') === 'production';
 
 const getProjectRoot = () => {
-  if (debugMode) {
+  if (productionMode) {
     return '/nuxt';
   }
   return process.cwd();
