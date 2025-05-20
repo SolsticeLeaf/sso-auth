@@ -34,17 +34,9 @@ export async function checkUserStatus(userId: string): Promise<{ status: string 
   return { status: 'OK' };
 }
 
-export async function deleteUserCode(code: string, userId: string): Promise<void> {
-  try {
-    await SubmitCodeModel.deleteOne({ _id: code, userId: userId }).exec();
-  } catch (error) {
-    console.error('Error on deleting user code:', error);
-  }
-}
-
 export async function verifyCode(code: string, userId: string): Promise<{ status: string }> {
   try {
-    const user = await SubmitCodeModel.findOne({ _id: code, userId: userId });
+    const user = await SubmitCodeModel.findOneAndDelete({ _id: code, userId: userId });
     if (user) {
       let status = 'OK';
       if (user.expires < new Date()) {

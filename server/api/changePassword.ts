@@ -33,7 +33,6 @@ export default defineEventHandler(async (event) => {
     const code = routeData.submitCode;
     const userId = routeData.userId;
     const checkedCode = await verifyCode(code, userId);
-
     if (checkedCode.status === 'OK') {
       const hashedPassword = hashSync(password, genSaltSync(10));
       const updateResult = await updatePassword(userId, hashedPassword);

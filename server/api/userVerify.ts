@@ -1,6 +1,6 @@
 import { connectDB } from '~/server/api/database/MongoDB';
 import { updateEmailStatus } from '~/server/api/interfaces/Account';
-import { checkUserStatus, createCode, deleteUserCode, verifyCode } from '~/server/api/interfaces/SubmitCode';
+import { checkUserStatus, createCode, verifyCode } from '~/server/api/interfaces/SubmitCode';
 import { encodeBase64 } from '~/utilities/base64.utils';
 import { getSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
@@ -78,7 +78,6 @@ async function sendSubmitCode(userId: string, email: string, data: any): Promise
     return { status: 'CODE_SENT' };
   } catch (error) {
     console.log('Error on sending code:', error);
-    await deleteUserCode(code, userId);
     return { status: 'CODE_NOT_SENT' };
   }
 }
