@@ -58,6 +58,7 @@ build:
       - .output/
       - config/
       - i18n/
+      - templates/
     expire_in: 1 hour
 
 deploy-mais:

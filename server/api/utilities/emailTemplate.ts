@@ -21,7 +21,7 @@ const translations: Record<string, Record<string, string>> = {
 };
 
 async function renderEmailTemplate(templateName: string, data: any, locale: string = 'en'): Promise<string> {
-  const templatePath = path.join(getProjectRoot(), 'server/api/templates/emails', `${templateName}.html`);
+  const templatePath = path.join(getProjectRoot(), 'templates/emails', `${templateName}.html`);
   const template = fs.readFileSync(templatePath, 'utf-8');
   const t = (key: string) => translations[locale]?.[key] || translations['en'][key] || key;
   let html = template.replace(/\{\{t\s+"([^"]+)"\}\}/g, (match, key) => t(key));
