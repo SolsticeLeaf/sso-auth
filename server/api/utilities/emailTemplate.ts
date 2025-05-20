@@ -1,17 +1,23 @@
 import fs from 'fs';
 import path from 'path';
 
+const debugMode = (process.env.nodeEnv || 'production') === 'development';
+
 const getProjectRoot = () => {
-  const cwd = process.cwd();
-  if (cwd.includes('/nuxt/.output')) {
+  if (debugMode) {
     return '/nuxt';
   }
-  return cwd;
+  return process.cwd();
+};
+
+const getTranslationPath = (locale: string) => {
+  const root = getProjectRoot();
+  return path.join(root, 'i18n', 'locales', `${locale}.json`);
 };
 
 const translations: Record<string, Record<string, string>> = {
-  en: JSON.parse(fs.readFileSync(path.join(getProjectRoot(), 'i18n/locales/en-US.json'), 'utf-8')),
-  ru: JSON.parse(fs.readFileSync(path.join(getProjectRoot(), 'i18n/locales/ru-RU.json'), 'utf-8')),
+  en: JSON.parse(fs.readFileSync(getTranslationPath('en-US'), 'utf-8')),
+  ru: JSON.parse(fs.readFileSync(getTranslationPath('ru-RU'), 'utf-8')),
 };
 
 async function renderEmailTemplate(templateName: string, data: any, locale: string = 'en'): Promise<string> {

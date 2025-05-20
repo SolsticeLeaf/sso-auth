@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 
-const debugMode = (process.env.nodeEnv || 'development') === 'production';
+const debugMode = (process.env.nodeEnv || 'production') === 'development';
 
 export async function sendEmail(email: any) {
   if (debugMode) {
