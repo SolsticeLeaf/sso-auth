@@ -3,7 +3,10 @@ import path from 'path';
 
 const getProjectRoot = () => {
   const cwd = process.cwd();
-  return cwd.includes('.output') ? path.resolve(cwd, '../../') : cwd;
+  if (cwd.includes('/nuxt/.output')) {
+    return '/nuxt';
+  }
+  return cwd;
 };
 
 const translations: Record<string, Record<string, string>> = {
@@ -11,8 +14,8 @@ const translations: Record<string, Record<string, string>> = {
   ru: JSON.parse(fs.readFileSync(path.join(getProjectRoot(), 'i18n/locales/ru-RU.json'), 'utf-8')),
 };
 
-export async function renderEmailTemplate(templateName: string, data: any, locale: string = 'en'): Promise<string> {
-  const templatePath = path.join(process.cwd(), 'server/api/templates/emails', `${templateName}.html`);
+async function renderEmailTemplate(templateName: string, data: any, locale: string = 'en'): Promise<string> {
+  const templatePath = path.join(getProjectRoot(), 'server/api/templates/emails', `${templateName}.html`);
   const template = fs.readFileSync(templatePath, 'utf-8');
   const t = (key: string) => translations[locale]?.[key] || translations['en'][key] || key;
   let html = template.replace(/\{\{t\s+"([^"]+)"\}\}/g, (match, key) => t(key));
