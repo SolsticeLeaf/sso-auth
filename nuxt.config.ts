@@ -86,6 +86,7 @@ export default defineNuxtConfig({
       EMAIL_SMTP_PORT: process.env.EMAIL_SMTP_PORT,
       EMAIL_SMTP_USERNAME: process.env.EMAIL_SMTP_USERNAME,
       EMAIL_SMTP_PASSWORD: process.env.EMAIL_SMTP_PASSWORD,
+      NODE_ENV: process.env.NODE_ENV,
       UMAMI_ID: process.env.UMAMI_ID,
       UMAMI_HOST: process.env.UMAMI_HOST,
     },

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const productionMode = (process.env.nodeEnv || 'production') === 'production';
+const productionMode = (process.env.NODE_ENV || 'production') === 'production';
 
 const getProjectRoot = () => {
   if (productionMode) {
