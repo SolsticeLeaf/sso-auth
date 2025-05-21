@@ -89,7 +89,7 @@ deploy-helios:
   stage: deploy
   image: docker:latest
   tags:
-    - 'helios'
+    - 'res-3'
   dependencies:
     - build
   before_script:
