@@ -85,7 +85,7 @@ deploy-mais:
   script:
     - docker compose up --detach --build
 
-deploy-helios:
+deploy-res-3:
   stage: deploy
   image: docker:latest
   tags:
