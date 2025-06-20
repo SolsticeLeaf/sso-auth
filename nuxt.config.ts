@@ -9,6 +9,13 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'en',
       },
+      script: [
+        {
+          src: 'https://metrics.sleaf.dev/api/script.js',
+          'data-site-id': '2',
+          defer: true,
+        },
+      ],
       meta: [
         { charset: 'utf-8' },
         {
@@ -31,7 +38,7 @@ export default defineNuxtConfig({
   sourcemap: true,
   compatibilityDate: '2025-01-29',
   devtools: { enabled: true },
-  modules: ['@nuxtjs/i18n', '@nuxtjs/device', '@nuxt/icon', '@nuxt/fonts', '@nuxt/image', 'nuxt-umami', '@nuxtjs/color-mode'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/device', '@nuxt/icon', '@nuxt/fonts', '@nuxt/image', '@nuxtjs/color-mode'],
   icon: {
     serverBundle: {
       collections: ['pixelarticons'],
@@ -70,11 +77,6 @@ export default defineNuxtConfig({
     port: 4000,
   },
   css: ['@/assets/scss/global.scss', '@/assets/scss/screens.scss'],
-  umami: {
-    id: process.env.UMAMI_ID,
-    host: process.env.UMAMI_HOST,
-    autoTrack: true,
-  },
   runtimeConfig: {
     public: {
       DATABASE_NAME: process.env.DATABASE_NAME,
@@ -87,8 +89,6 @@ export default defineNuxtConfig({
       EMAIL_SMTP_USERNAME: process.env.EMAIL_SMTP_USERNAME,
       EMAIL_SMTP_PASSWORD: process.env.EMAIL_SMTP_PASSWORD,
       NODE_ENV: process.env.NODE_ENV,
-      UMAMI_ID: process.env.UMAMI_ID,
-      UMAMI_HOST: process.env.UMAMI_HOST,
     },
   },
 });
