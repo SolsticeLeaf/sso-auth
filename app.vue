@@ -7,10 +7,6 @@ const { tm, setLocale } = useI18n();
 const theme = useColorMode();
 const route = useRoute();
 
-onMounted(() => {
-  umTrackView();
-});
-
 onBeforeMount(() => {
   const data = decodeBase64AsJson(route?.query?.data || '');
   const queryLocale = data.locale;
