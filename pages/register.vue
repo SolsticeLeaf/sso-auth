@@ -40,7 +40,6 @@ const openLoginPage = () => {
 
 const openRedirectUrl = () => {
   hideAlert();
-  umTrackEvent('registered');
   openWindow(`/login?data=${routeData}`);
 };
 
