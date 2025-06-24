@@ -131,8 +131,12 @@ export async function registerUser(username: string, password: string, email: st
 export async function authorizeServerUser(username: string, password: string): Promise<{ status: string }> {
   try {
     const user = await AccountModel.findOne({ username: username });
-    if (user && compareSync(password, user.password)) {
-      return { status: user.emailStatus };
+    if (user) {
+      if (compareSync(password, user.password)) {
+        return { status: 'OK' };
+      } else {
+        return { status: 'WRONG_PASSWORD' };
+      }
     }
   } catch (error) {
     console.error('Error on user authorize:', error);
@@ -153,7 +157,7 @@ export async function registerServerUser(username: string, password: string): Pr
       username: username,
       password: hashedPassword,
       avatar: 'https://ik.imagekit.io/kiinse/profile-default.svg',
-      email: '',
+      email: 'empty',
       emailStatus: 'NOT_VERIFIED',
       tokens: [],
       permissions: ['USER'],
