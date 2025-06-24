@@ -128,6 +128,43 @@ export async function registerUser(username: string, password: string, email: st
   }
 }
 
+export async function authorizeServerUser(username: string, password: string): Promise<{ status: string }> {
+  try {
+    const user = await AccountModel.findOne({ username: username });
+    if (user && compareSync(password, user.password)) {
+      return { status: user.emailStatus };
+    }
+  } catch (error) {
+    console.error('Error on user authorize:', error);
+    return { status: 'ERROR' };
+  }
+  return { status: 'NOT_FOUND' };
+}
+
+export async function registerServerUser(username: string, password: string): Promise<{ status: string }> {
+  try {
+    if (await AccountModel.findOne({ username: username })) {
+      return { status: 'USERNAME_EXISTS' };
+    }
+    const hashedPassword = hashSync(password, genSaltSync(10));
+    const userId = encodeBase64(randomUUID().toString() + Date.now().toString());
+    await AccountModel.create({
+      _id: userId,
+      username: username,
+      password: hashedPassword,
+      avatar: 'https://ik.imagekit.io/kiinse/profile-default.svg',
+      email: '',
+      emailStatus: 'NOT_VERIFIED',
+      tokens: [],
+      permissions: ['USER'],
+    });
+    return { status: 'OK' };
+  } catch (error) {
+    console.error('Error on user register:', error);
+    return { status: 'ERROR' };
+  }
+}
+
 export async function refreshUserToken(accessToken: string, refreshToken: string): Promise<{ status: string; token: Token | undefined }> {
   try {
     const users = await AccountModel.find();
@@ -197,6 +234,14 @@ export async function getAccountById(userId: string): Promise<Account | undefine
     return user;
   }
   return undefined;
+}
+
+export async function hasUser(username: string): Promise<boolean> {
+  const user = await AccountModel.findOne({ username: username });
+  if (user) {
+    return true;
+  }
+  return false;
 }
 
 export async function getAccountByEmail(email: string): Promise<Account | undefined> {
