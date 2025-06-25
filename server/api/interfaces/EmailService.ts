@@ -12,6 +12,7 @@ export async function sendEmail(email: any) {
         port: Number(process.env.EMAIL_SMTP_PORT?.toString() || '465'),
         secure: true,
         requireTLS: true,
+        connectionTimeout: 8000,
         auth: {
           user: process.env.EMAIL_SMTP_USERNAME || '',
           pass: process.env.EMAIL_SMTP_PASSWORD || '',

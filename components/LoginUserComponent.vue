@@ -19,6 +19,7 @@ const props = defineProps({
     default: {},
   },
 });
+
 const openRedirectUrl = (code: string) => {
   hideAlert();
   const route = encodeBase64(

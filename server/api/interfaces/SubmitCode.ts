@@ -68,3 +68,7 @@ export async function createCode(userId: string): Promise<{ status: string; code
     return { status: 'ERROR', code: '' };
   }
 }
+
+export async function removeCodes(userId: string): Promise<void> {
+  await SubmitCodeModel.deleteMany({ userId: userId });
+}

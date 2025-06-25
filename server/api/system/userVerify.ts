@@ -1,6 +1,6 @@
 import { connectDB } from '~/server/api/database/MongoDB';
 import { updateEmailStatus } from '~/server/api/interfaces/Account';
-import { checkUserStatus, createCode, verifyCode } from '~/server/api/interfaces/SubmitCode';
+import { checkUserStatus, createCode, removeCodes, verifyCode } from '~/server/api/interfaces/SubmitCode';
 import { encodeBase64 } from '~/utilities/base64.utils';
 import { getSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
@@ -27,6 +27,8 @@ export default defineEventHandler(async (event) => {
           return { status: 'OK' };
         case 'EXPIRED':
           return { status: 'EXPIRED' };
+        case 'NOT_FOUND':
+          return { status: 'TOKEN_NOT_FOUND' };
         default:
           return { status: 'ERROR' };
       }
@@ -73,6 +75,7 @@ async function sendSubmitCode(userId: string, email: string, data: any): Promise
     });
     return { status: 'CODE_SENT' };
   } catch (error) {
+    await removeCodes(userId);
     console.log('Error on sending code:', error);
     return { status: 'CODE_NOT_SENT' };
   }
