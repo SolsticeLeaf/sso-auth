@@ -25,23 +25,22 @@ export default defineEventHandler(async (event) => {
         case 'OK':
           await updateEmailStatus(checkedCode.userId, 'VERIFIED');
           return { status: 'OK' };
-        case 'ERROR':
-          return { status: 'ERROR' };
         case 'EXPIRED':
           return { status: 'EXPIRED' };
         default:
-          const sessionUser = await getSessionUser(event, userAgent);
-          if (sessionUser) {
-            if (sessionUser.emailStatus === 'VERIFIED') {
-              return { status: 'OK' };
-            }
-            if (sessionUser.email.length === 0) {
-              return { status: 'NO_EMAIL' };
-            }
-            const sessionUserId = sessionUser.userId;
-            return sendSubmitCode(sessionUserId, sessionUser.email, routeData);
-          }
+          return { status: 'ERROR' };
       }
+    }
+    const sessionUser = await getSessionUser(event, userAgent);
+    if (sessionUser) {
+      if (sessionUser.emailStatus === 'VERIFIED') {
+        return { status: 'OK' };
+      }
+      if (sessionUser.email.length === 0) {
+        return { status: 'NO_EMAIL' };
+      }
+      const sessionUserId = sessionUser.userId;
+      return sendSubmitCode(sessionUserId, sessionUser.email, routeData);
     }
     return { status: 'TOKEN_NOT_FOUND' };
   } catch (error) {
