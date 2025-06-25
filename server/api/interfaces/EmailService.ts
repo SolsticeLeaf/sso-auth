@@ -19,7 +19,7 @@ export async function sendEmail(email: any) {
             pass: process.env.EMAIL_SMTP_PASSWORD || '',
           },
           logger: true,
-          debug: debugMode,
+          debug: false,
         })
         .sendMail(email);
     } catch (error) {

@@ -1,4 +1,4 @@
-import { createClient } from 'redis';
+import { ClientClosedError, createClient } from 'redis';
 
 const dbUrl = process.env.REDIS_URL || 'redis://localhost:6379';
 
@@ -51,7 +51,9 @@ const checkRedisHealth = async (): Promise<boolean> => {
     const reply = await redisClient.get('health');
     return reply === 'ok';
   } catch (error) {
-    console.error('❤️‍🩹❌ Redis health check failed:', error);
+    if (!(error instanceof ClientClosedError)) {
+      console.error('❤️‍🩹❌ Redis health check failed:', error);
+    }
     return false;
   }
 };
