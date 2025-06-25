@@ -8,7 +8,9 @@ export default defineEventHandler(async () => {
   try {
     await connectDB();
     await connectRedis();
-  } catch {}
+  } catch (error) {
+    console.error('❤️‍🩹❌ Healthcheck connection error:', error);
+  }
   const redisHealth = await checkRedisHealth();
   return {
     status: isConnected && redisHealth ? 'success' : 'fail',

@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
     }
     return { status: 'TOKEN_NOT_FOUND' };
   } catch (error) {
-    console.log('Login verify error!', error);
+    console.error(`🕵️‍♂️❌ Error verifying user for agent "${userAgent}":`, error);
     return { status: 'ERROR' };
   }
 });
@@ -76,7 +76,7 @@ async function sendSubmitCode(userId: string, email: string, data: any): Promise
     return { status: 'CODE_SENT' };
   } catch (error) {
     await removeCodes(userId);
-    console.log('Error on sending code:', error);
+    console.error(`📧❌ Error sending verification code to "${email}" for user "${userId}":`, error);
     return { status: 'CODE_NOT_SENT' };
   }
 }

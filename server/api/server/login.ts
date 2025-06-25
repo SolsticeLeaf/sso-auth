@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
       return { status: 'USER_NOT_FOUND' };
     }
   } catch (error) {
-    console.log('Server login error!', error);
+    console.error(`🖥️❌ Server login error for user "${username}":`, error);
     setResponseStatus(event, 500);
     return { status: 'ERROR' };
   }

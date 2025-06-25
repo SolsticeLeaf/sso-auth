@@ -65,6 +65,7 @@ const authorize = async () => {
       }),
     });
     if (response_status) {
+      console.log('✅status:', response_status);
       switch (response_status) {
         case 'OK':
           openRedirectUrl(response_code);
@@ -77,7 +78,7 @@ const authorize = async () => {
       showAlert('unknown_error');
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error(`🔑❌ Error authorizing user "${props.data.username}":`, error);
     showAlert('unknown_error');
   }
   isButtonDisabled.value = false;
@@ -92,7 +93,7 @@ const exitAccount = async () => {
       method: 'GET',
     });
   } catch (error) {
-    console.error('Error:', error);
+    console.error(`🪵❌ Error logging out user "${props.data.username}":`, error);
     showAlert('unknown_error');
   }
   location.reload();

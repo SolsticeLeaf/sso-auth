@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     await connectDB();
     return await refreshUserToken(accessToken, refreshToken);
   } catch (error) {
-    console.log('Error on getting token!', error);
+    console.error(`🔄❌ Error refreshing token with accessToken "${accessToken}" and refreshToken "${refreshToken}":`, error);
     return { status: 'ERROR', token: '' };
   }
 });

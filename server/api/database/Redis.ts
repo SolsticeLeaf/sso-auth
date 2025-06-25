@@ -51,6 +51,7 @@ const checkRedisHealth = async (): Promise<boolean> => {
     const reply = await redisClient.get('health');
     return reply === 'ok';
   } catch (error) {
+    console.error('❤️‍🩹❌ Redis health check failed:', error);
     return false;
   }
 };

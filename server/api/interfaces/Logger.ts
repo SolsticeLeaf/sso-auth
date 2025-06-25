@@ -39,6 +39,6 @@ export async function addLog(data: LogData): Promise<void> {
       additional: data.additional,
     });
   } catch (error) {
-    console.error('Error on creating log:', error);
+    console.error(`📝❌ Error creating log for user "${data.userId}" with action "${data.action}":`, error);
   }
 }

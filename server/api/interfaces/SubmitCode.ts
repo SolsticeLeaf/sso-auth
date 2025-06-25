@@ -28,7 +28,7 @@ export async function checkUserStatus(userId: string): Promise<{ status: string 
       }
     }
   } catch (error) {
-    console.error('Error on checking user code status:', error);
+    console.error(`🔴❌ Error on checking user code status for user "${userId}":`, error);
     return { status: 'ERROR' };
   }
   return { status: 'OK' };
@@ -38,15 +38,13 @@ export async function verifyCode(code: string): Promise<{ status: string; userId
   try {
     const user = await SubmitCodeModel.findOneAndDelete({ _id: code });
     if (user) {
-      let status = 'OK';
       if (user.expires < new Date()) {
-        status = 'EXPIRED';
+        return { status: 'EXPIRED', userId: user.userId };
       }
-      await SubmitCodeModel.findByIdAndDelete({ _id: code });
-      return { status: status, userId: user.userId };
+      return { status: 'OK', userId: user.userId };
     }
   } catch (error) {
-    console.error('Error on verify code:', error);
+    console.error(`🔴❌ Error on verify code "${code}":`, error);
     return { status: 'ERROR', userId: '' };
   }
   return { status: 'NOT_FOUND', userId: '' };
@@ -64,11 +62,15 @@ export async function createCode(userId: string): Promise<{ status: string; code
     });
     return { status: 'OK', code: code };
   } catch (error) {
-    console.error('Error on code creation:', error);
+    console.error(`🔴❌ Error on code creation for user "${userId}":`, error);
     return { status: 'ERROR', code: '' };
   }
 }
 
 export async function removeCodes(userId: string): Promise<void> {
-  await SubmitCodeModel.deleteMany({ userId: userId });
+  try {
+    await SubmitCodeModel.deleteMany({ userId: userId });
+  } catch (error) {
+    console.error(`🔴❌ Error on removing codes for user "${userId}":`, error);
+  }
 }

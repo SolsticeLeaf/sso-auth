@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
     }
     return { status: user.status };
   } catch (error) {
-    console.log('Register error!', error);
+    console.error(`📝❌ Error during registration for user "${username}" with email "${email}" and agent "${userAgent}":`, error);
     return { status: 'ERROR' };
   }
 });

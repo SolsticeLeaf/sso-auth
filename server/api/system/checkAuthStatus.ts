@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     }
     return { status: 'NOT_FOUND', user: undefined };
   } catch (error) {
-    console.log('Login verify error!', error);
+    console.error(`🤔❌ Error checking auth status for user agent "${userAgent}":`, error);
     return { status: 'ERR', user: undefined };
   }
 });

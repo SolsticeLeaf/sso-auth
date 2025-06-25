@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
     }
     return { status: 'OK', docs: docs };
   } catch (error) {
+    console.error(`📚❌ Error getting doc for page "${page}":`, error);
     return { status: 'ERR', docs: {} };
   }
 });

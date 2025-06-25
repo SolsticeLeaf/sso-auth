@@ -43,17 +43,22 @@ export default defineEventHandler(async (event) => {
     }
     const code = codeStatus.code;
     const recoveryLink = await createLink(routeData, account._id, code);
-    await sendTemplatedEmail({
-      to: email,
-      template: 'password-recovery',
-      data: {
-        recoveryLink,
-      },
-      locale: routeData.locale || 'en',
-    });
+    try {
+      await sendTemplatedEmail({
+        to: email,
+        template: 'password-recovery',
+        data: {
+          recoveryLink,
+        },
+        locale: routeData.locale || 'en',
+      });
+    } catch (e) {
+      console.error(`📧❌ Error sending password recovery email to "${email}":`, e);
+      return { status: 'ERROR' };
+    }
     return { status: 'OK' };
   } catch (error) {
-    console.log('Login verify error!', error);
+    console.error(`🔑❌ Error during password recovery process for email "${email}":`, error);
     return { status: 'ERROR' };
   }
 });

@@ -29,6 +29,7 @@ export async function saveTokenRequest(token: Token, clientId: string): Promise<
     });
     return code;
   } catch (error) {
+    console.error(`🎟️❌ Error on saving token request for client "${clientId}":`, error);
     return undefined;
   }
 }
@@ -38,6 +39,7 @@ export async function getTokenRequest(code: string, clientId: string): Promise<T
     const token = await TokensManagerModel.findOneAndDelete({ _id: code, clientId: clientId });
     return token?.token;
   } catch (error) {
+    console.error(`🎟️❌ Error on getting token request for client "${clientId}" with code "${code}":`, error);
     return undefined;
   }
 }

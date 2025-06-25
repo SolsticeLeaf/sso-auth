@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
     setResponseStatus(event, 500);
     return { status: user.status };
   } catch (error) {
-    console.log('Register error!', error);
+    console.error(`🖥️📝❌ Server registration error for user "${username}":`, error);
     setResponseStatus(event, 500);
     return { status: 'ERROR' };
   }

@@ -60,6 +60,7 @@ const changePassword = async () => {
       }),
     });
     if (response.status) {
+      console.log('✅status:', response.status);
       switch (response.status) {
         case 'OK':
           hideAlert();
@@ -103,7 +104,7 @@ const changePassword = async () => {
       showAlert('unknown_error');
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error(`🔑❌ Error changing password for user "${data.userId}":`, error);
     showAlert('unknown_error');
   }
   isButtonDisabled.value = false;

@@ -17,8 +17,12 @@ const DocsModel = mongoose.model<Docs>('docs', schema);
 
 export async function getDoc(id: string): Promise<Docs | undefined> {
   try {
-    return (await DocsModel.find({ _id: id }))[0];
-  } catch {
-    return undefined;
+    const doc = await DocsModel.findOne({ _id: id });
+    if (doc) {
+      return doc;
+    }
+  } catch (error) {
+    console.error(`📚❌ Error finding document with id "${id}":`, error);
   }
+  return undefined;
 }

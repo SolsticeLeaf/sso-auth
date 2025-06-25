@@ -18,7 +18,7 @@ export async function hasToken(token: string | undefined): Promise<boolean> {
     if (token === undefined) return false;
     return (await ServerTokenModel.find({ _id: token.replace('Bearer ', '').trim() }).countDocuments()) > 0;
   } catch (error) {
-    console.error('Error on check token:', error);
+    console.error(`🛡️❌ Error on check server token "${token}":`, error);
     return false;
   }
 }

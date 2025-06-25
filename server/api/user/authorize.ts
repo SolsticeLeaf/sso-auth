@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
     }
     return await authByPassword(event, username, password, clientId, userAgent, locale);
   } catch (error) {
-    console.log('Login error!', error);
+    console.error(`🔑❌ Error during authorization for user "${username}" with agent "${userAgent}":`, error);
     return { status: 'ERROR', code: '' };
   }
 });
@@ -129,7 +129,7 @@ async function saveToken(
         locale: locale,
       });
     } catch (error) {
-      console.log('Error sending login notification:', error);
+      console.error(`📧❌ Error sending login notification to "${email}":`, error);
     }
   }
   if (!token) {

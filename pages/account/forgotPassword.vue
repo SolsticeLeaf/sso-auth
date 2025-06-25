@@ -50,6 +50,7 @@ const setupEmail = async () => {
       body: JSON.stringify({ email: email.value.replaceAll(' ', ''), routeData: data }),
     });
     if (response.status) {
+      console.log('✅status:', response.status);
       switch (response.status) {
         case 'OK':
           lastEmailSentTime.value = currentTime;
@@ -67,7 +68,7 @@ const setupEmail = async () => {
       }
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error(`🔑❌ Error during password recovery for email "${email.value}":`, error);
     showAlert('unknown_error');
   } finally {
     isButtonDisabled.value = false;

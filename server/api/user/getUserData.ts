@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     await connectDB();
     return await getAccountData(accessToken);
   } catch (error) {
-    console.log('Error on getting token!', error);
+    console.error(`👤❌ Error getting user data for access token "${accessToken}":`, error);
     return { status: 'ERROR', code: '' };
   }
 });

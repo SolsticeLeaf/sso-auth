@@ -26,7 +26,8 @@ export async function getSessionUser(event: H3Event<EventHandlerRequest>, userAg
       }
     }
   } catch (error) {
-    console.error('Error on getting session:', error);
+    const key = getCookie(event, 'sessionKey');
+    console.error(`🔒❌ Error on getting session for key "${key}" and user agent "${userAgent}":`, error);
   }
   return undefined;
 }
@@ -43,18 +44,18 @@ export async function saveSessionUser(event: H3Event<EventHandlerRequest>, userI
       })
     );
   } catch (error) {
-    console.error('Error on saving session:', error);
+    console.error(`💾❌ Error on saving session for user "${userId}" and user agent "${userAgent}":`, error);
   }
 }
 
 export async function removeSession(event: H3Event<EventHandlerRequest>): Promise<void> {
+  const key = getCookie(event, 'sessionKey') || null;
   try {
-    const key = getCookie(event, 'sessionKey') || null;
     deleteCookie(event, 'sessionKey');
     if (key) {
       await removeValue(key);
     }
   } catch (error) {
-    console.error('Error on removing session:', error);
+    console.error(`🗑️❌ Error on removing session for key "${key}":`, error);
   }
 }

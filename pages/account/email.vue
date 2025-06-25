@@ -45,6 +45,7 @@ const setupEmail = async () => {
       body: JSON.stringify({ email: email.value.replaceAll(' ', '') }),
     });
     if (response_status) {
+      console.log('✅status:', response_status);
       switch (response_status) {
         case 'OK':
           openRedirectUrl();
@@ -64,7 +65,7 @@ const setupEmail = async () => {
       }
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error(`📧❌ Error setting up email "${email.value}":`, error);
     alert('Unknown error occurred.');
   }
 };

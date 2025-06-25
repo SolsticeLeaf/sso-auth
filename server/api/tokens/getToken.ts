@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
     await connectDB();
     return { token: await getTokenRequest(serviceCode, clientId) };
   } catch (error) {
-    console.log('Error on getting token!', error);
+    console.error(`🎟️❌ Error getting token for serviceCode "${serviceCode}" and clientId "${clientId}":`, error);
     return { status: 'ERROR', code: '' };
   }
 });

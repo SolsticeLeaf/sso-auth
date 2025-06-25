@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { password, passwordRepeat, routeData } = body;
   if (!routeData || !routeData.submitCode || !routeData.userId) {
-    console.error('Invalid route data:', { routeData });
+    console.error('😠❌ Invalid route data for password change:', { routeData });
     return { status: 'INVALID_DATA' };
   }
   const userAgent = getRequestHeader(event, 'userAgent');
@@ -45,8 +45,9 @@ export default defineEventHandler(async (event) => {
             ip: getRequestHeader(event, 'x-forwarded-for') || 'unknown',
           },
         });
+        let email;
         try {
-          const email = await getAccountEmail(userId);
+          email = await getAccountEmail(userId);
           if (email !== undefined) {
             await sendTemplatedEmail({
               to: email,
@@ -59,7 +60,9 @@ export default defineEventHandler(async (event) => {
               locale: routeData.locale || 'en',
             });
           }
-        } catch {}
+        } catch (e) {
+          console.error(`📧❌ Error sending password change notification to "${email}" for user "${userId}":`, e);
+        }
         return { status: 'OK' };
       }
       return updateResult;
@@ -70,7 +73,7 @@ export default defineEventHandler(async (event) => {
     }
     return { status: 'ERROR' };
   } catch (error) {
-    console.error('Change password error:', {
+    console.error('😠❌ Error changing password:', {
       error,
       userId: routeData?.userId,
       userAgent,

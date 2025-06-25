@@ -48,6 +48,7 @@ const check = async () => {
       body: JSON.stringify({ routeData: data }),
     });
     if (response_status) {
+      console.log('✅status:', response_status);
       switch (response_status) {
         case 'OK':
           openRedirectUrl();
@@ -78,7 +79,7 @@ const check = async () => {
       }
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error(`🕵️‍♂️❌ Error during email verification for user "${data.userId}":`, error);
     alert('Unknown error occurred.');
     setMessage('unknown_error', 'retry');
   }

@@ -38,12 +38,14 @@ export default defineEventHandler(async (event) => {
           },
           locale: routeData?.locale || 'en',
         });
-      } catch {}
+      } catch (e) {
+        console.error(`📧❌ Error sending email change notification to "${oldEmail}" for user "${sessionUser.userId}":`, e);
+      }
       return { status: 'OK' };
     }
     return { status: 'NOT_FOUND' };
   } catch (error) {
-    console.log('Login verify error!', error);
+    console.error(`😠❌ Error changing email to "${email}":`, error);
     return { status: 'ERROR' };
   }
 });

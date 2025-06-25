@@ -77,6 +77,7 @@ const authorize = async () => {
       }),
     });
     if (response_status) {
+      console.log('✅status:', response_status);
       switch (response_status) {
         case 'OK':
           openRedirectUrl(response_code);
@@ -104,7 +105,8 @@ const authorize = async () => {
       showAlert('unknown_error');
     }
   } catch (error) {
-    console.error('Error:', error);
+    const inputUsername = getInputValue('usernameInput');
+    console.error(`🔑❌ Error authorizing user "${inputUsername}":`, error);
     showAlert('unknown_error');
   }
   isButtonDisabled.value = false;

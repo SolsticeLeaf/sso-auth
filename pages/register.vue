@@ -94,6 +94,7 @@ const register = async () => {
       }),
     });
     if (response_status) {
+      console.log('✅status:', response_status);
       switch (response_status) {
         case 'OK':
           hideAlert();
@@ -155,7 +156,7 @@ const register = async () => {
       showAlert('unknown_error');
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error(`📝❌ Error during registration for user "${username.value}" with email "${email.value}":`, error);
     showAlert('unknown_error');
   }
   isButtonDisabled.value = false;

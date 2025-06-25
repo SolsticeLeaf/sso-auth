@@ -28,7 +28,7 @@ export async function checkUserStatus(userId: string): Promise<{ status: string 
       }
     }
   } catch (error) {
-    console.error('Error on checking user code status:', error);
+    console.error(`❌ Error checking user's recovery code status for user ${userId}:`, error);
     return { status: 'ERROR' };
   }
   return { status: 'OK' };
@@ -38,15 +38,13 @@ export async function verifyCode(code: string, userId: string): Promise<{ status
   try {
     const user = await SubmitCodeModel.findOneAndDelete({ _id: code, userId: userId });
     if (user) {
-      let status = 'OK';
       if (user.expires < new Date()) {
-        status = 'EXPIRED';
+        return { status: 'EXPIRED' };
       }
-      await SubmitCodeModel.findByIdAndDelete({ _id: code, userId: userId });
-      return { status: status };
+      return { status: 'OK' };
     }
   } catch (error) {
-    console.error('Error on verify code:', error);
+    console.error(`❌ Error verifying recovery code for user ${userId}:`, error);
     return { status: 'ERROR' };
   }
   return { status: 'NOT_FOUND' };
@@ -64,7 +62,7 @@ export async function createCode(userId: string): Promise<{ status: string; code
     });
     return { status: 'OK', code: code };
   } catch (error) {
-    console.error('Error on code creation:', error);
+    console.error(`❌ Error creating new recovery code for user ${userId}:`, error);
     return { status: 'ERROR', code: '' };
   }
 }
