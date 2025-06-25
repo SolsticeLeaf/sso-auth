@@ -34,22 +34,22 @@ export async function checkUserStatus(userId: string): Promise<{ status: string 
   return { status: 'OK' };
 }
 
-export async function verifyCode(code: string, userId: string): Promise<{ status: string }> {
+export async function verifyCode(code: string): Promise<{ status: string; userId: string }> {
   try {
-    const user = await SubmitCodeModel.findOneAndDelete({ _id: code, userId: userId });
+    const user = await SubmitCodeModel.findOneAndDelete({ _id: code });
     if (user) {
       let status = 'OK';
       if (user.expires < new Date()) {
         status = 'EXPIRED';
       }
-      await SubmitCodeModel.findByIdAndDelete({ _id: code, userId: userId });
-      return { status: status };
+      await SubmitCodeModel.findByIdAndDelete({ _id: code });
+      return { status: status, userId: user.userId };
     }
   } catch (error) {
     console.error('Error on verify code:', error);
-    return { status: 'ERROR' };
+    return { status: 'ERROR', userId: '' };
   }
-  return { status: 'NOT_FOUND' };
+  return { status: 'NOT_FOUND', userId: '' };
 }
 
 export async function createCode(userId: string): Promise<{ status: string; code: string }> {

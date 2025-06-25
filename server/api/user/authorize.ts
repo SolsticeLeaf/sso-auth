@@ -4,8 +4,8 @@ import { getSessionUser, saveSessionUser } from '~/server/api/interfaces/Session
 import { connectRedis } from '~/server/api/database/Redis';
 import { EventHandlerRequest, H3Event } from 'h3';
 import { saveTokenRequest } from '~/server/api/interfaces/TokensManager';
-import { addLog } from './interfaces/Logger';
-import { sendTemplatedEmail } from './utilities/emailTemplate';
+import { addLog } from '../interfaces/Logger';
+import { sendTemplatedEmail } from '../utilities/emailTemplate';
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);

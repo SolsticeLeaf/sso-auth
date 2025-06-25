@@ -62,7 +62,7 @@ const authorize = async () => {
   isButtonDisabled.value = true;
   try {
     const inputUsername = getInputValue('usernameInput');
-    const { status: response_status, code: response_code } = await $fetch('/api/authorize', {
+    const { status: response_status, code: response_code } = await $fetch('/api/user/authorize', {
       default: () => [],
       cache: 'no-cache',
       server: false,

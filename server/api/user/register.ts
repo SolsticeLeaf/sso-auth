@@ -3,7 +3,7 @@ import { registerUser } from '~/server/api/interfaces/Account';
 import { saveSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
 import { Filter } from 'bad-words';
-import { addLog } from './interfaces/Logger';
+import { addLog } from '../interfaces/Logger';
 const filter = new Filter();
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 const usernameExpression: RegExp = /^[A-Za-z][A-Za-z0-9]*$/;

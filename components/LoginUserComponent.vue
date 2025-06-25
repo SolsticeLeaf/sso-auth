@@ -49,7 +49,7 @@ function openWindow(url: string) {
 const authorize = async () => {
   isButtonDisabled.value = true;
   try {
-    const { status: response_status, code: response_code } = await $fetch('/api/authorize', {
+    const { status: response_status, code: response_code } = await $fetch('/api/user/authorize', {
       default: () => [],
       cache: 'no-cache',
       server: false,
@@ -84,7 +84,7 @@ const authorize = async () => {
 
 const exitAccount = async () => {
   try {
-    await $fetch('/api/logoutAccount', {
+    await $fetch('/api/system/logoutAccount', {
       default: () => [],
       cache: 'no-cache',
       server: false,

@@ -1,6 +1,6 @@
 import pkg from '~/package.json';
-import { connectDB, isConnected } from './database/MongoDB';
-import { checkRedisHealth, connectRedis } from './database/Redis';
+import { connectDB, isConnected } from '../database/MongoDB';
+import { checkRedisHealth, connectRedis } from '../database/Redis';
 
 const startTime = new Date();
 

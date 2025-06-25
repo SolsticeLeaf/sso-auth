@@ -36,7 +36,7 @@ const email = ref('');
 const setupEmail = async () => {
   try {
     hideAlert();
-    const { status: response_status } = await $fetch('/api/changeEmail', {
+    const { status: response_status } = await $fetch('/api/system/changeEmail', {
       default: () => [],
       cache: 'no-cache',
       server: false,

@@ -2,7 +2,7 @@ import { connectDB } from '~/server/api/database/MongoDB';
 import { changeEmail } from '~/server/api/interfaces/Account';
 import { getSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
-import { sendTemplatedEmail } from './utilities/emailTemplate';
+import { sendTemplatedEmail } from '../utilities/emailTemplate';
 
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 

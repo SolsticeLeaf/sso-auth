@@ -4,7 +4,7 @@ import { checkUserStatus, createCode, verifyCode } from '~/server/api/interfaces
 import { encodeBase64 } from '~/utilities/base64.utils';
 import { getSessionUser } from '~/server/api/interfaces/Session';
 import { connectRedis } from '~/server/api/database/Redis';
-import { sendTemplatedEmail } from './utilities/emailTemplate';
+import { sendTemplatedEmail } from '../utilities/emailTemplate';
 
 const domain = process.env.DOMAIN || 'https://auth.sleaf.dev';
 
@@ -18,27 +18,29 @@ export default defineEventHandler(async (event) => {
   try {
     await connectDB();
     await connectRedis();
-    const sessionUser = await getSessionUser(event, userAgent);
-    if (sessionUser) {
-      if (sessionUser.emailStatus === 'VERIFIED') {
-        return { status: 'OK' };
-      }
-      if (sessionUser.email.length === 0) {
-        return { status: 'NO_EMAIL' };
-      }
-      const code = routeData.submitCode;
-      const userId = sessionUser.userId;
-      const checkedCode = await checkSubmitCode(userId, code);
+    const code = routeData.submitCode;
+    if (code) {
+      const checkedCode = await verifyCode(code);
       switch (checkedCode.status) {
         case 'OK':
-          await updateEmailStatus(sessionUser.userId.toString(), 'VERIFIED');
+          await updateEmailStatus(checkedCode.userId, 'VERIFIED');
           return { status: 'OK' };
         case 'ERROR':
           return { status: 'ERROR' };
         case 'EXPIRED':
           return { status: 'EXPIRED' };
         default:
-          return sendSubmitCode(userId, sessionUser.email, routeData);
+          const sessionUser = await getSessionUser(event, userAgent);
+          if (sessionUser) {
+            if (sessionUser.emailStatus === 'VERIFIED') {
+              return { status: 'OK' };
+            }
+            if (sessionUser.email.length === 0) {
+              return { status: 'NO_EMAIL' };
+            }
+            const sessionUserId = sessionUser.userId;
+            return sendSubmitCode(sessionUserId, sessionUser.email, routeData);
+          }
       }
     }
     return { status: 'TOKEN_NOT_FOUND' };
@@ -47,10 +49,6 @@ export default defineEventHandler(async (event) => {
     return { status: 'ERROR' };
   }
 });
-
-async function checkSubmitCode(userId: string, code: string): Promise<{ status: string }> {
-  return await verifyCode(code, userId);
-}
 
 async function sendSubmitCode(userId: string, email: string, data: any): Promise<{ status: string }> {
   const checkCodeStatus = (await checkUserStatus(userId)).status;

@@ -10,7 +10,7 @@ const isLoaded = ref(false);
 
 onBeforeMount(async () => {
   try {
-    const { status: response_status, user: response_data } = await $fetch('/api/checkAuthStatus', {
+    const { status: response_status, user: response_data } = await $fetch('/api/system/checkAuthStatus', {
       default: () => [],
       cache: 'no-cache',
       server: false,

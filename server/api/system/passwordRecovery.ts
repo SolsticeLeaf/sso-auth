@@ -1,9 +1,9 @@
 import { connectDB } from '~/server/api/database/MongoDB';
 import { getAccountByEmail } from '~/server/api/interfaces/Account';
 import { encodeBase64 } from '~/utilities/base64.utils';
-import { sendTemplatedEmail } from './utilities/emailTemplate';
-import { addLog } from './interfaces/Logger';
-import { createCode } from './interfaces/RecoveryPasswordsCodes';
+import { sendTemplatedEmail } from '../utilities/emailTemplate';
+import { addLog } from '../interfaces/Logger';
+import { createCode } from '../interfaces/RecoveryPasswordsCodes';
 
 const emailExpression: RegExp = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
 const domain = process.env.DOMAIN || 'https://auth.sleaf.dev';

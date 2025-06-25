@@ -21,7 +21,7 @@ const alertMessage = ref('');
 
 onBeforeMount(async () => {
   try {
-    const { status: response_status } = await $fetch('/api/checkAuthStatus', {
+    const { status: response_status } = await $fetch('/api/system/checkAuthStatus', {
       default: () => [],
       cache: 'no-cache',
       server: false,
@@ -80,7 +80,7 @@ const allFieldsHasText = computed(() => {
 const register = async () => {
   isButtonDisabled.value = true;
   try {
-    const { status: response_status } = await $fetch('/api/register', {
+    const { status: response_status } = await $fetch('/api/user/register', {
       default: () => [],
       cache: 'no-cache',
       server: false,

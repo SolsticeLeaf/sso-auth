@@ -43,7 +43,7 @@ const setupEmail = async () => {
       return;
     }
     isButtonDisabled.value = true;
-    const response = await $fetch<{ status: string }>('/api/passwordRecovery', {
+    const response = await $fetch<{ status: string }>('/api/system/passwordRecovery', {
       cache: 'no-cache',
       method: 'POST',
       headers: { userAgent: useDevice().userAgent },

@@ -49,7 +49,7 @@ const allFieldsHasText = computed(() => {
 const changePassword = async () => {
   isButtonDisabled.value = true;
   try {
-    const response = await $fetch<{ status: string }>('/api/changePassword', {
+    const response = await $fetch<{ status: string }>('/api/system/changePassword', {
       cache: 'no-cache',
       method: 'POST',
       headers: { userAgent: useDevice().userAgent },

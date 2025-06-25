@@ -1,9 +1,9 @@
 import { connectDB } from '~/server/api/database/MongoDB';
-import { verifyCode } from './interfaces/RecoveryPasswordsCodes';
-import { addLog } from './interfaces/Logger';
+import { verifyCode } from '../interfaces/RecoveryPasswordsCodes';
+import { addLog } from '../interfaces/Logger';
 import { genSaltSync, hashSync } from 'bcrypt-ts';
-import { getAccountEmail, updatePassword } from './interfaces/Account';
-import { sendTemplatedEmail } from './utilities/emailTemplate';
+import { getAccountEmail, updatePassword } from '../interfaces/Account';
+import { sendTemplatedEmail } from '../utilities/emailTemplate';
 
 const passwordLatinOnly: RegExp = /^[A-Za-z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/;
 const passwordHasUppercase: RegExp = /[A-Z]/;

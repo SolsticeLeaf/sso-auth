@@ -39,7 +39,7 @@ onBeforeMount(async () => {
 const check = async () => {
   try {
     setMessage('wait', 'none');
-    const { status: response_status } = await $fetch('/api/userVerify', {
+    const { status: response_status } = await $fetch('/api/system/userVerify', {
       default: () => [],
       cache: 'no-cache',
       server: false,
