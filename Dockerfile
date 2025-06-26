@@ -1,4 +1,4 @@
-FROM node:16.15.0-slim
+FROM node:23
 
 COPY /.output /nuxt/.output
 COPY ./config /nuxt/config
