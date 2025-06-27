@@ -18,12 +18,15 @@ export async function sendEmail(email: any) {
             user: process.env.EMAIL_SMTP_USERNAME || '',
             pass: process.env.EMAIL_SMTP_PASSWORD || '',
           },
-          logger: true,
+          logger: false,
           debug: false,
         })
-        .sendMail(email);
+        .sendMail(email)
+        .catch((error) => {
+          console.error(`✉️❌ Error sending email to "${email.to}":`, error);
+        });
     } catch (error) {
-      console.error(`✉️❌ Error sending email to "${email.to}":`, error);
+      console.error(`✉️❌ Unexpected error at sending email to "${email.to}":`, error);
     }
   }
 }

@@ -1,6 +1,5 @@
 import { connectDB } from '~/server/api/database/MongoDB';
-import { hasUser, registerServerUser, registerUser } from '~/server/api/interfaces/Account';
-import { saveSessionUser } from '~/server/api/interfaces/Session';
+import { hasUser, registerServerUser } from '~/server/api/interfaces/Account';
 import { connectRedis } from '~/server/api/database/Redis';
 import { hasToken } from '../interfaces/ServerToken';
 const passwordHasUppercase: RegExp = /[A-Z]/;
