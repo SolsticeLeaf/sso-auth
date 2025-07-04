@@ -1,6 +1,5 @@
 import { connectDB } from '~/server/api/database/MongoDB';
 import { hasUser, registerServerUser } from '~/server/api/interfaces/Account';
-import { connectRedis } from '~/server/api/database/Redis';
 import { hasToken } from '../interfaces/ServerToken';
 const passwordHasUppercase: RegExp = /[A-Z]/;
 
@@ -10,7 +9,6 @@ export default defineEventHandler(async (event) => {
   const token = getRequestHeader(event, 'authorization');
   try {
     await connectDB();
-    await connectRedis();
     if (!(await hasToken(token))) {
       setResponseStatus(event, 500);
       return { status: 'INVALID_TOKEN' };

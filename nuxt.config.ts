@@ -25,7 +25,7 @@ export default defineNuxtConfig({
         { name: 'description', content: '' },
         { name: 'format-detection', content: 'telephone=no' },
       ],
-      link: [{ rel: 'icon', type: 'image/x-icon', href: 'https://ik.imagekit.io/kiinse/sleaf-auth.png?updatedAt=1745755052715' }],
+      link: [{ rel: 'icon', type: 'image/x-icon', href: 'https://s3.twcstorage.ru/0af29f8f-sleaf/auth-service/favicon.png' }],
     },
   },
   nitro: {
