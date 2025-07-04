@@ -5,7 +5,7 @@ import { randomUUID } from 'node:crypto';
 import { encodeBase64 } from '~/utilities/base64.utils';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dfsdsfv32rvsdcv2csc';
-const defaultAvatar = 'https://s3.twcstorage.ru/0af29f8f-sleaf/auth-service/profile-default.svg';
+const defaultAvatar = 'https://s3.sleaf.dev/auth-service/profile-default.svg';
 
 export interface Account extends Document {
   _id: string;
