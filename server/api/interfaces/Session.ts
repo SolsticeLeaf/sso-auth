@@ -35,7 +35,13 @@ export async function getSessionUser(event: H3Event<EventHandlerRequest>, userAg
 export async function saveSessionUser(event: H3Event<EventHandlerRequest>, userId: string, userAgent: string): Promise<void> {
   try {
     const key = encodeBase64(String(userId) + new Date() + randomUUID().toString());
-    setCookie(event, 'sessionKey', key);
+    setCookie(event, 'sessionKey', key, {
+      maxAge: 60 * 60 * 24 * 90,
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      path: '/',
+    });
     await setValue(
       key,
       JSON.stringify({
