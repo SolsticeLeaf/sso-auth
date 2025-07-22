@@ -80,6 +80,7 @@ deploy-res-4:
     - export EMAIL_SMTP_PORT="$EMAIL_SMTP_PORT"
     - export EMAIL_SMTP_USERNAME="$EMAIL_SMTP_USERNAME"
     - export EMAIL_SMTP_PASSWORD="$EMAIL_SMTP_PASSWORD"
+    - export DOCKER_BUILDKIT=0
   script:
     - docker compose up --detach --build
 
@@ -102,5 +103,6 @@ deploy-res-3:
     - export EMAIL_SMTP_PORT="$EMAIL_SMTP_PORT"
     - export EMAIL_SMTP_USERNAME="$EMAIL_SMTP_USERNAME"
     - export EMAIL_SMTP_PASSWORD="$EMAIL_SMTP_PASSWORD"
+    - export DOCKER_BUILDKIT=0
   script:
     - docker compose up --detach --build
