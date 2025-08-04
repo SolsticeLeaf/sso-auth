@@ -27,7 +27,7 @@
 ![MongoDB](https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Axios](https://img.shields.io/badge/axios.js-854195?style=for-the-badge&logo=axios&logoColor=5A29E4)
 ![Sass](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=Sass&logoColor=white)
-![Nuxtjs](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=nuxtdotjs&logoColor=white)
+![VSCode](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?style=for-the-badge&logo=nuxtdotjs&logoColor=white)
 
 </center>
 
