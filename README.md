@@ -4,7 +4,7 @@
 
 </center>
 
-<h2 align="center">SSO service made by <code>Nuxt 4</code></h2>
+<h2 align="center">SSO service made by <code>Nuxt 3</code></h2>
 
 <center>
 
@@ -22,7 +22,7 @@
 
 <center>
 
-![Nuxtjs](https://img.shields.io/badge/Nuxt.js-4-00DC82?style=for-the-badge&logo=nuxtdotjs&logoColor=white)
+![Nuxtjs](https://img.shields.io/badge/Nuxt.js-3-00DC82?style=for-the-badge&logo=nuxtdotjs&logoColor=white)
 ![Vue.js](https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D)
 ![MongoDB](https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Axios](https://img.shields.io/badge/axios.js-854195?style=for-the-badge&logo=axios&logoColor=5A29E4)
